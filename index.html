@@ -166,6 +166,16 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .bi-desc{font-size:calc(var(--p)*8);color:#e8dcc4;line-height:1.45;margin-top:calc(var(--p)*2);word-break:keep-all}
 .bi-ref{font-size:calc(var(--p)*7);color:#ffd34a;margin-top:calc(var(--p)*2)}
 #scr.intro{background:rgba(10,4,6,.78)}
+.tpanel{display:flex;flex-direction:column;justify-content:space-between;min-height:100%;width:100%;max-width:none}
+#scr.titlebg{background:linear-gradient(rgba(5,4,10,.35),rgba(5,4,10,0) 30%,rgba(5,4,10,0) 55%,rgba(5,4,10,.55));align-items:stretch}
+#tsp{flex:1;min-height:calc(var(--p)*56)}
+.tbot .menu{margin-top:0}
+.ttop .ttl{text-shadow:calc(var(--p)*2) calc(var(--p)*2) 0 #7a1414,calc(var(--p)*3) calc(var(--p)*3) 0 #000,0 0 calc(var(--p)*8) #000}
+.ttop .hint{text-shadow:var(--p) var(--p) 0 #000}
+.tbot .ctrl{text-shadow:var(--p) var(--p) 0 #000;color:#b8acc8}
+#ui.land .tpanel .ttl{font-size:calc(var(--p)*13)!important}
+.halle{font-family:'Black Han Sans';font-size:calc(var(--p)*20);color:#fff3b0;text-shadow:0 0 calc(var(--p)*6) #ffd34a,calc(var(--p)*2) calc(var(--p)*2) 0 #7a4a10;margin-top:calc(var(--p)*3);animation:hal 1.2s ease-out}
+@keyframes hal{0%{transform:scale(.4);opacity:0}25%{transform:scale(1.25);opacity:1}45%{transform:scale(1)}100%{transform:scale(1)}}
 .stats{font-size:calc(var(--p)*9);color:#e8dcc4;margin:calc(var(--p)*6) 0;line-height:1.6}
 .stats b{color:#ffd34a;font-family:'Press Start 2P';font-size:calc(var(--p)*7);font-weight:normal}
 .sel-st{display:flex;flex-wrap:wrap;justify-content:center;max-width:calc(var(--p)*200);margin:calc(var(--p)*4) auto}
@@ -1016,8 +1026,120 @@ function updWeather(dt,cdx,cdy){if(!G)return;const t=G.b.weather;for(const o of 
  if(t==='storm'){lightning-=dt;if(lightning<-rnd(4,9)){lightning=0.35;sfx('thunder')}}}
 
 // ================= RENDER =================
+// ---------- detailed title heroes (vector -> pixel) ----------
+const THERO={};
+function buildTitleHeroes(){
+ const S4=4,TW=56,TH=92,HW=TW*S4,HH=TH*S4;
+ const mkH=()=>{const c=mk(HW,HH),g=c.getContext('2d');return[c,g]};
+ const E=(g,x,y,rx,ry,col,rot=0)=>{g.fillStyle=col;g.beginPath();g.ellipse(x,y,rx,ry,rot,0,TAU);g.fill()};
+ const Pg=(g,pts,col)=>{g.fillStyle=col;g.beginPath();g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)g.lineTo(pts[i][0],pts[i][1]);g.closePath();g.fill()};
+ const Ln=(g,pts,col,w)=>{g.strokeStyle=col;g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)g.lineTo(pts[i][0],pts[i][1]);g.stroke()};
+ const Q=(g,a,c,b,col,w)=>{g.strokeStyle=col;g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(a[0],a[1]);g.quadraticCurveTo(c[0],c[1],b[0],b[1]);g.stroke()};
+ const grad=(g,x0,y0,x1,y1,stops)=>{const gr=g.createLinearGradient(x0,y0,x1,y1);stops.forEach(([o,c])=>gr.addColorStop(o,c));return gr};
+ const SK='#d9a07c',SKD='#a86a50';
+ const face=(g,cx,cy,beard)=>{E(g,cx,cy,17,21,SK);E(g,cx-7,cy+3,8,15,'rgba(120,60,40,0.35)');const ey=cy+1;E(g,cx-7,ey,3,2.6,'#2a1810');E(g,cx+7,ey,3,2.6,'#2a1810');Pg(g,[[cx-12,ey-6],[cx-2,ey-5],[cx-2,ey-3],[cx-12,ey-4]],'#5a3a28');Pg(g,[[cx+2,ey-5],[cx+12,ey-6],[cx+12,ey-4],[cx+2,ey-3]],'#5a3a28');Ln(g,[[cx+1,ey+3],[cx+3,ey+10],[cx-1,ey+11]],SKD,3);if(!beard)Ln(g,[[cx-5,ey+16],[cx+5,ey+16]],'#8a4a3a',3)};
+ const arm=(g,pts,sleeve,w)=>{Ln(g,pts,SK,w);if(sleeve)Ln(g,pts.slice(0,2).concat([[pts[1][0]+(pts[2][0]-pts[1][0])*0.75,pts[1][1]+(pts[2][1]-pts[1][1])*0.75]]),sleeve,w+6)};
+ // ---- DAVID ----
+ {const[c,g]=mkH();const cx=112,top=96;
+  Pg(g,[[80,126],[148,124],[200,236],[188,290],[160,250],[134,180]],grad(g,120,120,200,290,[[0,'#b8382c'],[1,'#5a1414']]));
+  for(const[x,s]of[[94,-1],[118,1]]){Pg(g,[[x,226],[x+20,226],[x+18+s*2,330],[x+3+s*2,330]],grad(g,x,0,x+20,0,[[0,SKD],[0.5,SK],[1,SKD]]));Pg(g,[[x+1,326],[x+21,326],[x+23,344],[x-1,344]],'#5a3a1e');Ln(g,[[x+2,300],[x+18,306]],'#5a3a1e',3)}
+  Pg(g,[[76,124],[148,124],[154,170],[146,184],[160,246],[66,246],[78,184],[70,170]],grad(g,66,0,160,0,[[0,'#9a8a6c'],[0.45,'#e6d8b4'],[1,'#aa9a7a']]));
+  for(const[a,b]of[[[96,190],[86,244]],[[114,192],[114,244]],[[132,190],[142,242]]])Ln(g,[a,b],'#a89878',4);
+  Pg(g,[[72,176],[152,176],[154,190],[70,190]],'#6b4a2a');Pg(g,[[106,176],[118,176],[118,190],[106,190]],'#c8a050');
+  E(g,74,214,15,18,'#7a5432');E(g,74,207,11,6,'#5a3a1e');Ln(g,[[84,130],[72,200]],'#5a3a1e',4);
+  arm(g,[[82,132],[70,176],[66,212]],null,18);E(g,66,218,9,10,SK);
+  arm(g,[[142,132],[160,94],[170,54]],null,18);E(g,171,46,10,10,SK);
+  Q(g,[172,44],[206,6],[196,62],'#7a5432',6);Q(g,[172,44],[220,26],[200,64],'#7a5432',6);E(g,200,66,8,8,'#9a9a98');E(g,198,63,3,3,'#f0f0e8');
+  Pg(g,[[102,112],[124,112],[126,128],[100,128]],SK);
+  face(g,cx,top,false);
+  E(g,cx,top-17,20,12,'#7a2e16');E(g,cx-16,top-6,7,12,'#7a2e16');E(g,cx+16,top-8,6,10,'#7a2e16');
+  for(const[x,y]of[[-15,-21],[-5,-28],[6,-27],[16,-20],[-19,-10],[19,-12]])E(g,cx+x,top+y,6,6,'#a04824');
+  THERO.david=pixelize(c,TW,TH,'both')}
+ // ---- MOSES ----
+ {const[c,g]=mkH();const cx=104,top=98;
+  Pg(g,[[70,124],[136,124],[66,344],[24,344],[50,220]],grad(g,30,0,130,0,[[0,'#14244e'],[1,'#2e4c96']]));
+  Pg(g,[[72,120],[138,120],[152,200],[164,344],[46,344],[58,200]],grad(g,46,0,164,0,[[0,'#4a1e12'],[0.5,'#8e4228'],[1,'#5a2414']]));
+  for(const x of[82,104,126,144])Ln(g,[[x,206],[x+(x-104)*0.22,342]],'#5a2214',4);
+  Pg(g,[[72,150],[140,190],[138,206],[70,168]],'#3060b0');
+  Pg(g,[[46,340],[164,340],[166,350],[44,350]],'#3a1a10');
+  Ln(g,[[168,4],[150,344]],'#6b4a2a',8);Ln(g,[[167,8],[152,250]],'#a07848',2);E(g,168,6,10,10,'#fff3b0');E(g,168,6,5,5,'#ffffff');
+  arm(g,[[136,130],[152,96],[158,58]],'#7a3420',18);E(g,159,52,10,10,SK);
+  arm(g,[[78,130],[70,168],[80,186]],'#7a3420',18);
+  for(const dx of[0,18]){Pg(g,[[50+dx,146],[76+dx,146],[78+dx,200],[48+dx,200]],grad(g,50,146,78,200,[[0,'#d0ccc0'],[1,'#8a867c']]));E(g,63+dx,146,13,9,'#d0ccc0');for(let k=0;k<3;k++)Ln(g,[[54+dx,162+k*11],[72+dx,162+k*11]],'#6a665e',2)}
+  E(g,86,186,8,8,SK);
+  face(g,cx,top,true);
+  E(g,cx,top-12,20,13,'#e4e2da');E(g,cx-17,top+6,8,20,'#d4d2ca');E(g,cx+17,top+6,8,20,'#d4d2ca');
+  Pg(g,[[cx-16,top+8],[cx+16,top+8],[cx+13,top+42],[cx,top+70],[cx-13,top+42]],grad(g,cx-16,0,cx+16,0,[[0,'#c4c4bc'],[0.5,'#f6f6f0'],[1,'#bcbcb4']]));
+  Ln(g,[[cx-7,top+11],[cx+7,top+11]],'#ececE4',5);
+  THERO.moses=pixelize(c,TW,TH,'L')}
+ // ---- ABRAHAM ----
+ {const[c,g]=mkH();const cx=114,top=100;
+  Pg(g,[[82,124],[146,124],[180,344],[46,344]],grad(g,46,0,180,0,[[0,'#241a30'],[1,'#44305a']]));
+  Pg(g,[[84,120],[142,120],[156,200],[164,344],[62,344],[70,200]],grad(g,62,0,164,0,[[0,'#a89470'],[0.5,'#d8c49c'],[1,'#a08c68']]));
+  for(let k=0;k<4;k++){const x0=84+k*16;Ln(g,[[x0,126],[x0+(k-1.5)*8,344]],'#7a5a80',5)}
+  Pg(g,[[70,180],[154,180],[156,194],[68,194]],'#5a3a1e');
+  Pg(g,[[60,340],[166,340],[168,350],[58,350]],'#3a2414');
+  Ln(g,[[56,40],[50,346]],'#7a5432',8);Q(g,[56,42],[54,10],[76,12],'#7a5432',8);Q(g,[76,12],[92,16],[86,32],'#7a5432',8);
+  arm(g,[[90,132],[72,170],[58,182]],'#b8a07a',18);E(g,55,180,10,10,SK);
+  arm(g,[[138,132],[160,96],[172,62]],'#b8a07a',18);E(g,174,54,10,11,SK);for(const a of[-0.5,-0.2,0.1,0.4])Ln(g,[[174,52],[174+Math.cos(a-1.4)*14,52+Math.sin(a-1.4)*14]],SK,5);
+  face(g,cx,top,true);
+  Pg(g,[[cx-14,top+8],[cx+14,top+8],[cx+11,top+36],[cx,top+50],[cx-11,top+36]],grad(g,cx-14,0,cx+14,0,[[0,'#949490'],[0.5,'#d4d4cc'],[1,'#949490']]));
+  Pg(g,[[cx-24,top-16],[cx+24,top-16],[cx+33,top+44],[cx+18,top+48],[cx+18,top+2],[cx-18,top+2],[cx-18,top+48],[cx-33,top+44]],grad(g,cx-33,0,cx+33,0,[[0,'#b4aa94'],[0.5,'#f2ead6'],[1,'#aca28c']]));
+  E(g,cx,top-16,25,11,'#eee6d2');Pg(g,[[cx-24,top-12],[cx+24,top-12],[cx+24,top-5],[cx-24,top-5]],'#2a1e14');
+  THERO.abraham=pixelize(c,TW,TH,'R')}
+}
+function pixelize(src,w,h,side){const lo=mk(w,h),lg=lo.getContext('2d');lg.imageSmoothingEnabled=true;lg.imageSmoothingQuality='high';lg.drawImage(src,0,0,w,h);
+ const id=lg.getImageData(0,0,w,h),d=id.data;const op=new Uint8Array(w*h);for(let i=0;i<w*h;i++)op[i]=d[i*4+3]>110?1:0;
+ const out=lg.createImageData(w,h),o=out.data,q=v=>Math.round(v/18)*18;
+ const at=(x,y)=>x>=0&&y>=0&&x<w&&y<h&&op[y*w+x];
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x,j=i*4;
+  if(op[i]){let r=d[j],g=d[j+1],b=d[j+2];const a=d[j+3]/255;r/=a;g/=a;b/=a;
+   const eT=!at(x,y-1),eL=!at(x-1,y)&&side!=='R',eR=!at(x+1,y)&&side!=='L';
+   if(eT||eL||eR){const k=eT?0.5:0.38;r=r*(1-k)+255*k;g=g*(1-k)+210*k;b=b*(1-k)+120*k}
+   else{const sh=0.94-0.14*(y/h);r*=sh;g*=sh;b*=sh*0.95}
+   o[j]=Math.min(255,q(r));o[j+1]=Math.min(255,q(g));o[j+2]=Math.min(255,q(b));o[j+3]=255}
+  else if(at(x-1,y)||at(x+1,y)||at(x,y-1)||at(x,y+1)){o[j]=11;o[j+1]=10;o[j+2]=18;o[j+3]=255}}
+ lg.putImageData(out,0,0);return lo}
+
+// ---------- TITLE SCENE ----------
+let skyC=null,skyW=0,skyH=0,mtn=[],tEmb=[];const silC={};
+function silhouette(c,col){const k=col+c.width+'x'+c.height+(c.__id||(c.__id=Math.random()));if(silC[k])return silC[k];const d=mk(c.width,c.height),x=d.getContext('2d');x.drawImage(c,0,0);x.globalCompositeOperation='source-in';x.fillStyle=col;x.fillRect(0,0,c.width,c.height);return silC[k]=d}
+function buildSky(){skyW=W;skyH=H;skyC=mk(W,H);const g=skyC.getContext('2d');const cols=['#0a0718','#140b26','#241034','#3a1438','#5a1a36','#82263a','#a8402e','#cc6630','#e8963a','#f6c25a'];
+ const hz=Math.round(H*0.62);const B=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+ for(let y=0;y<H;y++){const t=Math.min(1,y/hz)*(cols.length-1);for(let x=0;x<W;x++){const f=t-Math.floor(t),b=B[y&3][x&3]/16;const ci=Math.min(cols.length-1,Math.floor(t)+(f>b?1:0));g.fillStyle=cols[ci];g.fillRect(x,y,1,1)}}
+ // stars
+ for(let i=0;i<70;i++){const x=Math.floor(hash(i,1,99)*W),y=Math.floor(hash(i,2,99)*hz*0.5);g.fillStyle=hash(i,3,99)<0.3?'#fff3b0':'#9a8ac0';g.fillRect(x,y,1,1)}
+ mtn=[];for(let x=0;x<W;x++){const n=Math.sin(x*0.035)*10+Math.sin(x*0.09+1.3)*6+Math.sin(x*0.21)*2;const n2=Math.sin(x*0.05+2)*7+Math.sin(x*0.13+0.4)*4;mtn.push([n,n2])}
+ tEmb=[];for(let i=0;i<46;i++)tEmb.push({x:rnd(W),y:rnd(H),v:rnd(6,18),s:rnd(TAU),c:pick(['#ffd34a','#ff8a2a','#fff3b0'])})}
+function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(skyC,0,0);
+ let gy=Math.round(H*0.66),spH=H*0.3;const sp=state==='title'&&document.getElementById('tsp');
+ if(sp){const r=sp.getBoundingClientRect(),cr=cv.getBoundingClientRect();if(r.height>4){gy=Math.round((r.bottom-cr.top)/cr.height*H)-2;spH=r.height/cr.height*H}}
+ const hz=Math.min(gy-6,Math.round(H*0.62)),cx=W/2,cy=gy-Math.min(spH*0.55,60);
+ // halo + rays
+ ctx.save();ctx.globalCompositeOperation='lighter';const rot=tGlobal*0.06;
+ for(let i=0;i<14;i++){const a=rot+i/14*TAU,a2=a+0.09;ctx.fillStyle=`rgba(255,200,110,${i%2?0.05:0.09})`;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*W,cy+Math.sin(a)*W);ctx.lineTo(cx+Math.cos(a2)*W,cy+Math.sin(a2)*W);ctx.fill()}
+ ctx.drawImage(glowTex('rgba(255,215,130,1)'),cx-90,cy-90,180,180);ctx.drawImage(glowTex('rgba(255,240,200,1)'),cx-34,cy-34,68,68);ctx.restore();
+ // far mountains with boss silhouette
+ ctx.fillStyle='#2a1030';for(let x=0;x<W;x++){const h=hz-18-mtn[x][1];ctx.fillRect(x,h,1,H-h)}
+ if(SPR.boss&&SPR.boss[0]){const b=SPR.boss[0].i,sc=2,bw=b.width*sc,bh=b.height*sc,bx=Math.round(W*0.78-bw/2),by=Math.round(hz-22-mtn[Math.min(W-1,Math.max(0,Math.round(W*0.78)))][1]-bh+6);ctx.globalAlpha=0.9;ctx.drawImage(silhouette(b,'#1a0a1e'),bx,by,bw,bh);ctx.globalAlpha=1;
+  if(Math.floor(tGlobal*1.5)%5!==0){ctx.fillStyle='#ff3a3a';ctx.fillRect(bx+Math.round(bw*0.8),by+Math.round(bh*0.25),2,1)}}
+ ctx.fillStyle='#180a1c';for(let x=0;x<W;x++){const h=hz-mtn[x][0];ctx.fillRect(x,h,1,H-h)}
+ // small idols on ridge
+ if(SPR.grunt){const g=silhouette(SPR.grunt[0].i,'#0e0610');for(let i=0;i<5;i++){const x=Math.round(W*(0.06+i*0.07+(i>2?0.55:0)));if(x>=W)continue;ctx.drawImage(g,x,Math.round(hz-mtn[Math.min(W-1,x+6)][0]-15))}}
+ // plateau
+ ctx.fillStyle='#0c0610';ctx.fillRect(0,gy,W,H-gy);
+ for(let x=0;x<W;x++){const e=Math.round(Math.sin(x*0.3)*1+Math.sin(x*0.07)*2);const d=Math.abs(x-cx)/W;ctx.fillStyle='#1e1018';ctx.fillRect(x,gy-2+e,1,3);ctx.fillStyle=d<0.32?'#e8a040':'#7a4a2a';ctx.fillRect(x,gy-2+e,1,1)}
+ for(let i=0;i<40;i++){const x=Math.floor(hash(i,7,3)*W);ctx.fillStyle='#2a1420';ctx.fillRect(x,gy+2+Math.floor(hash(i,8,3)*(H-gy)),2,1)}
+ // heroes
+ if(state==='title'){const order=[['abraham',-1],['david',0],['moses',1]];const th=THERO.david.height,tw=THERO.david.width;let sc=Math.min(spH*0.98/th,(W-8)/(tw*3*0.92));sc=sc>=2?Math.floor(sc):sc>=1?1:sc;const spc=tw*sc*0.92;
+  for(const[k,off]of[order[0],order[2],order[1]]){const im=THERO[k],w=Math.round(im.width*sc),h=Math.round(im.height*sc),bob=(Math.floor(tGlobal*1.6+off)%2?0:-1),dy=off===0?2:-2;
+   const x=Math.round(cx+off*spc-w/2),y=gy-h+dy+bob;ctx.drawImage(shadowSpr(w*0.7),Math.round(cx+off*spc-w*0.35),gy-2+dy);ctx.drawImage(im,x,y,w,h)}}
+ // embers
+ for(const e of tEmb){e.y-=e.v*(1/60);e.x+=Math.sin(tGlobal+e.s)*0.15;if(e.y<-4){e.y=H+4;e.x=rnd(W)}ctx.fillStyle=e.c;ctx.globalAlpha=0.6+0.4*Math.sin(tGlobal*4+e.s);ctx.fillRect(Math.round(e.x),Math.round(e.y),1,1)}ctx.globalAlpha=1;
+ ctx.drawImage(vign,0,0)}
 function render(){
  if(!G){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);return}
+ if(isMenu()){drawTitleScene();return}
  let sx=0,sy=0;if(shake>0){sx=rnd(-shake,shake);sy=rnd(-shake,shake);shake=Math.max(0,shake-0.4)}
  const cx=Math.round(cam.x+sx),cy=Math.round(cam.y+sy);
  // tiles
@@ -1193,12 +1315,12 @@ let noticeT=0;function leaveNotice(){if(performance.now()-noticeT<400)return;sfx
 function toTitle(){state='title';$('hud').classList.add('hidden');$('boss').classList.add('hidden');
  P=newPlayer(lastHero);beginStage(0,{});cam.x=0;cam.y=0;
  const cont=savedRun?`<div class="btn primary wide" data-act="cont">이어하기 ▶<small>ST.${String(savedRun.next+1).padStart(2,'0')} ${STAGES[savedRun.next].name} · ${HEROES[savedRun.P.hero].name} LV ${savedRun.P.hero?savedRun.P.lv:''}</small></div>`:'';
- screen(`<div class="panel"><div class="ttl" style="color:#ffd34a">ANOINTED</div><div class="ttl" style="margin-top:calc(var(--p)*3);color:#ffd34a">ONES</div><div class="sub" style="font-size:calc(var(--p)*14);margin-top:calc(var(--p)*5)">어노인티드 원즈</div>
- <div class="hint">"우리의 씨름은 혈과 육을 상대하는 것이 아니요"<br>— 에베소서 6:12</div>
- <div class="menu">${cont}<div class="btn ${savedRun?'':'primary'} wide" data-act="start">새 여정 시작<small>ST.01 엘라 골짜기부터</small></div>
+ screen(`<div class="panel tpanel"><div class="ttop"><div class="ttl" style="color:#ffd34a">ANOINTED</div><div class="ttl" style="margin-top:calc(var(--p)*3);color:#ffd34a">ONES</div><div class="sub" style="font-size:calc(var(--p)*14);margin-top:calc(var(--p)*5)">어노인티드 원즈</div>
+ <div class="hint">"우리의 씨름은 혈과 육을 상대하는 것이 아니요"<br>— 에베소서 6:12</div></div>
+ <div id="tsp"></div><div class="tbot"> <div class="menu">${cont}<div class="btn ${savedRun?'':'primary'} wide" data-act="start">새 여정 시작<small>ST.01 엘라 골짜기부터</small></div>
  <div class="btn wide gold" data-act="grace">주님의 은혜<small>기도 ${PRAY} · 영구 강화</small></div><div class="btn wide" data-act="select">스테이지 선택<small>해금 ${unlocked}/${STAGES.length}</small></div>
  <div class="btn wide" data-act="mute">${muted?'소리 켜기':'소리 끄기'}</div></div>
- <div class="ctrl">화면 아무 곳이나 드래그해서 이동 · 공격은 자동<br>PC: WASD / 방향키 · ESC 일시정지 · M 소리<br><span style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 보조장비를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</span></div></div>`)}
+ <div class="ctrl">화면 아무 곳이나 드래그해서 이동 · 공격은 자동<br>PC: WASD / 방향키 · ESC 일시정지 · M 소리<br><span style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 보조장비를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</span></div></div></div>`,'titlebg')}
 function showGrace(){state='heroes';
  const rows=METADEF.map(d=>{const lv=ML(d.k),max=lv>=d.max,cost=metaCost(d,lv),can=!max&&PRAY>=cost;
   const pips=[...Array(d.max)].map((_,i)=>`<i class="${i<lv?'on':''}"></i>`).join('');
@@ -1251,10 +1373,20 @@ function contRun(){const r=savedRun;if(!r)return toTitle();savedRun=null;storeRu
 function nextStage(){savedRun=null;storeRun();const c={pending:G.pending,kills:G.kills,time:G.totalTime};P.hp=Math.min(P.maxHp,P.hp+P.maxHp*0.5);P.weapons.forEach(w=>{w.t=0.5;w.hits=null});beginStage(G.si+1,c);showBrief()}
 
 // evolution
-function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';sfx('evo');shake=5;addLight(P.x,P.y,160,'rgba(255,210,90,1)',0.8);
+function choir(midis,t,dur,vol){const f1=AC.createBiquadFilter(),f2=AC.createBiquadFilter(),g=AC.createGain();f1.type=f2.type='bandpass';f1.frequency.value=800;f1.Q.value=3;f2.frequency.value=1150;f2.Q.value=4;
+ const out=AC.createGain();out.gain.setValueAtTime(0.0001,t);out.gain.exponentialRampToValueAtTime(vol,t+0.07);out.gain.setValueAtTime(vol,t+dur*0.7);out.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+ f1.connect(out);f2.connect(out);const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;lp.connect(f1);lp.connect(f2);const dry=AC.createGain();dry.gain.value=0.25;lp.connect(dry);dry.connect(out);out.connect(master);
+ for(const m of midis)for(const dt of [-7,0,6]){const o=AC.createOscillator();o.type='sawtooth';o.frequency.value=mf(m);o.detune.value=dt;const v=AC.createOscillator(),vg=AC.createGain();v.frequency.value=5.2;vg.gain.value=4;v.connect(vg);vg.connect(o.detune);o.connect(lp);o.start(t);o.stop(t+dur+0.05);v.start(t);v.stop(t+dur+0.05)}}
+function hallelujah(){if(!AC||muted)return;const t0=AC.currentTime+0.05;
+ if(musicG){musicG.gain.cancelScheduledValues(t0);musicG.gain.setValueAtTime(0.5,t0);musicG.gain.linearRampToValueAtTime(0.08,t0+0.15);musicG.gain.setValueAtTime(0.08,t0+2.9);musicG.gain.linearRampToValueAtTime(0.5,t0+3.6)}
+ // "Hal - le - lu - jah!"  C - F - G - C(high)
+ const seq=[[[48,60,64,67],0,0.42],[[53,60,65,69],0.42,0.2],[[55,62,67,71],0.62,0.38],[[48,60,64,67,72],1.0,2.1]];
+ for(const[ch,st,du]of seq){choir(ch,t0+st,du+0.05,0.11);for(const m of ch.slice(-1))tone('triangle',mf(m+12),mf(m+12),du,0.05,t0+st-AC.currentTime,master)}
+ [84,88,91,96,100].forEach((m,i)=>tone('sine',mf(m),mf(m),0.6,0.04,1.0+i*0.07+t0-AC.currentTime,master));nz(1.6,0.12,7000,1.0+t0-AC.currentTime,'highpass')}
+function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake=5;addLight(P.x,P.y,160,'rgba(255,210,90,1)',0.8);
  for(let i=0;i<40;i++){const a=rnd(TAU),sp=rnd(40,140);part(P.x,P.y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.5,1),pick(['#ffd34a','#fff3b0','#ff9a2a']),2,0,'fire')}
  const e=EVO[w.k];slots();
- screen(`<div class="panel"><div class="op" style="color:#ffd34a">WEAPON EVOLUTION</div><div class="big" style="color:#ffd34a">무기 진화!</div><div class="rg">모루 위에서 무기가 새롭게 단련되었다</div>
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">WEAPON EVOLUTION</div><div class="halle">할렐루야!</div><div class="big" style="color:#ffd34a">무기 진화!</div><div class="rg">모루 위에서 무기가 새롭게 단련되었다</div>
  <div class="evo-row"><div class="card"><img src="${ICON[w.k]}"><div class="lv">LV 8</div><div class="nm">${WDEF[w.k].name}</div></div><span class="pl">+</span>
  <div class="card"><img src="${ICON[e.p]}"><div class="nm">${PDEF[e.p].name}</div></div><span class="pl">▼</span>
  <div class="card gold"><img src="${ICON[w.k]}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
@@ -1297,7 +1429,7 @@ window.__fs={evolve,get G(){return G},get P(){return P},get state(){return state
 // ================= LOOP =================
 let last=performance.now();
 function loop(now){const dt=Math.min(1/30,(now-last)/1000);last=now;try{update(dt);render()}catch(err){console.error(err)}requestAnimationFrame(loop)}
-resize();initStatic();showNotice();requestAnimationFrame(loop);
+resize();initStatic();buildTitleHeroes();showNotice();requestAnimationFrame(loop);
 if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 </script>
 </body>
