@@ -877,26 +877,18 @@ function updWeapons(dt){
  }}}
 
 // ================= BOSS AI =================
-function bossAI(e,dt){const dx=P.x-e.x,dy=P.y-e.y,d=Math.hypot(dx,dy)||1,aim=Math.atan2(dy,dx);const rage=(e.hp<e.mhp*0.5?0.65:1)*(e.mini?1.5:1)*1.11;
- e.ta-=dt;e.tb-=dt;e.tc-=dt;e.face=dx<0?-1:1;
- if(e.bt==='tank'){e.x+=dx/d*e.spd*dt;e.y+=dy/d*e.spd*dt;e.anim+=dt*4;
-   if(e.ta<=0){e.ta=2.6*rage;const n=16,o=rnd(TAU);for(let i=0;i<n;i++)eShoot(e.x,e.y-6,o+i/n*TAU,55,12+G.si*3,'shell');addLight(e.x,e.y,60,'rgba(255,140,60,1)',0.15);sfx('boom')}
-   if(e.tb<=0){e.tb=4*rage;for(let i=-2;i<=2;i++)eShoot(e.x+e.face*24,e.y-14,aim+i*0.12,90,14+G.si*3,'rocket');sfx('eshot')}
-   if(e.tc<=0){e.tc=8;for(let i=0;i<6;i++){const a=i/6*TAU;spawnEnemy(G.b.land?'grunt':'frog',e.x+Math.cos(a)*30,e.y+Math.sin(a)*30)}}}
- else if(e.bt==='ship'){e.ang+=dt*0.25;const tx=P.x+Math.cos(e.ang)*W*0.4,ty=P.y+Math.sin(e.ang)*H*0.32;e.x+=(tx-e.x)*dt*0.6;e.y+=(ty-e.y)*dt*0.6;e.face=tx>e.x?1:-1;
-   if(Math.random()<dt*20)part(e.x-e.face*45+rnd(-4,4),e.y+10,rnd(-20,20),rnd(-5,5),0.8,'rgba(220,240,255,0.7)',2);
-   if(e.ta<=0){e.ta=1.8*rage;for(let i=-3;i<=3;i++)after((i+3)*0.06,()=>eShoot(e.x+i*10,e.y-8,aim+i*0.05,80,11+G.si*3,'burst'));sfx('eshot')}
+function bossAI(e,dt){const dx=P.x-e.x,dy=P.y-e.y,d=Math.hypot(dx,dy)||1;const rage=(e.hp<e.mhp*0.5?0.75:1)*(e.mini?1.5:1)*1.11;
+ e.tb-=dt;e.tc-=dt;e.face=dx<0?-1:1;
+ // 단순 추적: 모든 보스가 영웅을 향해 천천히 다가옴
+ const sp=(e.bt==='heli'?22:e.bt==='ship'?15:12)*(e.hp<e.mhp*0.5?1.15:1);
+ if(d>e.r*0.6){e.x+=dx/d*sp*dt;e.y+=dy/d*sp*dt}
+ e.anim+=dt*(e.bt==='heli'?20:4);
+ if(e.bt==='ship'){if(Math.random()<dt*20)part(e.x-e.face*45+rnd(-4,4),e.y+10,rnd(-20,20),rnd(-5,5),0.8,'rgba(220,240,255,0.7)',2);
    if(e.tb<=0){e.tb=5*rage;const n=5+G.si;for(let i=0;i<n;i++)G.emarks.push({x:P.x+rnd(-50,50),y:P.y+rnd(-40,40),t:1.2+i*0.1,T:1.2+i*0.1,dmg:16+G.si*3,r:18});sfx('whistle')}
    if(e.tc<=0){e.tc=7;for(let i=0;i<4;i++)spawnEnemy('boat',e.x+rnd(-30,30),e.y+rnd(-20,20))}}
- else{e.ang+=dt*(rage<1?1.3:0.9);const R=e.dash>0?0:W*0.4;
-   if(e.dash>0){e.dash-=dt;e.x+=e.dvx*dt;e.y+=e.dvy*dt}else{const tx=P.x+Math.cos(e.ang)*R,ty=P.y+Math.sin(e.ang)*R*1.3;e.x+=(tx-e.x)*dt*1.8;e.y+=(ty-e.y)*dt*1.8}
-   e.anim+=dt*20;
-   if(e.ta<=0){e.ta=0.1;e.spiral+=0.45;if(Math.floor(tGlobal*0.5)%2===0||rage<1){eShoot(e.x,e.y-4,e.spiral,60,10+G.si*3,'burst');eShoot(e.x,e.y-4,e.spiral+Math.PI,60,10+G.si*3,'burst');sfx('eshot')}}
-   if(e.tb<=0){e.tb=4*rage;e.dash=0.7;e.dvx=dx/d*230;e.dvy=dy/d*230;banner('','',0)}
-   if(e.tc<=0){e.tc=9;for(let i=0;i<5;i++){const[x,y]=ringPos(10);spawnEnemy(G.b.land?'dog':'frog',x,y)}}
-   if(d<e.r+6&&!e.fly)hurtPlayer(e.dmg)}
- if(e.bt!=='heli'&&d<e.r+6)hurtPlayer(e.dmg);
- if(e.bt==='heli'&&e.dash>0&&d<e.r+4)hurtPlayer(e.dmg);
+ else if(e.bt==='tank'){if(e.tc<=0){e.tc=8;for(let i=0;i<6;i++){const a=i/6*TAU;spawnEnemy(G.b.land?'grunt':'frog',e.x+Math.cos(a)*30,e.y+Math.sin(a)*30)}}}
+ else{if(e.tc<=0){e.tc=9;for(let i=0;i<5;i++){const[x,y]=ringPos(10);spawnEnemy(G.b.land?'dog':'frog',x,y)}}}
+ if(d<e.r+6)hurtPlayer(e.dmg);
 }
 function miniDeath(e){for(let i=0;i<5;i++)G.gems.push({x:e.x+rnd(-20,20),y:e.y+rnd(-20,20),k:'prayer'});for(let i=0;i<5;i++)after(i*0.15,()=>explode(e.x+rnd(-20,20),e.y+rnd(-15,15),rnd(18,30),0,true));
   for(let i=0;i<14;i++)dropGem(e.x+rnd(-24,24),e.y+rnd(-24,24),8);G.gems.push({x:e.x,y:e.y,k:'anvil'});G.gems.push({x:e.x+10,y:e.y,k:'med'});
