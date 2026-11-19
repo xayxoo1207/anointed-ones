@@ -158,6 +158,14 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .mp i.on{background:#ffd34a}
 .mc{flex:none;display:flex;align-items:center;gap:calc(var(--p)*1.5);font-family:'Press Start 2P';font-size:calc(var(--p)*6);color:#ffd34a}
 .mrow.max .mc{color:#8fd16a}
+.bi{max-width:min(calc(var(--p)*200),94vw)}
+#ui.land .bi{max-width:min(calc(var(--p)*380),94vw)}
+.bi-row{display:flex;gap:calc(var(--p)*6);align-items:center;text-align:left;margin-top:calc(var(--p)*7);background:#120e14cc;box-shadow:inset 0 0 0 var(--p) #5a2a2a;padding:calc(var(--p)*5)}
+.bi-row img{width:calc(var(--p)*44);height:calc(var(--p)*36);object-fit:contain;image-rendering:pixelated;flex:none;filter:drop-shadow(0 0 calc(var(--p)*3) #ff4a3a)}
+.bi-name{font-family:'Black Han Sans';font-size:calc(var(--p)*12);color:#fff}
+.bi-desc{font-size:calc(var(--p)*8);color:#e8dcc4;line-height:1.45;margin-top:calc(var(--p)*2);word-break:keep-all}
+.bi-ref{font-size:calc(var(--p)*7);color:#ffd34a;margin-top:calc(var(--p)*2)}
+#scr.intro{background:rgba(10,4,6,.78)}
 .stats{font-size:calc(var(--p)*9);color:#e8dcc4;margin:calc(var(--p)*6) 0;line-height:1.6}
 .stats b{color:#ffd34a;font-family:'Press Start 2P';font-size:calc(var(--p)*7);font-weight:normal}
 .sel-st{display:flex;flex-wrap:wrap;justify-content:center;max-width:calc(var(--p)*200);margin:calc(var(--p)*4) auto}
@@ -460,7 +468,7 @@ const ET={
  rpg:{hp:14,spd:24,dmg:8,r:5,xp:2,ranged:{range:110,cd:3.2,b:'rocket'}},
  heavy:{hp:60,spd:18,dmg:14,r:7,xp:4,kbRes:0.8},
  tank:{hp:240,spd:13,dmg:22,r:11,xp:12,kbRes:1,ranged:{range:150,cd:4,b:'shell'}},
- heli:{hp:90,spd:36,dmg:0,r:9,xp:8,fly:true,kbRes:0.7,ranged:{range:120,cd:2.6,b:'burst'}},
+ heli:{hp:90,spd:36,dmg:12,r:9,xp:8,fly:true,kbRes:0.7,ranged:{range:120,cd:2.6,b:'burst'}},
  frog:{hp:9,spd:30,dmg:8,r:5,xp:1},
  boat:{hp:22,spd:54,dmg:12,r:7,xp:2},
  gunboat:{hp:80,spd:18,dmg:14,r:10,xp:6,kbRes:0.9,ranged:{range:130,cd:3,b:'burst'}},
@@ -576,7 +584,7 @@ const SONGS=[
  S.ev=ev;S.len=Math.ceil(t/S.bar)*S.bar;S.chords=[];for(let k=0;k<S.len/S.bar;k++){const bt=k*S.bar;let e=ev.find(x=>x.t<=bt+0.01&&x.t+x.dur>bt)||ev.find(x=>x.t>=bt&&x.t<bt+S.bar)||ev[0];const r=((e.midi-S.key)%12+12)%12;S.chords.push([11,2].includes(r)?7:[5,9].includes(r)?5:0)}}})();
 const mf=m=>440*Math.pow(2,(m-69)/12);
 const mus={song:-1,t0:0,i:0,b:0,bt0:0};
-function musicTick(){if(!AC||muted)return;if(!(state==='play'||state==='brief'||state==='levelup'||isMenu())){mus.song=-1;return}
+function musicTick(){if(!AC||muted)return;if(!(state==='play'||state==='brief'||state==='levelup'||state==='intro'||isMenu())){mus.song=-1;return}
  const si=isMenu()?5:(G?G.si:0);const now=AC.currentTime;
  if(si!==mus.song){mus.song=si;mus.t0=mus.bt0=now+0.15;mus.i=0;mus.b=0}
  const S=SONGS[si],spb=60/S.bpm,ahead=now+0.2,loop=S.len*spb,boss=G&&G.boss&&state==='play';
@@ -654,6 +662,7 @@ function genTiles(b){const out=[];
 // ================= INPUT =================
 addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(state==='notice'){e.preventDefault();if(!e.repeat)leaveNotice();return}
+  if(state==='intro'){e.preventDefault();if(!e.repeat)leaveIntro();return}
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
   if(e.code==='KeyM'){muted=!muted;if(master)master.gain.value=muted?0:0.32}
   if((e.code==='Escape'||e.code==='KeyP')){if(state==='play')openPause();else if(state==='pause')closePause()}
@@ -678,14 +687,14 @@ $('pbtn').addEventListener('click',()=>{if(state==='play')openPause()});
 // ================= SPAWN =================
 function spawnEnemy(type,x,y,mul){const d=ET[type];const sm=(1+G.si*0.6)*(1+G.t/150);
   const e={type,x,y,hp:d.hp*sm*(mul||1),mhp:0,spd:d.spd*0.9*(1+G.si*0.04)*rnd(0.9,1.1),dmg:d.dmg*(1+G.si*0.25),r:d.r,xp:d.xp,fly:!!d.fly,kbRes:d.kbRes||0,
-    ranged:d.ranged,rcd:d.ranged?rnd(1,d.ranged.cd):0,kx:0,ky:0,flash:0,anim:rnd(4),face:1,alt:d.fly?18:0,spr:type,orb:rnd(TAU)};
+    ranged:null,rcd:0,kx:0,ky:0,flash:0,anim:rnd(4),face:1,alt:d.fly?18:0,spr:type,orb:rnd(TAU)};
   e.mhp=e.hp;const s=SPR[type][0];e.w=s.W;e.h=s.H;G.en.push(e);return e}
 function ringPos(extra=30){const a=rnd(TAU),R=Math.hypot(W,H)/2+extra;return[P.x+Math.cos(a)*R,P.y+Math.sin(a)*R]}
 function spawnTick(dt){
   const alive=G.en.length,cap=Math.round((140+G.si*15+Math.floor(G.t/30))*0.8);
   let rate=(1.2+G.t/40)*(1+G.si*0.25)*0.8;if(G.boss)rate*=0.35;else if(G.minis.some(m=>!m.dead))rate*=0.6;
   G.spawnAcc+=rate*dt;
-  const pool=(G.b.land?POOL_LAND:POOL_SEA).filter(p=>G.t>=p[0]*Math.max(0.3,1-G.si*0.12)&&!(G.si===0&&ET[p[1]].ranged));
+  const pool=(G.b.land?POOL_LAND:POOL_SEA).filter(p=>G.t>=p[0]*Math.max(0.3,1-G.si*0.12));
   const tot=pool.reduce((a,p)=>a+p[2],0);
   while(G.spawnAcc>=1){G.spawnAcc--;if(alive>=cap)continue;let r=rnd(tot),ty=pool[0][1];for(const p of pool){r-=p[2];if(r<=0){ty=p[1];break}}const[x,y]=ringPos();spawnEnemy(ty,x,y)}
   if(G.t>=G.evt&&!G.boss){G.evt+=60;const ty=G.b.land?(Math.random()<0.5?'grunt':'dog'):'frog';const n=Math.round((24+G.si*4)*0.8);banner('어둠의 포위','우상의 무리가 사방에서 몰려온다!',1.6);
@@ -701,14 +710,35 @@ function makeBoss(o){const[x,y]=ringPos(40);
   const s=SPR[o.spr][0];e.w=s.W*o.sc;e.h=s.H*o.sc;G.en.push(e);return e}
 const MINIS={land:[['tank'],['heli'],['heavy'],['tank','heli']],sea:[['gunboat'],['heli'],['gunboat'],['gunboat','heli']]};
 const MINIDEF={tank:{bt:'tank',spr:'dog',sc:3,r:16,name:'황금 송아지'},heli:{bt:'heli',spr:'fly',sc:2,r:16,name:'바알세붑'},heavy:{bt:'tank',spr:'rpg',sc:3,r:18,name:'몰록'},gunboat:{bt:'ship',spr:'frog',sc:4,r:18,name:'다곤'}};
+const LORE={
+ calf:{t:'황금 송아지',d:'모세가 시내산에 올라간 사이, 아론과 백성이 금귀고리를 녹여 만들고 "너희 신"이라 부르며 섬긴 우상.',r:'출애굽기 32장'},
+ fly:{t:'바알세붑',d:'"파리의 주"라는 뜻의 블레셋 에그론의 신. 복음서에서는 귀신의 왕을 가리키는 이름으로 불린다.',r:'열왕기하 1:2 · 마태복음 12:24'},
+ molech:{t:'몰록',d:'암몬 족속의 신. 자녀를 불 가운데로 지나가게 하는 가증한 제사를 받던 우상으로, 율법이 엄히 금했다.',r:'레위기 18:21 · 열왕기상 11:7'},
+ dagon:{t:'다곤',d:'블레셋의 신. 언약궤 앞에서 엎드러져 머리와 두 손이 부러졌고, 삼손이 그 신전을 무너뜨렸다.',r:'사무엘상 5장 · 사사기 16장'},
+ behemoth:{t:'베헤못',d:'하나님이 욥에게 보여주신 거대한 짐승. 소처럼 풀을 먹으며 그 꼬리는 백향목처럼 흔들린다.',r:'욥기 40:15-24'},
+ rahab:{t:'라합',d:'하나님께 제압당한 바다의 혼돈 괴물로 노래되며, 때로 교만한 애굽을 가리키는 이름으로도 쓰인다.',r:'이사야 51:9 · 시편 89:10'},
+ abaddon:{t:'아바돈',d:'무저갱에서 올라온 황충 떼의 왕, 무저갱의 사자. 헬라어 이름은 아볼루온, "파괴자"라는 뜻이다.',r:'요한계시록 9:11'},
+ nephilim:{t:'네피림',d:'홍수 이전 땅에 있었다고 기록된 거인들. 훗날 가나안 정탐꾼들은 그들 앞에서 스스로를 메뚜기 같다고 했다.',r:'창세기 6:4 · 민수기 13:33'},
+ saraph:{t:'불뱀',d:'광야에서 원망하던 이스라엘 백성을 물었던 불뱀. 모세가 놋뱀을 만들어 장대 위에 달았다.',r:'민수기 21:6-9 · 이사야 30:6'},
+ beast:{t:'일곱 머리 짐승',d:'바다에서 올라온 열 뿔과 일곱 머리를 가진 짐승. 머리마다 신성 모독하는 이름이 있었다.',r:'요한계시록 13:1'},
+ leviathan:{t:'레비아탄',d:'바다의 거대한 괴물, 날랜 뱀이요 꼬불꼬불한 뱀. 그 날에 여호와께서 강한 칼로 벌하시리라 예언되었다.',r:'욥기 41장 · 이사야 27:1'},
+};
+const MINILORE={tank:'calf',heli:'fly',heavy:'molech',gunboat:'dagon'};
+const sprURL={};function bossImg(key,fr){if(!sprURL[key])sprURL[key]=fr.toDataURL();return sprURL[key]}
+let introT=0,introId=0;
+function bossIntro(items,final){if(state!=='play')return;state='intro';introT=performance.now();const id=++introId;
+ const rows=items.map(it=>`<div class="bi-row"><img src="${it.img}"><div><div class="bi-name">${it.t}</div><div class="bi-desc">${it.d}</div><div class="bi-ref">${it.r}</div></div></div>`).join('');
+ screen(`<div class="panel bi"><div class="op" style="color:${final?'#ff4a3a':'#ffb04a'}">${final?'FINAL BOSS':'MINI BOSS'}</div><div class="big" style="font-size:calc(var(--p)*16);color:${final?'#ff4a3a':'#ffd34a'}">${final?'최종 보스 출현':'미니보스 출현'}</div>${rows}<div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro');
+ setTimeout(()=>{if(state==='intro'&&introId===id)leaveIntro(true)},7000)}
+function leaveIntro(force){if(!force&&performance.now()-introT<600)return;hideScreen();state='play';sfx('click')}
 function spawnMinis(k){const list=MINIS[G.b.land?'land':'sea'][k];const names=[];
   for(const t of list){const d=MINIDEF[t];const hp=1400*(1+G.si*0.8)*(1+k*0.7)/list.length*1.3;const e=makeBoss(Object.assign({},d,{hp,mini:true}));G.minis.push(e);names.push(d.name)}
-  banner('미니보스 출현',names.join(' · ')+` (${k+1}/4)`,2);sfx('alarm');shake=4}
+  sfx('alarm');shake=4;bossIntro(list.map(t=>{const L=LORE[MINILORE[t]];return{t:L.t,d:L.d,r:L.r,img:bossImg('m_'+t+G.si,SPR[MINIDEF[t].spr][0].i)}}),false)}
 function spawnBoss(){G.bossSpawned=true;const st=G.st;
   const hp=16000*(1+G.si*0.8)*(st.final?1.5:1);
   const conf=BOSSES[st.boss];
   G.boss=makeBoss({bt:conf.bt,spr:'boss',sc:conf.sc,r:conf.r,hp,name:st.bossName});
-  banner('최종 보스 출현',st.bossName,2.4);sfx('alarm');shake=6}
+  sfx('alarm');shake=6;{const L=LORE[st.boss];bossIntro([{t:L.t,d:L.d,r:L.r,img:bossImg('b_'+st.boss,SPR.boss[0].i)}],true)}}
 function curBoss(){if(G.boss&&!G.boss.dead)return G.boss;return G.minis.find(m=>!m.dead)||null}
 
 // ================= COMBAT =================
@@ -750,7 +780,7 @@ function hurtPlayer(d){if(P.inv>0||state!=='play')return;d=Math.max(1,Math.round
    for(const e of G.en){if(e.dead||e.boss)continue;const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<140){e.kx+=dx/d*400;e.ky+=dy/d*400}}G.ebul.length=0;
    for(let i=0;i<50;i++){const a=rnd(TAU),sp=rnd(40,160);part(P.x,P.y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.5,1),pick(['#fff3b0','#ffffff','#ffd34a']),2,0,'fire')}return}
    P.hp=0;gameOver()}}
-function eShoot(x,y,a,spd,dmg,type){spd*=0.9;G.ebul.push({x,y,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,dmg,type,life:4,r:type==='shell'?4:type==='rocket'?3:2})}
+function eShoot(x,y,a,spd,dmg,type){return;spd*=0.9;G.ebul.push({x,y,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,dmg,type,life:4,r:type==='shell'?4:type==='rocket'?3:2})}
 
 // ================= WEAPONS =================
 function nearest(x,y,maxD){let best=null,bd=maxD*maxD;for(const e of G.en){if(e.dead)continue;const dx=e.x-x,dy=e.y-y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=e}}return best}
@@ -897,7 +927,7 @@ function update(dt){
   if(e.boss){bossAI(e,dt);continue}
   const dx=P.x-e.x,dy=P.y-e.y,d=Math.hypot(dx,dy)||1;e.face=dx<0?-1:1;
   let sp=e.spd,mvx=dx/d,mvy=dy/d;
-  if(e.type==='heli'){e.orb+=dt*0.8;const tx2=P.x+Math.cos(e.orb)*90,ty2=P.y+Math.sin(e.orb)*60;const ddx=tx2-e.x,ddy=ty2-e.y,dd=Math.hypot(ddx,ddy)||1;mvx=ddx/dd;mvy=ddy/dd;sp=Math.min(e.spd,dd*2)}
+  if(e.type==='heli'&&e.ranged){e.orb+=dt*0.8;const tx2=P.x+Math.cos(e.orb)*90,ty2=P.y+Math.sin(e.orb)*60;const ddx=tx2-e.x,ddy=ty2-e.y,dd=Math.hypot(ddx,ddy)||1;mvx=ddx/dd;mvy=ddy/dd;sp=Math.min(e.spd,dd*2)}
   else if(e.ranged&&d<e.ranged.range*0.85){sp*=0.15;mvx=-dy/d;mvy=dx/d}
   e.x+=(mvx*sp+e.kx)*dt;e.y+=(mvy*sp+e.ky)*dt;e.kx*=Math.pow(0.002,dt);e.ky*=Math.pow(0.002,dt);
   e.anim+=dt*(e.type==='heli'?20:6);
@@ -905,7 +935,7 @@ function update(dt){
     if(e.ranged.b==='burst'){for(let i=0;i<3;i++)after(i*0.12,()=>{if(!e.dead)eShoot(e.x,e.y-e.alt*0.5,Math.atan2(P.y-e.y,P.x-e.x)+rnd(-0.1,0.1),75,6+G.si*2,'burst')});sfx('eshot')}
     else eShoot(e.x+e.face*6,e.y-4,a,e.ranged.b==='shell'?70:85,e.ranged.b==='shell'?14+G.si*3:10+G.si*2,e.ranged.b);
     addLight(e.x+e.face*8,e.y,20,'rgba(255,120,80,1)',0.08)}}
-  if(!e.fly&&d<e.r+5)hurtPlayer(e.dmg);
+  if(d<e.r+5&&e.dmg>0)hurtPlayer(e.dmg);
   if(d>farR&&!e.fly){const[x,y]=ringPos(10);e.x=x;e.y=y}
   // separation
   if(!e.fly){query(e.x,e.y,e.r*2,o=>{if(o===e||o.fly||o.boss)return;const sx=e.x-o.x,sy=e.y-o.y,sd=sx*sx+sy*sy,rr=e.r+o.r;if(sd<rr*rr&&sd>0.01){const s=Math.sqrt(sd),push=(rr-s)*0.5;e.x+=sx/s*push;e.y+=sy/s*push}})}
@@ -1139,7 +1169,7 @@ let bannerT=null;
 function banner(t,s,dur){if(!t)return;const b=$('banner');b.innerHTML=t+(s?`<small>${s}</small>`:'');b.classList.add('on');clearTimeout(bannerT);bannerT=setTimeout(()=>b.classList.remove('on'),dur*1000)}
 function screen(html,cls){$('banner').classList.remove('on');const s=$('scr');s.className=cls||'';s.innerHTML=html;s.classList.remove('hidden')}
 function hideScreen(){$('scr').classList.add('hidden');$('scr').innerHTML=''}
-$('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNotice();return}const b=e.target.closest('[data-act]');if(!b)return;initAudio();sfx('click');const a=b.dataset.act;
+$('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNotice();return}if(state==='intro'){leaveIntro();return}const b=e.target.closest('[data-act]');if(!b)return;initAudio();sfx('click');const a=b.dataset.act;
  if(a==='start'){showHeroes(0)}
  else if(a==='hero'){savedRun=null;storeRun();lastHero=b.dataset.k;try{localStorage.setItem('fs_hero',lastHero)}catch(e){}newRunBrief(pendingSi,lastHero)}
  else if(a==='select')showSelect();
