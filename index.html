@@ -42,7 +42,8 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #tsub{position:absolute;left:0;right:0;text-align:center;top:calc(var(--p)*37);font-size:calc(var(--p)*7);color:#ffb04a;text-shadow:var(--p) var(--p) 0 #000}
 #stl{position:absolute;left:calc(var(--p)*5);top:calc(var(--p)*47);font-size:calc(var(--p)*7);color:#d8c9a8;text-shadow:var(--p) var(--p) 0 #000}
 #stl b{color:#ff5a4a;font-weight:normal}
-#slots{position:absolute;left:calc(var(--p)*5);top:calc(var(--p)*57);display:flex;flex-wrap:wrap;gap:calc(var(--p)*2);width:calc(var(--p)*206)}
+#slots{position:absolute;left:calc(var(--p)*5);top:calc(var(--p)*57);display:flex;flex-direction:column;gap:calc(var(--p)*2);width:calc(var(--p)*206)}
+.srow{display:flex;flex-wrap:wrap;gap:calc(var(--p)*2)}.srow:empty{display:none}
 .slot{width:calc(var(--p)*15);height:calc(var(--p)*15);background:#0c0b10cc;border:var(--p) solid #3a3446;position:relative}
 .slot.ps{border-color:#46402a}
 .slot img{position:absolute;inset:calc(var(--p)*1);width:calc(var(--p)*12);height:calc(var(--p)*12);image-rendering:pixelated;object-fit:contain}
@@ -1477,8 +1478,8 @@ function hud(){hudT-=1/60;if(hudT>0)return;hudT=0.08;
  $('pry').innerHTML=`<img src="${ICON.prayer}">${G.prayers||0}`;
  $('kil').textContent='☠'+G.kills;
  const cb=curBoss();$('boss').classList.toggle('hidden',!cb);if(cb){$('bossn').textContent=(cb.mini?'MINI · ':'')+cb.name;$('bossf').style.width=Math.max(0,cb.hp/cb.mhp*100)+'%'}}
-function slots(){const el=$('slots');el.innerHTML='';for(const w of P.weapons)el.insertAdjacentHTML('beforeend',`<div class="slot ${w.evo?'evo':evoReady(w)?'ready':''}" title="${wname(w)}"><img src="${ICON[w.k]}"><i>${w.evo?'★':w.lv}</i></div>`);
- for(const k in P.pass)el.insertAdjacentHTML('beforeend',`<div class="slot ps"><img src="${ICON[k]}"><i>${P.pass[k]}</i></div>`)}
+function slots(){const S=$('slots');S.innerHTML='<div class="srow" id="srw"></div><div class="srow" id="srp"></div>';let el=$('srw');for(const w of P.weapons)el.insertAdjacentHTML('beforeend',`<div class="slot ${w.evo?'evo':evoReady(w)?'ready':''}" title="${wname(w)}"><img src="${ICON[w.k]}"><i>${w.evo?'★':w.lv}</i></div>`);
+ el=$('srp');for(const k in P.pass)el.insertAdjacentHTML('beforeend',`<div class="slot ps"><img src="${ICON[k]}"><i>${P.pass[k]}</i></div>`)}
 let bannerT=null;
 function banner(t,s,dur){if(!t)return;const b=$('banner');b.innerHTML=t+(s?`<small>${s}</small>`:'');b.classList.add('on');clearTimeout(bannerT);bannerT=setTimeout(()=>b.classList.remove('on'),dur*1000)}
 function screen(html,cls){$('banner').classList.remove('on');const s=$('scr');s.className=cls||'';s.innerHTML=html;s.classList.remove('hidden')}
