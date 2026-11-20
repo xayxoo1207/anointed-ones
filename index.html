@@ -698,7 +698,7 @@ const EVO={
  fist:{p:'he',name:'삼손의 진노',desc:'몸 주위로 강한 충격파가 연속으로 퍼져 나간다'},
  cart:{p:'he',name:'불수레',desc:'불타는 수레 4대가 왕복하며 불길을 남기고 대폭발'},
  grenade:{p:'ammo',name:'번제의 불',desc:'폭발 후 불씨 6개가 연쇄 폭발'},
- drone:{p:'magnet',name:'천군천사',desc:'천사 6명이 선회하며 빛을 쏜다'},
+ drone:{p:'magnet',name:'그룹의 분노',desc:'붉은 기운을 두른 그룹 6이 선회하며 빛을 쏜다'},
  flame:{p:'vest',name:'갈멜 산의 불',desc:'불이 지나간 자리에 불길이 남는다'},
  mortar:{p:'boots',name:'큰 우박 폭풍',desc:'우박 16개가 전장을 뒤덮는다'},
  air:{p:'medic',name:'불말과 불병거',desc:'불병거 3대 편대가 전장을 휩쓴다'},
@@ -1381,10 +1381,10 @@ function render(){
   const r=Math.round(m.r*(0.6+0.4*(m.t/m.T)));ctx.fillRect(x-r,y,3,1);ctx.fillRect(x+r-2,y,3,1);ctx.fillRect(x,y-r*0.6,1,3);ctx.fillRect(x,y+r*0.6-2,1,3);ctx.fillRect(x,y,1,1);
   if(m.t<0.35){const fy=y-m.t*300;if(en){ctx.fillStyle=OUT;ctx.fillRect(x-1,fy-4,3,6);ctx.fillStyle='#8a909c';ctx.fillRect(x,fy-3,1,4)}else{ctx.fillStyle=OUT;ctx.fillRect(x-3,fy-3,6,6);ctx.fillStyle='#bfe6ff';ctx.fillRect(x-2,fy-2,4,4);ctx.fillStyle='#fff';ctx.fillRect(x-2,fy-2,2,2)}}}
  // drones
- for(const w of P.weapons)if(w.k==='drone'&&!isMenu()){const s=w.evo?{n:6,R:44}:WS.drone(w.lv);for(let i=0;i<s.n;i++){const a=(w.a||0)+i/s.n*TAU,x=P.x+Math.cos(a)*s.R-cx,y=P.y-4+Math.sin(a)*s.R*0.8-cy;ctx.drawImage(shadowSpr(6),Math.round(x-3),Math.round(y+10));ctx.drawImage(SPR.drone.i,Math.round(x-5),Math.round(y-3+Math.sin(tGlobal*8+i)));addLight(x+cx,y+cy,14,'rgba(255,230,140,1)',0.02)}}
+ for(const w of P.weapons)if(w.k==='drone'&&!isMenu()){const s=w.evo?{n:6,R:44}:WS.drone(w.lv);for(let i=0;i<s.n;i++){const a=(w.a||0)+i/s.n*TAU,x=P.x+Math.cos(a)*s.R-cx,y=P.y-4+Math.sin(a)*s.R*0.8-cy;ctx.drawImage(shadowSpr(6),Math.round(x-3),Math.round(y+10));if(w.evo){const yy=y+2,pul=0.5+0.5*Math.sin(tGlobal*6+i);ctx.fillStyle=`rgba(255,40,30,${0.12+0.1*pul})`;ctx.beginPath();ctx.arc(x,yy,8+pul*2,0,TAU);ctx.fill();for(let q=0;q<3;q++){const b=tGlobal*5+i+q*TAU/3,rr=9+pul;ctx.fillStyle=q?'#ff4a2a':'#ffb03a';ctx.fillRect(Math.round(x+Math.cos(b)*rr),Math.round(yy+Math.sin(b)*rr*0.7),1,1);ctx.fillStyle='rgba(255,60,30,0.5)';ctx.fillRect(Math.round(x+Math.cos(b-0.35)*rr),Math.round(yy+Math.sin(b-0.35)*rr*0.7),1,1)}addLight(x+cx,yy+cy,22,'rgba(255,50,30,1)',0.06)}ctx.drawImage(SPR.drone.i,Math.round(x-5),Math.round(y-3+Math.sin(tGlobal*8+i)));addLight(x+cx,y+cy,14,'rgba(255,230,140,1)',0.02)}}
  // bullets
  for(const b of G.bul){const x=Math.round(b.x-cx),y=Math.round(b.y-cy),n=Math.hypot(b.vx,b.vy);
-  if(b.kind){const big=b.kind==='bigstone';if(big){ctx.fillStyle='#ffd34a';for(let k=2;k<8;k+=2)ctx.fillRect(Math.round(x-b.vx/n*k),Math.round(y-b.vy/n*k),1,1)}const r=big?3:2;ctx.fillStyle=OUT;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.fillStyle=big?'#e8e0c8':'#a8a8a0';ctx.fillRect(x-r+1,y-r+1,r*2-2,r*2-2);ctx.fillStyle='#fff';ctx.fillRect(x-r+1,y-r+1,1,1);continue}ctx.fillStyle=b.cyan?'#fff3b0':'#ffd34a';for(let k=0;k<4;k++)ctx.fillRect(Math.round(x-b.vx/n*k),Math.round(y-b.vy/n*k),1,1);ctx.fillStyle='#fff';ctx.fillRect(x,y,1,1)}
+  if(b.kind){const big=b.kind==='bigstone';if(big){ctx.fillStyle='#ffd34a';for(let k=2;k<8;k+=2)ctx.fillRect(Math.round(x-b.vx/n*k),Math.round(y-b.vy/n*k),1,1)}const r=big?3:2;ctx.fillStyle=OUT;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.fillStyle=big?'#e8e0c8':'#a8a8a0';ctx.fillRect(x-r+1,y-r+1,r*2-2,r*2-2);ctx.fillStyle='#fff';ctx.fillRect(x-r+1,y-r+1,1,1);continue}ctx.fillStyle=b.cyan?'#ff6a4a':'#ffd34a';for(let k=0;k<4;k++)ctx.fillRect(Math.round(x-b.vx/n*k),Math.round(y-b.vy/n*k),1,1);ctx.fillStyle='#fff';ctx.fillRect(x,y,1,1)}
  for(const v of G.waves){const a=Math.min(1,v.life/v.max*3);ctx.globalAlpha=a;const th=v.big?6:3;
   for(let t=-v.hw;t<=v.hw;t++){const q=t/v.hw,cur=-(q*q)*(v.big?3:7)+Math.sin(t*0.4+tGlobal*12)*0.7;const px=v.x-v.dy*t+v.dx*cur-cx,py=v.y+v.dx*t+v.dy*cur-cy;
    for(let k=0;k<=th;k++){ctx.fillStyle=k===0?'#f2fbff':k<=1?'#8acaff':k<th?'#2a72c8':'#123a7a';ctx.fillRect(Math.round(px-v.dx*k),Math.round(py-v.dy*k),1,1)}}
