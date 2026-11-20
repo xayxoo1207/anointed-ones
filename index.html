@@ -728,7 +728,7 @@ const EVO={
 };
 const wname=w=>w.evo?EVO[w.k].name:WDEF[w.k].name;
 const evoReady=w=>!w.evo&&w.lv>=WMAX&&(P.pass[EVO[w.k].p]||0)>0;
-const WMAX=8,PMAX=5,MAXW=6;
+const WMAX=8,PMAX=5,MAXW=6,MAXP=6;
 const PDEF={
  vest:{name:'의의 호심경',desc:'받는 피해 -1.5'},
  boots:{name:'복음을 전하는 발',desc:'이동 속도 +8%'},
@@ -1652,7 +1652,7 @@ function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>!WDEF
 function options(){const o=[];
  for(const w of P.weapons)if(w.lv<WMAX)o.push({t:'w',k:w.k,lv:w.lv+1});
  if(P.weapons.length<MAXW)for(const k in WDEF)if(!WDEF[k].hero&&!P.weapons.find(w=>w.k===k))o.push({t:'w',k,lv:1});
- for(const k in PDEF)if((P.pass[k]||0)<PMAX)o.push({t:'p',k,lv:(P.pass[k]||0)+1});
+ const npass=Object.keys(P.pass).filter(k=>P.pass[k]>0).length;for(const k in PDEF)if((P.pass[k]||0)<PMAX&&((P.pass[k]||0)>0||npass<MAXP))o.push({t:'p',k,lv:(P.pass[k]||0)+1});
  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}
  const r=o.slice(0,3);if(!r.length){r.push({t:'f'});r.push({t:'auto'})}return r}
 function wdiff(k,lv){if(lv===1)return WDEF[k].desc;const a=WS[k](lv-1),b=WS[k](lv);const out=[];
