@@ -1305,54 +1305,52 @@ function buildTitleHeroes(){
  const SK='#d9a07c',SKD='#a86a50';
  const face=(g,cx,cy,beard)=>{E(g,cx,cy,17,21,SK);E(g,cx-7,cy+3,8,15,'rgba(120,60,40,0.35)');const ey=cy+1;E(g,cx-7,ey,3,2.6,'#2a1810');E(g,cx+7,ey,3,2.6,'#2a1810');Pg(g,[[cx-12,ey-6],[cx-2,ey-5],[cx-2,ey-3],[cx-12,ey-4]],'#5a3a28');Pg(g,[[cx+2,ey-5],[cx+12,ey-6],[cx+12,ey-4],[cx+2,ey-3]],'#5a3a28');Ln(g,[[cx+1,ey+3],[cx+3,ey+10],[cx-1,ey+11]],SKD,3);if(!beard)Ln(g,[[cx-5,ey+16],[cx+5,ey+16]],'#8a4a3a',3)};
  const arm=(g,pts,sleeve,w)=>{Ln(g,pts,SK,w);if(sleeve)Ln(g,pts.slice(0,2).concat([[pts[1][0]+(pts[2][0]-pts[1][0])*0.75,pts[1][1]+(pts[2][1]-pts[1][1])*0.75]]),sleeve,w+6)};
- // ---- DAVID ----
- {const[c,g]=mkH();const cx=112,top=96;
-  Pg(g,[[80,126],[148,124],[200,236],[188,290],[160,250],[134,180]],grad(g,120,120,200,290,[[0,'#b8382c'],[1,'#5a1414']]));
-  for(const[x,s]of[[94,-1],[118,1]]){Pg(g,[[x,226],[x+20,226],[x+18+s*2,330],[x+3+s*2,330]],grad(g,x,0,x+20,0,[[0,SKD],[0.5,SK],[1,SKD]]));Pg(g,[[x+1,326],[x+21,326],[x+23,344],[x-1,344]],'#5a3a1e');Ln(g,[[x+2,300],[x+18,306]],'#5a3a1e',3)}
-  Pg(g,[[76,124],[148,124],[154,170],[146,184],[160,246],[66,246],[78,184],[70,170]],grad(g,66,0,160,0,[[0,'#9a8a6c'],[0.45,'#e6d8b4'],[1,'#aa9a7a']]));
+ const legs=(g,st,x1,x2,top,bot,col,skin)=>{for(const[x,ph]of[[x1,st?1:-1],[x2,st?-1:1]]){const lift=ph>0?-10:4;Pg(g,[[x,top],[x+20,top],[x+18,bot+lift],[x+3,bot+lift]],skin);Pg(g,[[x+1,bot-4+lift],[x+21,bot-4+lift],[x+23,bot+10+lift],[x-1,bot+10+lift]],col);if(ph>0)Pg(g,[[x+2,bot+6+lift],[x+20,bot+6+lift],[x+18,bot+12+lift],[x+4,bot+12+lift]],'#2a1a10')}};
+ const hem=(g,st,x1,x2,y,col)=>{for(const[x,ph]of[[x1,st?1:-1],[x2,st?-1:1]]){const lift=ph>0?-6:2;E(g,x,y+lift,13,6,col);if(ph>0)E(g,x,y+lift+4,10,3,'#1a1008')}};
+ THERO.david=[];THERO.moses=[];THERO.abraham=[];
+ for(const st of[0,1]){
+ // ---- DAVID (back) ----
+ {const[c,g]=mkH();const cx=112,top=96,sw=st?8:-8;
+  legs(g,st,94,118,226,330,'#5a3a1e',grad(g,94,0,140,0,[[0,SKD],[0.5,SK],[1,SKD]]));
+  Pg(g,[[76,124],[148,124],[154,170],[146,184],[160,246],[66,246],[78,184],[70,170]],grad(g,66,0,160,0,[[0,'#9a8a6c'],[0.5,'#e2d4b0'],[1,'#a49474']]));
   for(const[a,b]of[[[96,190],[86,244]],[[114,192],[114,244]],[[132,190],[142,242]]])Ln(g,[a,b],'#a89878',4);
-  Pg(g,[[72,176],[152,176],[154,190],[70,190]],'#6b4a2a');Pg(g,[[106,176],[118,176],[118,190],[106,190]],'#c8a050');
-  E(g,74,214,15,18,'#7a5432');E(g,74,207,11,6,'#5a3a1e');Ln(g,[[84,130],[72,200]],'#5a3a1e',4);
-  arm(g,[[82,132],[70,176],[66,212]],null,18);E(g,66,218,9,10,SK);
-  arm(g,[[142,132],[160,94],[170,54]],null,18);E(g,171,46,10,10,SK);
-  Q(g,[172,44],[206,6],[196,62],'#7a5432',6);Q(g,[172,44],[220,26],[200,64],'#7a5432',6);E(g,200,66,8,8,'#9a9a98');E(g,198,63,3,3,'#f0f0e8');
+  Pg(g,[[72,176],[152,176],[154,190],[70,190]],'#6b4a2a');
+  Pg(g,[[86,124],[150,128],[118,250],[92,240]],grad(g,86,124,140,250,[[0,'#b8382c'],[1,'#5a1414']]));
+  arm(g,[[80,132],[72+sw,180],[70+sw,214]],null,18);E(g,70+sw,220,9,10,SK);
+  arm(g,[[144,132],[152-sw,180],[154-sw,214]],null,18);E(g,154-sw,220,9,10,SK);
+  Ln(g,[[154-sw,224],[158-sw,262]],'#7a5432',4);Ln(g,[[154-sw,224],[150-sw,262]],'#7a5432',4);E(g,154-sw,266,8,8,'#7a5432');
   Pg(g,[[102,112],[124,112],[126,128],[100,128]],SK);
-  face(g,cx,top,false);
-  E(g,cx,top-17,20,12,'#7a2e16');E(g,cx-16,top-6,7,12,'#7a2e16');E(g,cx+16,top-8,6,10,'#7a2e16');
-  for(const[x,y]of[[-15,-21],[-5,-28],[6,-27],[16,-20],[-19,-10],[19,-12]])E(g,cx+x,top+y,6,6,'#a04824');
-  THERO.david=pixelize(c,TW,TH,'both')}
- // ---- MOSES ----
- {const[c,g]=mkH();const cx=104,top=98;
-  Pg(g,[[70,124],[136,124],[66,344],[24,344],[50,220]],grad(g,30,0,130,0,[[0,'#14244e'],[1,'#2e4c96']]));
-  Pg(g,[[72,120],[138,120],[152,200],[164,344],[46,344],[58,200]],grad(g,46,0,164,0,[[0,'#4a1e12'],[0.5,'#8e4228'],[1,'#5a2414']]));
-  for(const x of[82,104,126,144])Ln(g,[[x,206],[x+(x-104)*0.22,342]],'#5a2214',4);
-  Pg(g,[[72,150],[140,190],[138,206],[70,168]],'#3060b0');
-  Pg(g,[[46,340],[164,340],[166,350],[44,350]],'#3a1a10');
-  Ln(g,[[168,4],[150,344]],'#6b4a2a',8);Ln(g,[[167,8],[152,250]],'#a07848',2);E(g,168,6,10,10,'#fff3b0');E(g,168,6,5,5,'#ffffff');
-  arm(g,[[136,130],[152,96],[158,58]],'#7a3420',18);E(g,159,52,10,10,SK);
-  arm(g,[[78,130],[70,168],[80,186]],'#7a3420',18);
-  for(const dx of[0,18]){Pg(g,[[50+dx,146],[76+dx,146],[78+dx,200],[48+dx,200]],grad(g,50,146,78,200,[[0,'#d0ccc0'],[1,'#8a867c']]));E(g,63+dx,146,13,9,'#d0ccc0');for(let k=0;k<3;k++)Ln(g,[[54+dx,162+k*11],[72+dx,162+k*11]],'#6a665e',2)}
-  E(g,86,186,8,8,SK);
-  face(g,cx,top,true);
-  E(g,cx,top-12,20,13,'#e4e2da');E(g,cx-17,top+6,8,20,'#d4d2ca');E(g,cx+17,top+6,8,20,'#d4d2ca');
-  Pg(g,[[cx-16,top+8],[cx+16,top+8],[cx+13,top+42],[cx,top+70],[cx-13,top+42]],grad(g,cx-16,0,cx+16,0,[[0,'#c4c4bc'],[0.5,'#f6f6f0'],[1,'#bcbcb4']]));
-  Ln(g,[[cx-7,top+11],[cx+7,top+11]],'#ececE4',5);
-  THERO.moses=pixelize(c,TW,TH,'L')}
- // ---- ABRAHAM ----
- {const[c,g]=mkH();const cx=114,top=100;
-  Pg(g,[[82,124],[146,124],[180,344],[46,344]],grad(g,46,0,180,0,[[0,'#241a30'],[1,'#44305a']]));
-  Pg(g,[[84,120],[142,120],[156,200],[164,344],[62,344],[70,200]],grad(g,62,0,164,0,[[0,'#a89470'],[0.5,'#d8c49c'],[1,'#a08c68']]));
-  for(let k=0;k<4;k++){const x0=84+k*16;Ln(g,[[x0,126],[x0+(k-1.5)*8,344]],'#7a5a80',5)}
-  Pg(g,[[70,180],[154,180],[156,194],[68,194]],'#5a3a1e');
+  E(g,cx,top-4,21,24,'#7a2e16');for(const[x,y]of[[-15,-18],[-5,-26],[6,-25],[16,-17],[-19,-6],[19,-8],[-12,6],[0,10],[12,6],[-6,-10],[8,-6]])E(g,cx+x,top+y,6.5,6.5,y<0?'#a04824':'#8a3a1c');
+  E(g,cx-20,top+2,4,6,SKD);E(g,cx+20,top+2,4,6,SKD);
+  THERO.david.push(pixelize(c,TW,TH,'both'))}
+ // ---- MOSES (back) ----
+ {const[c,g]=mkH();const cx=104,top=98,sw=st?6:-6;
+  hem(g,st,88,122,344,'#3a2414');
+  Pg(g,[[70,120],[140,120],[154,200],[166,344],[44,344],[56,200]],grad(g,44,0,166,0,[[0,'#4a1e12'],[0.5,'#8a4026'],[1,'#56220f']]));
+  for(const x of[78,104,130])Ln(g,[[x,140],[x+(x-104)*0.3,340]],'#5a2214',4);
+  Pg(g,[[60,178],[150,178],[152,192],[58,192]],'#3060b0');Ln(g,[[140,190],[146,226]],'#3060b0',6);
+  Pg(g,[[44,340],[166,340],[168,350],[42,350]],'#3a1a10');
+  Ln(g,[[172,6],[156,346]],'#6b4a2a',8);Ln(g,[[171,10],[158,250]],'#a07848',2);E(g,172,8,10,10,'#fff3b0');E(g,172,8,5,5,'#ffffff');
+  arm(g,[[136,130],[154,150],[162,170]],'#7a3420',18);E(g,163,172,10,10,SK);
+  arm(g,[[74,130],[64+sw,178],[62+sw,212]],'#7a3420',18);E(g,62+sw,218,9,10,SK);
+  E(g,cx,top-2,21,24,'#e4e2da');Pg(g,[[cx-20,top],[cx+20,top],[cx+24,top+46],[cx-24,top+46]],grad(g,cx-24,0,cx+24,0,[[0,'#c4c4bc'],[0.5,'#f2f2ec'],[1,'#bcbcb4']]));
+  for(const dx of[-12,-4,4,12])Ln(g,[[cx+dx,top-10],[cx+dx*1.3,top+44]],'#c8c6be',2);
+  THERO.moses.push(pixelize(c,TW,TH,'L'))}
+ // ---- ABRAHAM (back) ----
+ {const[c,g]=mkH();const cx=114,top=100,sw=st?-6:6;
+  hem(g,st,98,132,344,'#2a1a10');
+  Pg(g,[[82,124],[146,124],[180,344],[46,344]],grad(g,46,0,180,0,[[0,'#2a1e36'],[1,'#46325c']]));
+  Pg(g,[[86,150],[140,150],[156,220],[162,340],[66,340],[72,220]],grad(g,66,0,162,0,[[0,'#3a2a48'],[0.5,'#56406e'],[1,'#3a2a48']]));
+  for(let k=0;k<4;k++){const x0=88+k*14;Ln(g,[[x0,154],[x0+(k-1.5)*8,338]],'#2a1e36',3)}
   Pg(g,[[60,340],[166,340],[168,350],[58,350]],'#3a2414');
-  Ln(g,[[56,40],[50,346]],'#7a5432',8);Q(g,[56,42],[54,10],[76,12],'#7a5432',8);Q(g,[76,12],[92,16],[86,32],'#7a5432',8);
-  arm(g,[[90,132],[72,170],[58,182]],'#b8a07a',18);E(g,55,180,10,10,SK);
-  arm(g,[[138,132],[160,96],[172,62]],'#b8a07a',18);E(g,174,54,10,11,SK);for(const a of[-0.5,-0.2,0.1,0.4])Ln(g,[[174,52],[174+Math.cos(a-1.4)*14,52+Math.sin(a-1.4)*14]],SK,5);
-  face(g,cx,top,true);
-  Pg(g,[[cx-14,top+8],[cx+14,top+8],[cx+11,top+36],[cx,top+50],[cx-11,top+36]],grad(g,cx-14,0,cx+14,0,[[0,'#949490'],[0.5,'#d4d4cc'],[1,'#949490']]));
-  Pg(g,[[cx-24,top-16],[cx+24,top-16],[cx+33,top+44],[cx+18,top+48],[cx+18,top+2],[cx-18,top+2],[cx-18,top+48],[cx-33,top+44]],grad(g,cx-33,0,cx+33,0,[[0,'#b4aa94'],[0.5,'#f2ead6'],[1,'#aca28c']]));
+  Ln(g,[[54,40],[48,346]],'#7a5432',8);Q(g,[54,42],[52,10],[74,12],'#7a5432',8);Q(g,[74,12],[90,16],[84,32],'#7a5432',8);
+  arm(g,[[90,132],[66,158],[56,176]],'#b8a07a',18);E(g,53,176,10,10,SK);
+  arm(g,[[140,132],[150-sw,180],[152-sw,212]],'#b8a07a',18);E(g,152-sw,218,9,10,SK);
+  Pg(g,[[cx-24,top-16],[cx+24,top-16],[cx+33,top+44],[cx+30,top+60],[cx-30,top+60],[cx-33,top+44]],grad(g,cx-33,0,cx+33,0,[[0,'#b4aa94'],[0.5,'#f2ead6'],[1,'#aca28c']]));
+  for(const dx of[-16,-6,6,16])Ln(g,[[cx+dx,top-6],[cx+dx*1.4,top+58]],'#c8bea6',2);
   E(g,cx,top-16,25,11,'#eee6d2');Pg(g,[[cx-24,top-12],[cx+24,top-12],[cx+24,top-5],[cx-24,top-5]],'#2a1e14');
-  THERO.abraham=pixelize(c,TW,TH,'R')}
+  THERO.abraham.push(pixelize(c,TW,TH,'R'))}
+ }
 }
 function pixelize(src,w,h,side){const lo=mk(w,h),lg=lo.getContext('2d');lg.imageSmoothingEnabled=true;lg.imageSmoothingQuality='high';lg.drawImage(src,0,0,w,h);
  const id=lg.getImageData(0,0,w,h),d=id.data;const op=new Uint8Array(w*h);for(let i=0;i<w*h;i++)op[i]=d[i*4+3]>110?1:0;
@@ -1377,6 +1375,15 @@ function buildSky(){skyW=W;skyH=H;skyC=mk(W,H);const g=skyC.getContext('2d');con
  for(let i=0;i<70;i++){const x=Math.floor(hash(i,1,99)*W),y=Math.floor(hash(i,2,99)*hz*0.5);g.fillStyle=hash(i,3,99)<0.3?'#fff3b0':'#9a8ac0';g.fillRect(x,y,1,1)}
  mtn=[];for(let x=0;x<W;x++){const n=Math.sin(x*0.035)*10+Math.sin(x*0.09+1.3)*6+Math.sin(x*0.21)*2;const n2=Math.sin(x*0.05+2)*7+Math.sin(x*0.13+0.4)*4;mtn.push([n,n2])}
  tEmb=[];for(let i=0;i<46;i++)tEmb.push({x:rnd(W),y:rnd(H),v:rnd(6,18),s:rnd(TAU),c:pick(['#ffd34a','#ff8a2a','#fff3b0'])})}
+let _jes=null;function jesusSil(){if(_jes)return _jes;const w=70,h=90,c=mk(w,h),x=c.getContext('2d'),m=Array.from({length:h},()=>Array(w).fill(0)),S=(i,j)=>{i=Math.round(i);j=Math.round(j);if(i>=0&&i<w&&j>=0&&j<h)m[j][i]=1};
+ for(let j=0;j<h;j++)for(let i=0;i<w;i++){const dx=i-35,dy=j-12;if(dx*dx/17+dy*dy/26<=1)S(i,j)}
+ for(let j=10;j<=21;j++){const hw=j<14?4.5:j<18?5.5:6;for(let i=-hw;i<=hw;i++)S(35+i,j)}
+ for(let j=19;j<h;j++){const hw=8+Math.min(10,(j-19)*0.16);for(let i=-hw;i<=hw;i++)S(35+i,j)}
+ for(const sg of[-1,1])for(let t=0;t<=1;t+=0.01){const ax=35+sg*(7+24*t),ay=23+13*t;for(let k=-2;k<=2;k++)S(ax,ay+k);if(t<0.8){const drop=3+11*t;for(let k=0;k<drop;k++)S(ax,ay+2+k*0.9)}if(t>0.92)for(let k=-1;k<=3;k++)S(ax+sg,ay+k)}
+ const d=x.createImageData(w,h);for(let j=0;j<h;j++)for(let i=0;i<w;i++){if(!m[j][i])continue;const edge=!(m[j-1]&&m[j-1][i])||!(m[j+1]&&m[j+1][i])||!m[j][i-1]||!m[j][i+1];const p=(j*w+i)*4;const col=edge?[200,110,80]:[30,12,34];d.data[p]=col[0];d.data[p+1]=col[1];d.data[p+2]=col[2];d.data[p+3]=255}
+ x.putImageData(d,0,0);
+ const g=mk(w,h),gx=g.getContext('2d');for(let j=0;j<h;j++)for(let i=0;i<w;i++){const r=Math.hypot(i-35,j-12);if(r>6.5&&r<14&&((i+j)%2===0||r<9.5)){gx.fillStyle=`rgba(255,225,160,${0.85*(1-(r-6.5)/7.5)})`;gx.fillRect(i,j,1,1)}}
+ const o=mk(w,h),ox=o.getContext('2d');ox.drawImage(g,0,0);ox.drawImage(c,0,0);return _jes=o}
 function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(skyC,0,0);
  let gy=Math.round(H*0.66),spH=H*0.3;const sp=state==='title'&&document.getElementById('tsp');
  if(sp){const r=sp.getBoundingClientRect(),cr=cv.getBoundingClientRect();if(r.height>4){gy=Math.round((r.bottom-cr.top)/cr.height*H)-2;spH=r.height/cr.height*H}}
@@ -1387,8 +1394,8 @@ function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(
  ctx.drawImage(glowTex('rgba(255,215,130,1)'),cx-90,cy-90,180,180);ctx.drawImage(glowTex('rgba(255,240,200,1)'),cx-34,cy-34,68,68);ctx.restore();
  // far mountains with boss silhouette
  ctx.fillStyle='#2a1030';for(let x=0;x<W;x++){const h=hz-18-mtn[x][1];ctx.fillRect(x,h,1,H-h)}
- if(SPR.boss&&SPR.boss[0]){const b=SPR.boss[0].i,sc=2,bw=b.width*sc,bh=b.height*sc,bx=Math.round(W*0.78-bw/2),by=Math.round(hz-22-mtn[Math.min(W-1,Math.max(0,Math.round(W*0.78)))][1]-bh+6);ctx.globalAlpha=0.9;ctx.drawImage(silhouette(b,'#1a0a1e'),bx,by,bw,bh);ctx.globalAlpha=1;
-  if(Math.floor(tGlobal*1.5)%5!==0){ctx.fillStyle='#ff3a3a';ctx.fillRect(bx+Math.round(bw*0.8),by+Math.round(bh*0.25),2,1)}}
+ {const J=jesusSil(),js=Math.max(1,Math.round(W/108)),jw=J.width*js,jh=J.height*js,jx=Math.round(W/2-jw/2),jy=Math.round(gy-spH+6-12*js);
+  ctx.drawImage(J,jx,jy,jw,jh);const ea=0.75+0.25*Math.sin(tGlobal*2);ctx.save();ctx.shadowColor='#ffffff';ctx.shadowBlur=5*js;ctx.fillStyle='#ffffff';for(let q=0;q<2;q++){ctx.globalAlpha=q?1:ea*0.8;ctx.fillRect(jx+33*js,jy+12*js,js,js);ctx.fillRect(jx+37*js,jy+12*js,js,js)}ctx.restore()}
  ctx.fillStyle='#180a1c';for(let x=0;x<W;x++){const h=hz-mtn[x][0];ctx.fillRect(x,h,1,H-h)}
  // small idols on ridge
  if(SPR.grunt){const g=silhouette(SPR.grunt[0].i,'#0e0610');for(let i=0;i<5;i++){const x=Math.round(W*(0.06+i*0.07+(i>2?0.55:0)));if(x>=W)continue;ctx.drawImage(g,x,Math.round(hz-mtn[Math.min(W-1,x+6)][0]-15))}}
@@ -1397,8 +1404,8 @@ function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(
  for(let x=0;x<W;x++){const e=Math.round(Math.sin(x*0.3)*1+Math.sin(x*0.07)*2);const d=Math.abs(x-cx)/W;ctx.fillStyle='#1e1018';ctx.fillRect(x,gy-2+e,1,3);ctx.fillStyle=d<0.32?'#e8a040':'#7a4a2a';ctx.fillRect(x,gy-2+e,1,1)}
  for(let i=0;i<40;i++){const x=Math.floor(hash(i,7,3)*W);ctx.fillStyle='#2a1420';ctx.fillRect(x,gy+2+Math.floor(hash(i,8,3)*(H-gy)),2,1)}
  // heroes
- if(state==='title'){const order=[['abraham',-1],['david',0],['moses',1]];const th=THERO.david.height,tw=THERO.david.width;let sc=Math.min(spH*0.98/th,(W-8)/(tw*3*0.92));sc=sc>=2?Math.floor(sc):sc>=1?1:sc;const spc=tw*sc*0.92;
-  for(const[k,off]of[order[0],order[2],order[1]]){const im=THERO[k],w=Math.round(im.width*sc),h=Math.round(im.height*sc),bob=(Math.floor(tGlobal*1.6+off)%2?0:-1),dy=off===0?2:-2;
+ if(state==='title'){const order=[['abraham',-1],['david',0],['moses',1]];const th=THERO.david[0].height,tw=THERO.david[0].width;let sc=Math.min(spH*0.98/th,(W-8)/(tw*3*0.92));sc=sc>=2?Math.floor(sc):sc>=1?1:sc;const spc=tw*sc*0.92;
+  for(const[k,off]of[order[0],order[2],order[1]]){const fi=Math.floor(tGlobal*2.2+(off+1)*0.37)%2,im=THERO[k][fi],w=Math.round(im.width*sc),h=Math.round(im.height*sc),bob=fi?-1:0,dy=off===0?2:-2;
    const x=Math.round(cx+off*spc-w/2),y=gy-h+dy+bob;ctx.drawImage(shadowSpr(w*0.7),Math.round(cx+off*spc-w*0.35),gy-2+dy);ctx.drawImage(im,x,y,w,h)}}
  // embers
  for(const e of tEmb){e.y-=e.v*(1/60);e.x+=Math.sin(tGlobal+e.s)*0.15;if(e.y<-4){e.y=H+4;e.x=rnd(W)}ctx.fillStyle=e.c;ctx.globalAlpha=0.6+0.4*Math.sin(tGlobal*4+e.s);ctx.fillRect(Math.round(e.x),Math.round(e.y),1,1)}ctx.globalAlpha=1;
