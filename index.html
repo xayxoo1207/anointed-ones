@@ -410,6 +410,58 @@ const HEROES={
  abraham:{name:'아브라함',en:'ABRAHAM',role:'관통 · 폭발 딜러',desc:'수레를 보내 가로줄을 3초간 왕복하며 관통한 뒤 폭발시킨다. 체력이 가장 높다.',w:'cart',hp:120,spd:56,pal:{h:'#e0d4b0',H:'#fff2d0',r:'#6a3a7a',W:'#c8c8c0',u:'#a8865a',U:'#7a5a3a'}},
 };
 const ESPEC={dog:{y:'#f2c84a',o:'#b07a20'},tank:{y:'#f2c84a',o:'#b07a20'},heli:{m:'#3a2a5a',M:'#6a4a9a'},frog:{q:'#3a6a5a',Q:'#6a9a7a'},boat:{q:'#2a5a4a',Q:'#4a8a6a'},gunboat:{q:'#3a4a5a',Q:'#5a7a8a'},rpg:{o:'#ff8a2a',y:'#ffd34a'}};
+/* ===== hi-res hero sprites (1.5x canvas, same pixel size) ===== */
+function hero2(k){
+ const frame=leg=>{const g=Array.from({length:22},()=>Array(17).fill('.'));const P=(x,y,c)=>{if(x>=0&&x<17&&y>=0&&y<22)g[y][x]=c};const Rc=(x,y,w,h,c)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)P(x+i,y+j,c)};
+  const face=(beard,bc)=>{Rc(5,3,6,5,'s');Rc(5,3,1,5,'S');P(6,5,'E');P(6,6,'E');P(9,5,'E');P(9,6,'E');P(6,4,'h');P(9,4,'h');P(10,4,'h');P(11,5,'s');P(11,6,'s');P(10,7,'S');
+    if(beard){Rc(6,7,5,1,bc);Rc(6,8,5,beard,bc);P(11,7,bc);P(10,7,'S');for(let j=0;j<beard;j++)P(6,8+j,bc==='W'?'g':'H');Rc(7,8+beard,3,1,bc);P(10,6,'s')}};
+  const legsShort=()=>{if(leg===0){Rc(5,16,2,4,'s');Rc(9,16,2,4,'s');P(5,18,'S');P(9,18,'S');Rc(4,20,3,2,'B');Rc(9,20,3,2,'B');P(4,21,'b');P(9,21,'b')}
+    else{Rc(6,16,2,4,'s');Rc(8,16,2,4,'S');Rc(5,20,6,2,'B');P(5,21,'b')}};
+  const robeHem=(c,C)=>{Rc(3,15,10,5,c);Rc(3,15,2,5,C);if(leg===0){Rc(4,20,3,1,'B');Rc(9,20,3,1,'B');Rc(3,19,10,1,C)}else{Rc(5,20,6,1,'B');Rc(4,19,8,1,C)}};
+  if(k==='david'){
+   Rc(5,1,6,3,'h');P(4,2,'h');P(4,3,'h');Rc(6,0,4,1,'h');P(7,1,'H');P(8,1,'H');P(5,2,'H');P(11,2,'h');P(11,3,'h');P(4,4,'h');P(4,5,'h');
+   face(0);Rc(7,8,2,1,'s');
+   Rc(4,9,8,6,'u');Rc(4,9,2,6,'U');Rc(4,13,8,1,'r');P(5,13,'R');
+   Rc(4,14,8,2,'u');Rc(4,14,2,2,'U');P(6,15,'U');P(9,15,'U');
+   Rc(3,9,1,4,'s');P(3,13,'s');
+   Rc(12,9,1,1,'u');Rc(12,10,1,3,'s');P(12,13,'s');
+   P(13,13,'B');P(13,14,'B');P(14,15,'B');P(14,16,'B');P(14,17,'B');P(13,17,'B');P(15,17,'B');P(14,18,'g');
+   P(2,12,'B');Rc(1,13,3,2,'B');P(1,13,'b');
+   legsShort()}
+  else if(k==='moses'){
+   Rc(4,0,7,3,'h');Rc(4,0,7,1,'H');Rc(3,2,3,7,'h');P(3,4,'H');P(3,6,'H');P(4,8,'h');
+   face(4,'W');P(7,7,'s');
+   Rc(4,9,8,6,'u');Rc(4,9,2,6,'U');Rc(7,9,2,5,'W');Rc(6,13,6,1,'r');P(11,13,'r');P(5,14,'r');P(5,15,'r');
+   robeHem('u','U');Rc(8,15,1,4,'U');
+   Rc(3,9,1,5,'u');P(3,14,'s');
+   Rc(12,9,1,3,'u');Rc(12,12,1,2,'s');P(13,11,'s');P(13,12,'s');
+   Rc(14,1,1,21,'B');P(14,0,'y');P(15,1,'y');P(13,1,'y');P(14,10,'b');P(14,16,'b')}
+  else if(k==='abraham'){
+   Rc(4,0,7,3,'W');Rc(4,0,7,1,'H');Rc(4,2,7,1,'r');Rc(3,2,3,8,'W');P(3,5,'g');P(4,7,'g');P(3,9,'W');
+   face(4,'h');P(7,7,'s');
+   Rc(4,9,8,6,'u');Rc(4,9,2,6,'U');Rc(6,9,1,10,'r');Rc(10,9,1,10,'r');Rc(4,13,8,1,'B');
+   robeHem('u','U');Rc(6,15,1,4,'r');Rc(10,15,1,4,'r');
+   Rc(3,9,1,5,'u');P(3,14,'s');
+   Rc(12,9,1,3,'u');Rc(12,12,1,2,'s');P(13,12,'s');
+   Rc(13,11,1,11,'B');P(13,10,'B');P(12,10,'B');P(13,16,'b')}
+  else if(k==='samson'){
+   Rc(4,0,7,3,'h');P(6,0,'H');P(8,0,'H');Rc(3,2,3,9,'h');Rc(2,4,2,8,'h');P(2,5,'H');P(3,7,'H');P(2,9,'H');P(4,10,'H');P(11,2,'h');P(11,3,'h');P(2,12,'h');P(3,12,'h');
+   face(2,'h');P(7,7,'s');P(10,9,'h');
+   Rc(5,9,7,5,'s');Rc(5,9,1,5,'S');Rc(7,11,4,1,'S');P(9,13,'S');
+   Rc(3,9,2,5,'s');Rc(3,9,1,5,'S');Rc(2,13,3,2,'s');P(2,14,'S');
+   Rc(12,9,2,4,'s');P(13,9,'S');Rc(12,13,3,2,'s');P(14,14,'S');
+   Rc(5,14,7,1,'r');Rc(5,15,7,2,'u');Rc(5,15,2,2,'U');P(8,16,'U');
+   if(leg===0){Rc(5,17,2,3,'s');Rc(9,17,2,3,'s');P(5,18,'S');P(9,18,'S');Rc(4,20,3,2,'B');Rc(9,20,3,2,'B')}else{Rc(6,17,2,3,'s');Rc(8,17,2,3,'S');Rc(5,20,6,2,'B')}}
+  else if(k==='noah'){
+   Rc(5,1,6,2,'W');Rc(4,2,2,6,'W');P(4,4,'g');P(5,6,'g');Rc(6,0,4,1,'W');P(7,0,'H');P(8,1,'H');
+   face(5,'W');P(7,7,'s');
+   Rc(4,9,8,6,'u');Rc(4,9,2,6,'U');Rc(4,13,8,1,'r');Rc(9,10,1,3,'U');
+   robeHem('u','U');Rc(9,15,1,4,'U');
+   Rc(3,9,1,5,'u');P(3,14,'s');
+   Rc(12,9,1,3,'u');Rc(12,12,1,2,'s');
+   Rc(13,10,3,2,'W');P(15,9,'W');P(16,10,'W');P(14,12,'W');P(13,10,'g');P(15,10,'E')}
+  return outl(g.map(r=>r.join('')))};
+ return[frame(0),frame(1)]}
 /* ===== per-stage enemy roster ===== */
 function outl(rows){const h=rows.length,w=Math.max(...rows.map(r=>r.length)),f=(x,y)=>{const c=(rows[y]||'')[x];return c&&c!=='.'};const g=[];
   for(let y=-1;y<=h;y++){let s='';for(let x=-1;x<=w;x++){if(f(x,y)){s+=rows[y][x];continue}s+=(f(x+1,y)||f(x-1,y)||f(x,y+1)||f(x,y-1))?'k':'.'}g.push(s)}return g}
@@ -525,7 +577,7 @@ const PLAYERPAL=Object.assign({},BASEPAL,{h:'#3e5a3a',H:'#6f9455',u:'#4a5f3b',U:
 let SPR={},ICON={},DECOR={},TILES=[];
 function icon(rows,pal){const c=raw(rows,pal||PLAYERPAL);const s=mk(12,12),x=s.getContext('2d');x.drawImage(c,Math.floor((12-c.width)/2),Math.floor((12-c.height)/2));return s.toDataURL()}
 function initStatic(){
-  for(const k in HEROES){const pal=Object.assign({},BASEPAL,HEROES[k].pal);SPR['hero_'+k]=[spr(SD[k+'A'],pal),spr(SD[k+'B'],pal)];HEROIMG[k]=raw(SD[k+'A'],pal).toDataURL()}
+  for(const k in HEROES){const pal=Object.assign({},BASEPAL,{E:'#1a1010'},HEROES[k].pal);const hr=hero2(k);SPR['hero_'+k]=[spr(hr[0],pal),spr(hr[1],pal)];HEROIMG[k]=raw(hr[0],pal).toDataURL()}
   SPR.pboat=spr(SD.pboat,Object.assign({},BASEPAL,{P:'#7a5a3a',p:'#9a7a4a',R:'#4a2e1a'}));
   SPR.jet=spr(SD.chariot,Object.assign({},BASEPAL,{o:'#ff8a2a',y:'#ffd34a'}));
   SPR.drone=spr(SD.angel,Object.assign({},BASEPAL,{W:'#f8f4e0',y:'#ffd34a'}));
@@ -1401,9 +1453,9 @@ function drawEnemy(e,cx,cy){const set=SPR[e.spr];const fr=set[Math.floor(e.anim)
  if(!e.boss&&e.hp<e.mhp&&e.mhp>40){ctx.fillStyle=OUT;ctx.fillRect(x,y-3,w,2);ctx.fillStyle='#e8342f';ctx.fillRect(x,y-3,Math.round(w*e.hp/e.mhp),2)}
  if(!G.b.land&&!e.fly&&Math.random()<0.15)part(e.x+rnd(-w/2,w/2),e.y+h/2,rnd(-6,6),rnd(-6,0),0.4,'rgba(220,240,255,0.5)',1)}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
- const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);
- if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);ctx.drawImage(P.face<0?fr.f:fr.i,x-6,y-9+bob);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
- ctx.drawImage(shadowSpr(10),x-5,y+6);ctx.drawImage(P.face<0?fr.f:fr.i,x-6,y-8)}
+ const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;
+ if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
+ ctx.drawImage(shadowSpr(15),x-7,y+6);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+8-hh,hw,hh)}
 function drawWeather(){const t=G.b.weather;
  for(const o of G.wx){const x=Math.round(o.x),y=Math.round(o.y);
   if(t==='rain'||t==='storm'){ctx.fillStyle='rgba(170,200,235,0.45)';for(let k=0;k<o.len;k++)ctx.fillRect(x+Math.round(k*o.vx/o.vy),y+k,1,1)}
