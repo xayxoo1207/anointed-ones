@@ -1450,7 +1450,7 @@ function render(){
  if(state==='play'&&P.inv>0.35){ctx.fillStyle=`rgba(200,0,0,${(P.inv-0.35)*0.5})`;ctx.fillRect(0,0,W,H)}
  if((state==='play'||state==='levelup'||state==='evo')&&P.hp/P.maxHp<=0.30){const per=P.hp/P.maxHp<0.15?0.75:1,ph=(tGlobal%per)/per,beat=Math.max(Math.exp(-Math.pow((ph-0.05)/0.07,2)),0.7*Math.exp(-Math.pow((ph-0.3)/0.08,2)));ctx.globalAlpha=0.15+0.75*beat;ctx.drawImage(redV,0,0);ctx.globalAlpha=1}
  // boss arrow
- const cb=state==='play'?curBoss():null;if(cb&&!onScreen(cb)){const a=Math.atan2(cb.y-P.y,cb.x-P.x);const x=W/2+Math.cos(a)*(W/2-14),y=H/2+Math.sin(a)*(H/2-14);ctx.fillStyle=Math.floor(tGlobal*4)%2?'#ff3b30':'#ffd34a';for(let k=0;k<5;k++)ctx.fillRect(Math.round(x-Math.cos(a)*k)-(4-k)/2,Math.round(y-Math.sin(a)*k)-(4-k)/2,Math.max(1,5-k),Math.max(1,5-k))}
+ const cb=state==='play'?curBoss():null;if(cb&&!onScreen(cb)){const a=Math.atan2(cb.y-P.y,cb.x-P.x);drawBossArrow(a)}
  // joystick
  if(joy&&state==='play'){ctx.globalAlpha=0.5;ctx.strokeStyle='#fff';ctx.beginPath();ctx.arc(joy.ox,joy.oy,20,0,TAU);ctx.stroke();const dx=joy.x-joy.ox,dy=joy.y-joy.oy,d=Math.min(20,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);ctx.fillStyle='#fff';ctx.fillRect(Math.round(joy.ox+Math.cos(a)*d)-4,Math.round(joy.oy+Math.sin(a)*d)-4,8,8);ctx.globalAlpha=1}
 }
@@ -1463,6 +1463,11 @@ function drawEnemy(e,cx,cy){const set=SPR[e.spr];const fr=set[Math.floor(e.anim)
 
  if(!e.boss&&e.hp<e.mhp&&e.mhp>40){ctx.fillStyle=OUT;ctx.fillRect(x,y-3,w,2);ctx.fillStyle='#e8342f';ctx.fillRect(x,y-3,Math.round(w*e.hp/e.mhp),2)}
  if(!G.b.land&&!e.fly&&Math.random()<0.15)part(e.x+rnd(-w/2,w/2),e.y+h/2,rnd(-6,6),rnd(-6,0),0.4,'rgba(220,240,255,0.5)',1)}
+function drawBossArrow(a){const c=Math.cos(a),s=Math.sin(a),m=13,t=Math.min((W/2-m)/Math.max(1e-3,Math.abs(c)),(H/2-m)/Math.max(1e-3,Math.abs(s)));
+ const bob=Math.sin(tGlobal*8)*1.5,cx0=Math.round(W/2+c*(t+bob)),cy0=Math.round(H/2+s*(t+bob));const blink=Math.floor(tGlobal*4)%2;
+ const sa=Math.round(a/(Math.PI/4))*(Math.PI/4),C=Math.round(Math.cos(sa)*1e6)/1e6,S=Math.round(Math.sin(sa)*1e6)/1e6;const F=(px,py)=>{const u=px*C+py*S,v=-px*S+py*C,av=Math.abs(v);return u<=8&&av<=6*(8-u)/12&&u>=-4+4*(1-Math.min(1,av/6))};
+ for(let j=-10;j<=10;j++)for(let i=-10;i<=10;i++){const f=F(i,j);if(!f&&!(F(i+1,j)||F(i-1,j)||F(i,j+1)||F(i,j-1)))continue;
+  ctx.fillStyle=!f?'#0b0a12':(i*S-j*C)>0.8?(blink?'#b81e18':'#d8a020'):(blink?'#ff3b30':'#ffd34a');ctx.fillRect(cx0+i,cy0+j,1,1)}}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
  const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;
  if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
