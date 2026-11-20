@@ -187,6 +187,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #ui.land .bi{max-width:min(calc(var(--p)*380),94vw)}
 .bi-row{display:flex;gap:calc(var(--p)*6);align-items:center;text-align:left;margin-top:calc(var(--p)*7);background:#120e14cc;box-shadow:inset 0 0 0 var(--p) #5a2a2a;padding:calc(var(--p)*5)}
 .bi-row img{width:calc(var(--p)*44);height:calc(var(--p)*36);object-fit:contain;image-rendering:pixelated;flex:none;filter:drop-shadow(0 0 calc(var(--p)*3) #ff4a3a)}
+.bi-tag{font-family:'Press Start 2P';font-size:calc(var(--p)*4.5);letter-spacing:calc(var(--p)*0.5);margin-bottom:calc(var(--p)*2)}
 .bi-name{font-family:'Black Han Sans';font-size:calc(var(--p)*12);color:#fff}
 .bi-desc{font-size:calc(var(--p)*8);color:#e8dcc4;line-height:1.45;margin-top:calc(var(--p)*2);word-break:keep-all}
 .bi-ref{font-size:calc(var(--p)*7);color:#ffd34a;margin-top:calc(var(--p)*2)}
@@ -700,7 +701,7 @@ const WDEF={
  air:{name:'불병거',desc:'불병거가 전장을 가로지르며 불을 쏟는다'},
  aura:{name:'스랍의 축복',desc:'몸을 둘러싼 하얀 빛의 영역에 닿는 적에게 계속 피해'},
  sniper:{name:'말씀의 검',desc:'가장 강한 적을 꿰뚫는 빛의 검'},
- armor:{name:'전신갑주',desc:'하얀 보호막이 받는 피해를 줄이고 가까이 온 적을 밀쳐낸다'},
+ armor:{name:'전신갑주',desc:'몸을 감싼 빛의 보호막이 공격 한 번을 막아 주고 깨지며 주변 적을 밀쳐낸다 · 3초 뒤 다시 생긴다'},
 };
 const WS={
  sling:l=>({dmg:20+7*(l-1),cd:0.85*Math.pow(0.92,l-1),n:[3,3,3,4,4,4,5,5][l-1]}),
@@ -716,7 +717,7 @@ const WS={
  air:l=>({dmg:35+12*l,cd:Math.max(4.5,10-0.7*l),r:20+l,lines:l>=6?2:1}),
  aura:l=>({dmg:5+2.5*(l-1),R:24+3*l,cd:0.55*Math.pow(0.95,l-1)}),
  sniper:l=>({dmg:45+18*l,cd:1.8*Math.pow(0.92,l-1),n:l>=5?2:1}),
- armor:l=>({red:12+4*(l-1),dmg:4+2*l,R:16+l,cd:2.4*Math.pow(0.94,l-1)}),
+ armor:l=>({dmg:10+6*l,R:26+2*l}),
 };
 const WLBL={red:'피해 감소%',dmg:'피해',cd:'대기',n:'개수',pierce:'관통',r:'범위',R:'반경',range:'사거리',ang:'각도',lines:'폭격선',w:'폭',boom:'폭발'};
 const EVO={
@@ -967,7 +968,7 @@ const MINILORE={tank:'calf',heli:'fly',heavy:'molech',gunboat:'dagon'};
 const sprURL={};function bossImg(key,fr){if(!sprURL[key])sprURL[key]=fr.toDataURL();return sprURL[key]}
 let introT=0,introId=0;
 function bossIntro(items,final){if(state!=='play')return;state='intro';introT=performance.now();const id=++introId;
- const rows=items.map(it=>`<div class="bi-row"><img src="${it.img}"><div><div class="bi-name">${it.t}</div><div class="bi-desc">${it.d}</div><div class="bi-ref">${it.r}</div></div></div>`).join('');
+ const rows=items.map(it=>`<div class="bi-row"><img src="${it.img}"><div><div class="bi-tag" style="color:${final?'#ff4a3a':'#ffb04a'}">${final?'FINAL BOSS':'MINI BOSS'}</div><div class="bi-name">${it.t}</div><div class="bi-desc">${it.d}</div><div class="bi-ref">${it.r}</div></div></div>`).join('');
  screen(`<div class="panel bi">${rows}<div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro');
  setTimeout(()=>{if(state==='intro'&&introId===id)leaveIntro(true)},7000)}
 function leaveIntro(force){if(!force&&performance.now()-introT<600)return;hideScreen();state='play';sfx('click')}
@@ -1032,7 +1033,8 @@ function explode(x,y,r,dmg,visualOnly,enemy){
   addLight(x,y,r*3,'rgba(255,170,80,1)',0.35);shake=Math.max(shake,0.6*Math.min(5,r/7));sfx(r>40?'bigboom':'boom');
   if(G.b.land&&G.decals.length<70)G.decals.push({x,y,r:Math.min(16,r*0.5),a:1,born:G.t});if(G.decals.length>=70)G.decals.shift()}
 let gridFresh=false;function buildGridIfNeeded(){if(!gridFresh){buildGrid();gridFresh=true}}
-function hurtPlayer(d){if(P.inv>0||state!=='play')return;const aw=P.weapons.find(w=>w.k==='armor');if(aw&&aw.evo)d=Math.max(0.1,Math.round(d*0.1*10)/10);else{d=Math.max(1,Math.round(d-P.armor));if(aw)d=Math.max(1,Math.round(d*(1-WS.armor(aw.lv).red/100)))}if(aw)aw.flash=0.25;P.hp-=d;P.inv=0.6;shake=Math.max(shake,3);sfx('hurt');
+function hurtPlayer(d){if(P.inv>0||state!=='play')return;const aw=P.weapons.find(w=>w.k==='armor');if(aw&&!aw.evo&&aw.up!==false){aw.up=false;aw.t=3*P.cdMul;P.inv=0.5;const s=WS.armor(aw.lv);armorPulse(aw,s.R,s.dmg,110);sfx('hit');shake=Math.max(shake,2);for(let i=0;i<26;i++){const a=rnd(TAU),sp=rnd(40,110);part(P.x+Math.cos(a)*8,P.y-4+Math.sin(a)*10,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.25,0.5),pick(['#ffffff','#dfeaff','#b8ccf0']),pick([1,2]),120)}addLight(P.x,P.y,50,'rgba(220,235,255,1)',0.3);return}
+  if(aw&&aw.evo)d=Math.max(0.1,Math.round(d*0.1*10)/10);else d=Math.max(1,Math.round(d-P.armor));P.hp-=d;P.inv=0.6;shake=Math.max(shake,3);sfx('hurt');
   G.nums.push({x:P.x,y:P.y-14,v:d,t:0.7,c:'r'});for(let i=0;i<6;i++)part(P.x,P.y,rnd(-50,50),rnd(-60,0),0.4,'#ff3b30',1,200);
   if(P.hp<=0){if(P.revives>0){P.revives--;P.hp=Math.round(P.maxHp*0.5);P.inv=2.5;banner('부활의 소망','다시 일어섰다!',2);sfx('evo');shake=6;addLight(P.x,P.y,200,'rgba(255,240,180,1)',0.8);
    for(const e of G.en){if(e.dead||e.boss)continue;const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<140){e.kx+=dx/d*400;e.ky+=dy/d*400}}G.ebul.length=0;
@@ -1112,7 +1114,7 @@ function updWeapons(dt){
       addLight(ox,oy,22,'rgba(255,210,120,1)',0.06);part(ox,oy,Math.cos(a)*40,Math.sin(a)*40,0.08,'#fff3b0',2);sfx('shot')})}break;
   case'grenade':if(w.t<=0){w.t=s.cd*P.cdMul;for(let i=0;i<s.n;i++){let tx,ty;const vis=G.en.filter(e=>!e.dead&&onScreen(e)&&inR(e,w));if(vis.length){const e=pick(vis);tx=e.x;ty=e.y}else{const a=rnd(TAU);tx=P.x+Math.cos(a)*60;ty=P.y+Math.sin(a)*60}
       G.nades.push({x0:P.x,y0:P.y-4,x1:tx+rnd(-8,8),y1:ty+rnd(-8,8),t:0,T:0.65+i*0.08,dmg:s.dmg,r:s.r,rot:0})}sfx('throw')}break;
-  case'armor':if(w.t<=0){w.t=s.cd*P.cdMul;armorPulse(w,s.R,s.dmg,70)}break;
+  case'armor':if(w.up===undefined)w.up=true;if(!w.up&&w.t<=0){w.up=true;sfx('heal');for(let i=0;i<14;i++){const a=rnd(TAU);part(P.x+Math.cos(a)*10,P.y-4+Math.sin(a)*12,-Math.cos(a)*25,-Math.sin(a)*25,0.35,pick(['#ffffff','#e8f2ff']),1)}w.flash=0.3}break;
   case'drone':{w.a=(w.a||0)+dt*3;w.hits=w.hits||new Map();for(let i=0;i<s.n;i++){const a=w.a+i/s.n*TAU,x=P.x+Math.cos(a)*s.R,y=P.y-4+Math.sin(a)*s.R*0.8;
       query(x,y,10,e=>{if(Math.hypot(e.x-x,e.y-y)<e.r+5){const last=w.hits.get(e)||0;if(tGlobal-last>0.45){w.hits.set(e,tGlobal);hurt(e,s.dmg,Math.cos(a)*40,Math.sin(a)*40);part(x,y,rnd(-30,30),rnd(-30,30),0.15,'#9fe0ff')}}})}
       if(w.hits.size>300)w.hits.clear();break}
@@ -1248,7 +1250,7 @@ function collect(g){
  if(g.k==='xp'){P.xp+=g.v*(1+0.08*ML('growth'))*(1+0.1*(P.pass.wisdom||0));sfx('pick');while(P.xp>=P.next){P.xp-=P.next;P.lv++;P.next=xpNeed(P.lv);G.pending++}}
  else if(g.k==='med'){P.hp=Math.min(P.maxHp,P.hp+60);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:60,t:0.8,c:'g'})}
  else if(g.k==='manna'){P.hp=Math.min(P.maxHp,P.hp+20);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:20,t:0.8,c:'g'})}
- else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');(()=>{let seen=false;try{seen=localStorage.getItem('fs_lotsSeen')==='1';localStorage.setItem('fs_lotsSeen','1')}catch(e){}if(!seen)banner('제비','레벨업 선택지를 다시 뽑을 수 있다',1.6)})()}
+ else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');0}
  else if(g.k==='flare'){for(const o of G.gems)if(o.k==='xp')o.vac=true;sfx('heal');banner('','',0)}
  else if(g.k==='prayer'){PRAY++;G.prayers=(G.prayers||0)+1;saveMeta();sfx('pray');G.nums.push({x:P.x+6,y:P.y-16,v:1,t:0.6,c:'y'})}
  else if(g.k==='anvil'){const ew=P.weapons.find(evoReady);if(ew){evolve(ew);return}G.pending++;sfx('lvl');banner('모루','진화할 무기가 없어 레벨업으로 바뀌었다',1.8)}
@@ -1517,17 +1519,18 @@ function drawBossArrow(a){const c=Math.cos(a),s=Math.sin(a),m=13,t=Math.min((W/2
   ctx.fillStyle=!f?'#0b0a12':(i*S-j*C)>0.8?(blink?'#b81e18':'#d8a020'):(blink?'#ff3b30':'#ffd34a');ctx.fillRect(cx0+i,cy0+j,1,1)}}
 function armorPulse(w,Rr,dmg,kb){w.pulse=0.35;let hit=false;query(P.x,P.y,Rr+14,e=>{const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<Rr+e.r){hurt(e,dmg,dx/d*kb,dy/d*kb);hit=true}});if(hit)sfx('punch')}
 function drawArmor(w,cx,cy){const x=Math.round(P.x-cx),y=Math.round(P.y-cy-3);const t=tGlobal;
- if(!w.evo){const R=WS.armor(w.lv).R,pul=Math.sin(t*3)*0.5;ctx.fillStyle=`rgba(255,255,255,${0.08+(w.flash>0?0.15:0)})`;ctx.beginPath();ctx.arc(x,y,R+pul,0,TAU);ctx.fill();
-  for(let i=0;i<64;i++){const a=i/64*TAU,px=Math.round(x+Math.cos(a)*(R+pul)),py=Math.round(y+Math.sin(a)*(R+pul));ctx.fillStyle=(i+Math.floor(t*12))%8<2?'rgba(255,255,255,0.85)':'rgba(220,235,255,0.4)';ctx.fillRect(px,py,1,1)}
-  if(w.pulse>0){const k=1-w.pulse/0.35;ctx.strokeStyle=`rgba(255,255,255,${0.6*(1-k)})`;ctx.beginPath();ctx.arc(x,y,R+k*10,0,TAU);ctx.stroke()}}
+ if(!w.evo){if(w.pulse>0){const k=1-w.pulse/0.35,R=WS.armor(w.lv).R;ctx.strokeStyle=`rgba(230,240,255,${0.7*(1-k)})`;ctx.beginPath();ctx.arc(x,y,6+k*R,0,TAU);ctx.stroke()}}
  else{const sw=Math.round(Math.sin(t*2.2)*1.5),s=SPR.wing;ctx.globalAlpha=0.9;ctx.drawImage(s.i,x+3+sw,y-15);ctx.drawImage(s.f,x-3-s.W-sw,y-15);ctx.globalAlpha=1;
   addLight(P.x,P.y-4,30,'rgba(255,240,190,1)',0.025);if(w.pulse>0){const k=1-w.pulse/0.35;ctx.strokeStyle=`rgba(255,230,150,${0.7*(1-k)})`;ctx.beginPath();ctx.arc(x,y,36*k+8,0,TAU);ctx.stroke()}
   if(Math.random()<0.25)part(P.x+rnd(-14,14),P.y+rnd(-16,6),0,rnd(-20,-6),0.6,pick(['#fff8e0','#ffe9a0']),1)}
  if(w.pulse>0)w.pulse-=1/60;if(w.flash>0)w.flash-=1/60}
+function heroGlow(fr,x,y,w,h){const aw=P.weapons.find(q=>q.k==='armor');if(!aw||aw.evo||aw.up===false)return;const wi=P.face<0?fr.wf:fr.w;const a=0.75+0.25*Math.sin(tGlobal*4)+(aw.flash>0?0.3:0);
+ ctx.save();ctx.globalAlpha=Math.min(1,a*0.55);ctx.shadowColor='rgba(220,236,255,0.95)';ctx.shadowBlur=8;ctx.drawImage(wi,x,y,w,h);ctx.restore();
+ ctx.globalAlpha=Math.min(1,a);for(const[dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])ctx.drawImage(wi,x+dx,y+dy,w,h);ctx.globalAlpha=1}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
  const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;
- if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
- ctx.drawImage(shadowSpr(15),x-7,y+6);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+8-hh,hw,hh)}
+ if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);heroGlow(fr,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
+ ctx.drawImage(shadowSpr(15),x-7,y+6);heroGlow(fr,x-Math.round(hw/2),y+8-hh,hw,hh);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+8-hh,hw,hh)}
 function drawWeather(){const t=G.b.weather;
  for(const o of G.wx){const x=Math.round(o.x),y=Math.round(o.y);
   if(t==='rain'||t==='storm'){ctx.fillStyle='rgba(170,200,235,0.45)';for(let k=0;k<o.len;k++)ctx.fillRect(x+Math.round(k*o.vx/o.vy),y+k,1,1)}
