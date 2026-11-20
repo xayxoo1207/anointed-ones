@@ -187,6 +187,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #ui.land .bi{max-width:min(calc(var(--p)*380),94vw)}
 .bi-row{display:flex;gap:calc(var(--p)*6);align-items:center;text-align:left;margin-top:calc(var(--p)*7);background:#120e14cc;box-shadow:inset 0 0 0 var(--p) #5a2a2a;padding:calc(var(--p)*5)}
 .bi-row img{width:calc(var(--p)*44);height:calc(var(--p)*36);object-fit:contain;image-rendering:pixelated;flex:none;filter:drop-shadow(0 0 calc(var(--p)*3) #ff4a3a)}
+.btag{display:block;font-family:'Press Start 2P';font-size:calc(var(--p)*5);color:#ffd34a;letter-spacing:calc(var(--p)*0.6);margin-bottom:calc(var(--p)*3)}
 .bi-tag{font-family:'Press Start 2P';font-size:calc(var(--p)*4.5);letter-spacing:calc(var(--p)*0.5);margin-bottom:calc(var(--p)*2)}
 .bi-name{font-family:'Black Han Sans';font-size:calc(var(--p)*12);color:#fff}
 .bi-desc{font-size:calc(var(--p)*8);color:#e8dcc4;line-height:1.45;margin-top:calc(var(--p)*2);word-break:keep-all}
@@ -941,7 +942,7 @@ function spawnTick(dt){npcTick(dt);
   if(G.t>=G.evt&&!G.boss){G.evt+=60;const ty=G.b.land?(Math.random()<0.5?'grunt':'dog'):'frog';const n=Math.round((24+G.si*3)*0.8);banner('어둠의 포위',((ROSTER[G.si]||{}).grp||'적의 무리')+'가 사방에서 몰려온다!',1.6);
     for(let i=0;i<n;i++){const a=i/n*TAU,R=Math.hypot(W,H)/2+10;spawnEnemy(ty,P.x+Math.cos(a)*R,P.y+Math.sin(a)*R)}}
   if(G.t>=G.elite&&!G.boss&&!G.bossSpawned&&!G.minis.some(m=>!m.dead)){G.elite+=80;const ty=G.b.land?(G.si>=1&&Math.random()<0.5?'tank':'heavy'):'gunboat';const[x,y]=ringPos(20);const e=spawnEnemy(ty,x,y,ty==='heavy'?9:4);
-    e.elite=true;if(SPR[ty+'_E']){e.spr=ty+'_E';e.sc=1;e.w=SPR[e.spr][0].W;e.h=SPR[e.spr][0].H}else{e.sc=2;e.w*=2;e.h*=2}e.r=Math.round(e.r*1.8);e.kbRes=1;e.xp*=4;banner((((ROSTER[G.si]||{})[ty]||[ET_NAME[ty]||'우상'])[0]),'',1.8);sfx('alarm')}
+    e.elite=true;if(SPR[ty+'_E']){e.spr=ty+'_E';e.sc=1;e.w=SPR[e.spr][0].W;e.h=SPR[e.spr][0].H}else{e.sc=2;e.w*=2;e.h*=2}e.r=Math.round(e.r*1.8);e.kbRes=1;e.xp*=4;banner('<span class="btag">ELITE</span>'+(((ROSTER[G.si]||{})[ty]||[ET_NAME[ty]||'우상'])[0]),'',1.8);sfx('alarm')}
   if(G.miniIdx<4&&G.t>=G.nextMini){G.nextMini+=180;spawnMinis(G.miniIdx++)}
   if(!G.bossSpawned&&G.t>=G.st.dur)spawnBoss();
 }
