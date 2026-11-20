@@ -150,6 +150,15 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .osl::-moz-range-thumb{width:calc(var(--p)*8);height:calc(var(--p)*14);background:#fff;border:var(--p) solid #000;border-radius:0;cursor:pointer}
 .seg{display:flex;gap:calc(var(--p)*2)}.seg .btn{flex:1;margin:0;text-align:center;padding:calc(var(--p)*4) 0}
 .seg .btn.on{background:#3a330e;box-shadow:inset 0 0 0 calc(var(--p)*2) #fff44f,0 calc(var(--p)*2) 0 #000;color:#fff44f}
+.qhd{display:flex;align-items:center;gap:calc(var(--p)*6);justify-content:center;margin:calc(var(--p)*4) 0}
+.qhd img{width:calc(var(--p)*30);height:calc(var(--p)*38);image-rendering:pixelated;object-fit:contain;filter:drop-shadow(0 0 calc(var(--p)*4) #ffb03a)}
+.qhd .hint{text-align:left}.qhd .big{text-align:left}
+.qv{font-family:'Do Hyeon';font-size:calc(var(--p)*10);color:#fff;line-height:1.5;margin:calc(var(--p)*6) auto;max-width:calc(var(--p)*196);padding:calc(var(--p)*6);background:#0c0b10cc;box-shadow:inset 0 0 0 var(--p) #5a4a2a}
+.qops{display:flex;flex-direction:column;align-items:center}
+.qo{position:relative;font-size:calc(var(--p)*10)}.qo .qk{position:absolute;left:calc(var(--p)*7);color:#6a6078;font-family:'Press Start 2P';font-size:calc(var(--p)*5);top:50%;transform:translateY(-50%)}
+.qo.pick{background:#3a2a0e;box-shadow:inset 0 0 0 calc(var(--p)*2) #ffd34a,0 0 calc(var(--p)*6) #ffb02a;color:#ffd34a}
+.qo.right{background:#1e3a14;box-shadow:inset 0 0 0 calc(var(--p)*2) #8fd16a;color:#cfffb0}
+.qo.wrong{background:#3a1414;box-shadow:inset 0 0 0 calc(var(--p)*2) #ff5a4a;color:#ffb0a0}
 .btn.gold{box-shadow:inset 0 0 0 var(--p) #ffd34a,0 calc(var(--p)*2) 0 #000;color:#ffe9a0}
 .pbal{font-family:'Do Hyeon';font-size:calc(var(--p)*10);color:#ffd34a;display:flex;align-items:center;justify-content:center;gap:calc(var(--p)*3)}
 .pbal img,.mc img{width:calc(var(--p)*8);height:calc(var(--p)*8);image-rendering:pixelated}
@@ -712,7 +721,7 @@ const SONGS=[
  S.ev=ev;S.len=Math.ceil(t/S.bar)*S.bar;S.chords=[];for(let k=0;k<S.len/S.bar;k++){const bt=k*S.bar;let e=ev.find(x=>x.t<=bt+0.01&&x.t+x.dur>bt)||ev.find(x=>x.t>=bt&&x.t<bt+S.bar)||ev[0];const r=((e.midi-S.key)%12+12)%12;S.chords.push([11,2].includes(r)?7:[5,9].includes(r)?5:0)}}})();
 const mf=m=>440*Math.pow(2,(m-69)/12);
 const mus={song:-1,t0:0,i:0,b:0,bt0:0};
-function musicTick(){if(!AC||muted)return;if(!(state==='play'||state==='brief'||state==='levelup'||state==='intro'||isMenu())){mus.song=-1;return}
+function musicTick(){if(!AC||muted)return;if(!(state==='play'||state==='brief'||state==='levelup'||state==='intro'||state==='quiz'||isMenu())){mus.song=-1;return}
  const si=isMenu()?5:(G?G.si:0);const now=AC.currentTime;
  if(si!==mus.song){mus.song=si;mus.t0=mus.bt0=now+0.15;mus.i=0;mus.b=0}
  const S=SONGS[si],spb=60/S.bpm,ahead=now+0.2,loop=S.len*spb,boss=G&&G.boss&&state==='play';
@@ -783,6 +792,8 @@ function buildStage(){
   const b=G.b;const ep=Object.assign({},BASEPAL,b.enemy);
   for(const k of ['grunt','dog','rpg','heavy','tank','heli','frog','boat','gunboat']){const pp=Object.assign({},ep,ESPEC[k]||{});SPR[k]=[spr(SD[k+'A'],pp),spr(SD[(SD[k+'B']?k+'B':k+'A')],pp)]}
   SPR.fly=[spr(SD.fly,Object.assign({},ep,{m:'#2a3a22',M:'#4a5a32',W:'#c8d0e0'}))];
+  {const d=hum({head:'hair',beard:1,robe:1,wpn:'staff',pal:{s:'#c08a62',e:'#1a1010',a:'#7a5a3a',A:'#5a4026',c:'#7a5a3a',C:'#5a4026',l:'#3a2414',d:'#e8e4dc',w:'#8a6a3a',y:'#ffe08a',o:'#ffb03a'}});SPR.elijah=[spr(d.A,d.pal),spr(d.B,d.pal)]}
+  SPR.qmark=spr(['.kkkkk.','kyyyyyk','kykkkyk','kkk.kyk','..kyyk.','..kyk..','..kkk..','..kyk..','..kkk..'],Object.assign({},BASEPAL,{y:'#fff44f'}));
   SPR.calf=SPR.dog;SPR.molech=SPR.rpg;SPR.dagon=SPR.frog;
   {const R=ROSTER[G.si]||{};for(const k in R){if(k==='grp'||!R[k][1])continue;const d=R[k][1]();SPR[k]=[spr(d.A,d.pal),spr(d.B,d.pal)]}}
   {const bc=BOSSES[G.st.boss];SPR.boss=[spr(SD[bc.spr],Object.assign({},BASEPAL,bc.pal))]}
@@ -809,6 +820,7 @@ addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
   if(e.code==='KeyM'){muted=!muted;if(master)master.gain.value=muted?0:0.32}
   if((e.code==='Escape'||e.code==='KeyP')){if(state==='play')openPause();else if(state==='pause')closePause()}
+  if(state==='quiz'){const bs=[...document.querySelectorAll('#scr .qo')];if(/^Digit[1-3]$/.test(e.code)){const b=bs[+e.code.slice(5)-1];if(b)b.click()}else if(e.code==='Enter'||e.code==='Space'){e.preventDefault();const p=document.querySelector('#scr .qo.pick');if(p)p.click()}}
   if(state==='levelup'){const cs=[...document.querySelectorAll('#scr .card')];
     if(/^Digit[1-4]$/.test(e.code)){const c=cs[+e.code.slice(5)-1];if(c)c.click()}
     else if(cs.length&&!e.repeat&&performance.now()-lvOpenT>250){const land=$('ui').classList.contains('land');const prev=land?['ArrowLeft','KeyA']:['ArrowUp','KeyW'],next=land?['ArrowRight','KeyD']:['ArrowDown','KeyS'],prev2=land?['ArrowUp','KeyW']:['ArrowLeft','KeyA'],next2=land?['ArrowDown','KeyS']:['ArrowRight','KeyD'];
@@ -833,7 +845,7 @@ function spawnEnemy(type,x,y,mul){const d=ET[type];const sm=(1+G.si*0.6)*(1+G.t/
     ranged:null,rcd:0,kx:0,ky:0,flash:0,anim:rnd(4),face:1,alt:d.fly?18:0,spr:type,orb:rnd(TAU)};
   e.mhp=e.hp;const s=SPR[type][0];e.w=s.W;e.h=s.H;G.en.push(e);return e}
 function ringPos(extra=30){const a=rnd(TAU),R=Math.hypot(W,H)/2+extra;return[P.x+Math.cos(a)*R,P.y+Math.sin(a)*R]}
-function spawnTick(dt){
+function spawnTick(dt){npcTick(dt);
   const alive=G.en.length,cap=Math.round((140+G.si*15+Math.floor(G.t/30))*0.8);
   let rate=(1.2+G.t/40)*(1+G.si*0.25)*0.8;if(G.boss)rate*=0.35;else if(G.minis.some(m=>!m.dead))rate*=0.6;
   G.spawnAcc+=rate*dt;
@@ -1297,6 +1309,7 @@ function render(){
    const s=DECOR[k];const x=i*cs+Math.floor(hash(i,j,13)*(cs-10)),y=j*cs+Math.floor(hash(i,j,17)*(cs-10));list.push({y:y,k:0,s,x,fl:hash(i,j,19)<0.5})}
  for(const e of G.en)list.push({y:e.y+(e.fly?40:e.h/2),k:1,e});
  if(!isMenu())list.push({y:P.y+8,k:2});
+ if(G.npc)list.push({y:G.npc.y,k:6});
  for(const c of G.carts)list.push({y:c.y+4,k:4,c});
  for(const a of G.animals)list.push({y:a.y+(a.t===3?30:3),k:5,a});
  for(const n of G.nades)list.push({y:n.y0+(n.y1-n.y0)*(n.t/n.T),k:3,n});
@@ -1304,6 +1317,7 @@ function render(){
  for(const o of list){
   if(o.k===0){const x=o.x-cx,y=o.y-cy;ctx.drawImage(shadowSpr(o.s.W*0.9),Math.round(x-o.s.W*0.45),Math.round(y-2));ctx.drawImage(o.fl?o.s.f:o.s.i,Math.round(x-o.s.W/2),Math.round(y-o.s.H))}
   else if(o.k===1)drawEnemy(o.e,cx,cy);
+  else if(o.k===6)drawElijah(cx,cy);
   else if(o.k===2)drawPlayer(cx,cy);
   else if(o.k===3){const n=o.n,t=n.t/n.T,x=n.x0+(n.x1-n.x0)*t-cx,y=n.y0+(n.y1-n.y0)*t-cy-Math.sin(Math.PI*t)*34;ctx.drawImage(shadowSpr(5),Math.round(n.x0+(n.x1-n.x0)*t-cx-2),Math.round(n.y0+(n.y1-n.y0)*t-cy));ctx.fillStyle=OUT;ctx.fillRect(Math.round(x)-2,Math.round(y)-2,4,4);ctx.fillStyle='#ff6a1a';ctx.fillRect(Math.round(x)-1,Math.round(y)-1,2,2);ctx.fillStyle='#ffd34a';ctx.fillRect(Math.round(x),Math.round(y)-1,1,1);addLight(n.x0+(n.x1-n.x0)*t,y+cy,12,'rgba(255,140,50,1)',0.02)}
   else if(o.k===5){const a=o.a,fr=SPR.animals[a.t][Math.floor(a.anim)%2],sc=a.big?2:1,x=Math.round(a.x-cx),y=Math.round(a.y-cy)-(a.t===3?8:0);const al=Math.min(1,a.life*4);ctx.globalAlpha=al;if(a.t!==3||true)ctx.drawImage(shadowSpr(fr.W*sc*0.8),Math.round(a.x-cx-fr.W*sc*0.4),Math.round(a.y-cy+2));ctx.drawImage(a.vx<0?fr.f:fr.i,x-Math.floor(fr.W*sc/2),y-fr.H*sc+3,fr.W*sc,fr.H*sc);ctx.globalAlpha=1}
@@ -1423,6 +1437,7 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='select')showSelect();
  else if(a==='grace')showGrace();
  else if(a==='opt')showOptions();
+ else if(a==='quizok')closeQuiz(b.dataset.ok==='1');
  else if(a==='shk'){OPT.shake=+b.dataset.v;saveOpt();document.querySelectorAll('.seg .btn').forEach(x=>x.classList.toggle('on',x===b));shake=[0,2,3][OPT.shake]}
  else if(a==='buy')buyMeta(b.dataset.k,b);
  else if(a==='refund')refundMeta(b);
@@ -1512,7 +1527,7 @@ function showBrief(){state='brief';$('hud').classList.add('hidden');const st=G.s
  ${route(G.si)}<div class="brief">${st.brief}<br><div class="verse">${st.verse}</div><span style="color:#ff8a6a">15분 생존 · 3분마다 미니보스 출현<br>15:00 최종 보스 「${st.bossName}」 처치 시 승리</span>${roster()}<div style="margin-top:calc(var(--p)*4);color:#c8b898">영웅: ${HEROES[P.hero].name} · ${WDEF[HEROES[P.hero].w].name}</div></div>
  <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="quit">◀ 메인</div></div>`)}
 function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden');$('boss').classList.add('hidden');
- $('stl').innerHTML=`<b>ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2)}
+ $('stl').innerHTML=`<b>ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}}
 function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="op" style="color:#ffd34a;font-size:calc(var(--p)*5)">EVOLUTION</div><div style="font-size:calc(var(--p)*7);color:#c8b898">무기 LV8 + 보조장비 보유 → 미니보스의 모루</div>${recipes()}<div class="btn primary" data-act="resume">계속</div><div class="btn" data-act="mute">${muted?'소리 켜기':'소리 끄기'}</div><div class="btn" data-act="quit">메인 화면</div></div>`)}
 function closePause(){hideScreen();state='play'}
 function fmtT(t){return Math.floor(t/60)+'분 '+String(Math.floor(t%60)).padStart(2,'0')+'초'}
@@ -1581,6 +1596,82 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
  const all=[...document.querySelectorAll('#scr .card')];
  all.forEach((c,j)=>c.addEventListener('click',()=>{if(c.classList.contains('pick')){lvConfirm(+c.dataset.i);return}
   all.forEach(x=>x.classList.remove('pick'));c.classList.add('pick');selCard(j);sfx('click')}))}
+
+// ================= ELIJAH QUIZ =================
+const OTB=['창세기','출애굽기','레위기','민수기','신명기','여호수아','룻기','사무엘상','열왕기상','느헤미야','에스더','욥기','시편','잠언','전도서','이사야','에스겔','다니엘','아모스','요나','하박국','스가랴','말라기'];
+const NTB=['마태복음','마가복음','누가복음','요한복음','사도행전','로마서','고린도전서','고린도후서','갈라디아서','에베소서','빌립보서','데살로니가전서','디모데후서','히브리서','야고보서','베드로전서','요한일서','요한계시록'];
+const QUIZ=[
+ ['태초에 하나님이 천지를 창조하시니라','창세기'],['하나님이 이르시되 빛이 있으라 하시니 빛이 있었고','창세기'],
+ ['너는 나 외에는 다른 신들을 네게 두지 말라','출애굽기'],['너희는 거룩하라 이는 나 여호와 너희 하나님이 거룩함이니라','레위기'],
+ ['여호와는 네게 복을 주시고 너를 지키시기를 원하며','민수기'],['이스라엘아 들으라 우리 하나님 여호와는 오직 유일한 여호와이시니','신명기'],
+ ['강하고 담대하라 두려워하지 말며 놀라지 말라','여호수아'],['오직 나와 내 집은 여호와를 섬기겠노라','여호수아'],
+ ['어머니의 백성이 나의 백성이 되고 어머니의 하나님이 나의 하나님이 되시리니','룻기'],
+ ['사람은 외모를 보거니와 나 여호와는 중심을 보느니라','사무엘상'],['전쟁은 여호와께 속한 것인즉','사무엘상'],
+ ['너희가 어느 때까지 둘 사이에서 머뭇머뭇 하려느냐','열왕기상'],['불 후에 세미한 소리가 있는지라','열왕기상'],
+ ['여호와로 인하여 기뻐하는 것이 너희의 힘이니라','느헤미야'],['죽으면 죽으리이다','에스더'],
+ ['주신 이도 여호와시요 거두신 이도 여호와시오니','욥기'],
+ ['여호와는 나의 목자시니 내게 부족함이 없으리로다','시편'],['주의 말씀은 내 발에 등이요 내 길에 빛이니이다','시편'],
+ ['내가 산을 향하여 눈을 들리라 나의 도움이 어디서 올까','시편'],['너희는 가만히 있어 내가 하나님 됨을 알지어다','시편'],
+ ['너는 마음을 다하여 여호와를 신뢰하고 네 명철을 의지하지 말라','잠언'],['여호와를 경외하는 것이 지식의 근본이거늘','잠언'],
+ ['헛되고 헛되며 헛되고 헛되니 모든 것이 헛되도다','전도서'],['범사에 기한이 있고 천하 만사가 다 때가 있나니','전도서'],
+ ['오직 여호와를 앙망하는 자는 새 힘을 얻으리니 독수리가 날개치며 올라감 같을 것이요','이사야'],
+ ['두려워하지 말라 내가 너와 함께 함이라 놀라지 말라 나는 네 하나님이 됨이라','이사야'],
+ ['마른 뼈들아 여호와의 말씀을 들을지어다','에스겔'],['다니엘은 뜻을 정하여 왕의 음식과 그가 마시는 포도주로 자기를 더럽히지 아니하리라','다니엘'],
+ ['오직 정의를 물 같이, 공의를 마르지 않는 강 같이 흐르게 할지어다','아모스'],
+ ['여호와께서 이미 큰 물고기를 예비하사 요나를 삼키게 하셨으므로','요나'],['의인은 그의 믿음으로 말미암아 살리라','하박국'],
+ ['힘으로 되지 아니하며 능력으로 되지 아니하고 오직 나의 영으로 되느니라','스가랴'],
+ ['너희의 온전한 십일조를 창고에 들여 나의 집에 양식이 있게 하고','말라기'],
+ ['너희는 세상의 소금이니','마태복음'],['수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라','마태복음'],
+ ['너희는 먼저 그의 나라와 그의 의를 구하라','마태복음'],
+ ['때가 찼고 하나님의 나라가 가까이 왔으니 회개하고 복음을 믿으라','마가복음'],
+ ['인자가 온 것은 잃어버린 자를 찾아 구원하려 함이니라','누가복음'],
+ ['지극히 높은 곳에서는 하나님께 영광이요 땅에서는 하나님이 기뻐하신 사람들 중에 평화로다','누가복음'],
+ ['태초에 말씀이 계시니라','요한복음'],['하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니','요한복음'],['내가 곧 길이요 진리요 생명이니','요한복음'],
+ ['오직 성령이 너희에게 임하시면 너희가 권능을 받고','사도행전'],['주 예수를 믿으라 그리하면 너와 네 집이 구원을 받으리라','사도행전'],
+ ['죄의 삯은 사망이요 하나님의 은사는 그리스도 예수 우리 주 안에 있는 영생이니라','로마서'],
+ ['하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는 모든 것이 합력하여 선을 이루느니라','로마서'],
+ ['사랑은 오래 참고 사랑은 온유하며 시기하지 아니하며','고린도전서'],
+ ['누구든지 그리스도 안에 있으면 새로운 피조물이라','고린도후서'],['내 은혜가 네게 족하도다','고린도후서'],
+ ['오직 성령의 열매는 사랑과 희락과 화평과 오래 참음과 자비와 양선과 충성과','갈라디아서'],
+ ['너희는 그 은혜에 의하여 믿음으로 말미암아 구원을 받았으니','에베소서'],['하나님의 전신 갑주를 입으라','에베소서'],
+ ['내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라','빌립보서'],
+ ['항상 기뻐하라 쉬지 말고 기도하라 범사에 감사하라','데살로니가전서'],
+ ['나는 선한 싸움을 싸우고 나의 달려갈 길을 마치고 믿음을 지켰으니','디모데후서'],
+ ['믿음은 바라는 것들의 실상이요 보이지 않는 것들의 증거니','히브리서'],
+ ['행함이 없는 믿음은 그 자체가 죽은 것이라','야고보서'],['너희 염려를 다 주께 맡기라 이는 그가 너희를 돌보심이라','베드로전서'],
+ ['하나님은 사랑이시라','요한일서'],['볼지어다 내가 문 밖에 서서 두드리노니','요한계시록'],['나는 알파와 오메가요','요한계시록'],
+];
+let quizUsed=[];
+function pickQuiz(){if(quizUsed.length>=QUIZ.length)quizUsed=[];let i;do{i=Math.floor(Math.random()*QUIZ.length)}while(quizUsed.includes(i));quizUsed.push(i);
+  const[v,a]=QUIZ[i];const pool=(OTB.includes(a)?OTB:NTB).filter(b=>b!==a);const opts=[a];while(opts.length<3){const b=pick(pool);if(!opts.includes(b))opts.push(b)}
+  for(let k=opts.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[opts[k],opts[j]]=[opts[j],opts[k]]}return{v,a,opts}}
+function spawnElijah(){const a=rnd(TAU);G.npc={x:P.x+Math.cos(a)*44,y:P.y+Math.sin(a)*30,anim:0,leave:0}}
+function npcTick(dt){const n=G.npc;if(!n)return;n.anim+=dt;
+  if(n.leave>0){n.leave+=dt;if(Math.random()<0.8)part(n.x+rnd(-5,5),n.y-n.leave*60+rnd(-4,8),rnd(-10,10),rnd(10,40),0.5,pick(['#ffd34a','#ff8a2a','#fff3b0']),2);if(n.leave>1.6)G.npc=null;return}
+  if(Math.hypot(P.x-n.x,P.y-n.y)<15)openQuiz()}
+function drawElijah(cx,cy){const n=G.npc;const fr=SPR.elijah[Math.floor(n.anim*2)%2];const up=n.leave>0?n.leave*n.leave*40:0;
+  const x=Math.round(n.x-cx-fr.W/2),y=Math.round(n.y-cy-fr.H-up);
+  if(!n.leave)ctx.drawImage(shadowSpr(10),Math.round(n.x-cx-5),Math.round(n.y-cy-2));
+  if(!n.leave){const r=7+Math.sin(n.anim*3);ctx.strokeStyle='rgba(255,230,120,0.55)';ctx.beginPath();ctx.ellipse(Math.round(n.x-cx),Math.round(n.y-cy),r+3,(r+3)*0.4,0,0,TAU);ctx.stroke()}
+  if(n.leave>0){ctx.globalAlpha=Math.max(0,1-n.leave/1.6)}
+  ctx.drawImage(fr.i,x,y);ctx.globalAlpha=1;
+  if(!n.leave){const by=y-9+Math.round(Math.sin(n.anim*4)*1.5);ctx.drawImage(SPR.qmark.i,Math.round(n.x-cx-SPR.qmark.W/2),by)}}
+let quizCur=null;
+function openQuiz(){if(state!=='play')return;quizCur=pickQuiz();state='quiz';sfx('click');
+  for(const k in keys)keys[k]=false;joy=null;
+  screen(`<div class="panel quiz"><div class="op" style="color:#ffd34a">ELIJAH'S QUESTION</div><div class="qhd"><img src="${bossImg('elijah',SPR.elijah[0].i)}"><div><div class="big" style="font-size:calc(var(--p)*15)">엘리야의 물음</div><div class="hint">이 말씀은 어느 성경에 기록되어 있느냐?</div></div></div>
+  <div class="qv">"${quizCur.v}"</div><div class="qops">${quizCur.opts.map((o,i)=>`<div class="btn wide qo" data-i="${i}"><span class="qk">${i+1}</span>${o}</div>`).join('')}</div>
+  <div class="hint">한 번 눌러 고르고, 한 번 더 누르면 답이 확정돼요</div></div>`);
+  const bs=[...document.querySelectorAll('#scr .qo')];let done=false;const t0=performance.now();
+  bs.forEach(b=>b.addEventListener('click',()=>{if(done||performance.now()-t0<300)return;if(b.classList.contains('pick')){done=true;answerQuiz(+b.dataset.i);return}bs.forEach(x=>x.classList.remove('pick'));b.classList.add('pick');sfx('click')}))}
+function answerQuiz(i){const ok=quizCur.opts[i]===quizCur.a;const bs=[...document.querySelectorAll('#scr .qo')];
+  bs.forEach((b,j)=>{b.classList.remove('pick');if(quizCur.opts[j]===quizCur.a)b.classList.add('right');else if(j===i)b.classList.add('wrong')});
+  if(ok)sfx('evo');else sfx('hurt');
+  setTimeout(()=>{screen(`<div class="panel quiz"><div class="op" style="color:${ok?'#8fd16a':'#ff6a4a'}">${ok?'CORRECT':'WRONG'}</div><div class="big">${ok?'정답이다!':'아쉽구나'}</div>
+   <div class="qv">"${quizCur.v}"<br><b style="color:#ffd34a">— ${quizCur.a}</b></div>
+   <div class="hint" style="font-size:calc(var(--p)*8)">${ok?'엘리야의 축복으로 새 무기를 얻거나 무기를 강화할 수 있다.':'말씀을 마음에 새기고 다시 싸움터로 나아가라.'}</div>
+   <div class="btn primary" data-act="quizok" data-ok="${ok?1:0}">${ok?'축복 받기 ▶':'계속 ▶'}</div></div>`)},ok?700:1100)}
+function closeQuiz(ok){hideScreen();state='play';if(G.npc)G.npc.leave=0.01;banner('엘리야',ok?'회오리바람을 타고 하늘로 올라갔다 · 축복을 받았다':'회오리바람을 타고 하늘로 올라갔다',1.6);if(ok)G.pending++}
 
 // ================= DEV =================
 const DEV=location.hash==='#dev';
