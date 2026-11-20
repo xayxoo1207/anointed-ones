@@ -226,6 +226,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #ui.land .big{margin:calc(var(--p)*1) 0}
 #ui.land #slots{width:calc(var(--p)*260)}
 #ui.land #boss{width:60%}
+#tsub{display:none!important}
 </style>
 </head>
 <body>
@@ -1421,7 +1422,7 @@ function hud(){hudT-=1/60;if(hudT>0)return;hudT=0.08;
  $('hpf').style.width=(P.hp/P.maxHp*100)+'%';$('hpt').textContent=Math.ceil(P.hp)+'/'+P.maxHp;
  const el=G.t,m=Math.floor(el/60),sec=Math.floor(el%60);const tm=$('tmr');tm.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');tm.classList.toggle('boss',G.bossSpawned);
  const fmt=v=>Math.floor(v/60)+':'+String(Math.floor(v%60)).padStart(2,'0');
- $('tsub').textContent=G.bossSpawned?'최종 보스 교전 중':G.miniIdx<4?`미니보스 ${fmt(G.nextMini-el)} · 최종 보스 ${fmt(G.st.dur-el)}`:`최종 보스까지 ${fmt(G.st.dur-el)}`;
+ 
  $('pry').innerHTML=`<img src="${ICON.prayer}">${G.prayers||0}`;
  $('kil').textContent='☠'+G.kills;
  const cb=curBoss();$('boss').classList.toggle('hidden',!cb);if(cb){$('bossn').textContent=(cb.mini?'MINI · ':'')+cb.name;$('bossf').style.width=Math.max(0,cb.hp/cb.mhp*100)+'%'}}
