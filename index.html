@@ -81,6 +81,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .cards{display:flex;flex-direction:column;align-items:center;gap:calc(var(--p)*5);margin-top:calc(var(--p)*8)}
 .card{width:calc(var(--p)*196);min-height:calc(var(--p)*50);padding-left:calc(var(--p)*38)!important;background:#14111a;border:var(--p) solid #000;box-shadow:inset 0 0 0 var(--p) #4a4058,0 calc(var(--p)*3) 0 #000;padding:calc(var(--p)*6);padding-bottom:calc(var(--p)*6);cursor:pointer;text-align:left;position:relative}
 .lvhint{font-family:'Black Han Sans';font-size:calc(var(--p)*7);color:#ffd34a;margin:calc(var(--p)*1) 0 calc(var(--p)*2);visibility:hidden}.lvhint.on{visibility:visible}
+.btn.reroll{display:inline-flex;align-items:center;gap:calc(var(--p)*4);margin-top:calc(var(--p)*6);box-shadow:inset 0 0 0 var(--p) #c8a060,0 calc(var(--p)*2) 0 #000;color:#f2e2c0}.btn.reroll img{width:calc(var(--p)*12);height:calc(var(--p)*12);image-rendering:pixelated}.btn.reroll b{color:#ffd34a;margin-left:calc(var(--p)*2)}
 .card.pick{background:#3a2a0e!important;box-shadow:inset 0 0 0 calc(var(--p)*2) #ffd34a,0 0 calc(var(--p)*8) #ffb02a,0 calc(var(--p)*3) 0 #000!important;transform:translateY(calc(var(--p)*-2))}
 .card:hover,.card.sel{box-shadow:inset 0 0 0 var(--p) #9a8a68,0 calc(var(--p)*3) 0 #000;background:#221a14;transform:translateY(calc(var(--p)*-2))}
 .card img{width:calc(var(--p)*24);height:calc(var(--p)*24);image-rendering:pixelated;object-fit:contain;display:block;position:absolute;left:calc(var(--p)*7);top:calc(var(--p)*8)}
@@ -611,7 +612,7 @@ function initStatic(){
   SPR.animals=[['#e8e8e0','#5a5a5a'],['#d8a040','#8a5a20'],['#7a4a2a','#4a2e18']].map(([b,h])=>{const p=Object.assign({},BASEPAL,{b,h,e:'#111'});return[spr(SD.beast4,p),spr(SD.beast4B,p)]});
   {const p=Object.assign({},BASEPAL,{W:'#f8f8f0'});SPR.animals.push([spr(SD.dove,p),spr(SD.doveB,p)])}
   SPR.prayer=spr(PK.prayer,Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0',o:'#c89a20'}));ICON.prayer=icon(['...k...','..kyk..','.kyWyk.','kyWWWyk','.kyWyk.','..kyk..','...k...'],Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0'}));ICON.gem=icon(SD.gem,Object.assign({},BASEPAL,{a:'#4fe36a',A:'#d6ffd0'}));
-  SPR.flare=spr(PK.horn,Object.assign({},BASEPAL,{A:'#e0d0a8',a:'#a08860'}));
+  SPR.lots=spr(['....kk....','...kBBk...','..kkrrkk..','.kBBBBBBk.','kBBWWkBBBk','kBWWWkbBBk','kBBWkbbbBk','kBBBkbbBBk','.kBBBBBBk.','..kkkkkk..'],Object.assign({},BASEPAL,{B:'#8a5a32',r:'#c8302a',W:'#f2ead8',b:'#2a2230'}));SPR.flare=spr(PK.horn,Object.assign({},BASEPAL,{A:'#e0d0a8',a:'#a08860'}));
   SPR.crate=spr(PK.chest,Object.assign({},BASEPAL,{a:'#c8902a',A:'#ffd34a',y:'#fff3b0',d:'#8a5a12',B:'#7a4a10',W:'#ffffff'}));
   SPR.gem=[['#3fa9ff','#cfeeff','#1f62b8'],['#4fe36a','#d6ffd0','#22903a'],['#ff4d6d','#ffd6de','#a82040']].map(c=>spr(PK.gem,Object.assign({},BASEPAL,{a:c[0],A:c[1],d:c[2],W:'#ffffff'})));
   for(const k of ['sling','wave','grenade','flame','mortar','sniper','vest','boots','ammo','he','magnet','medic','food','scope'])ICON[k]=icon(SD['i_'+k],ICONPAL);
@@ -897,6 +898,7 @@ addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(e.code==='KeyM'){muted=!muted;if(master)master.gain.value=muted?0:0.32}
   if((e.code==='Escape'||e.code==='KeyP')){if(state==='play')openPause();else if(state==='pause')closePause()}
   if(state==='quiz'){const bs=[...document.querySelectorAll('#scr .qo')];if(/^Digit[1-3]$/.test(e.code)){const b=bs[+e.code.slice(5)-1];if(b)b.click()}else if(e.code==='Enter'||e.code==='Space'){e.preventDefault();const p=document.querySelector('#scr .qo.pick');if(p)p.click()}}
+  if(state==='levelup'&&e.code==='KeyR'){lvReroll();return}
   if(state==='levelup'){const cs=[...document.querySelectorAll('#scr .card')];
     if(/^Digit[1-4]$/.test(e.code)){const c=cs[+e.code.slice(5)-1];if(c)c.click()}
     else if(cs.length&&!e.repeat&&performance.now()-lvOpenT>250){const land=$('ui').classList.contains('land');const prev=land?['ArrowLeft','KeyA']:['ArrowUp','KeyW'],next=land?['ArrowRight','KeyD']:['ArrowDown','KeyS'],prev2=land?['ArrowUp','KeyW']:['ArrowLeft','KeyA'],next2=land?['ArrowDown','KeyS']:['ArrowRight','KeyD'];
@@ -988,7 +990,7 @@ function kill(e){e.dead=true;G.kills++;G.stageKills++;sfx('die');
   if(e.boss){if(e.mini)miniDeath(e);else bossDeath(e);return}
   dropGem(e.x,e.y,e.xp);
   if(Math.random()<0.03*(1+0.15*ML('luck'))*(e.elite?20:1))G.gems.push({x:e.x+rnd(-4,4),y:e.y+rnd(-4,4),k:'prayer'});
-  const r=Math.random();if(r<0.025)G.gems.push({x:e.x,y:e.y,k:'manna'});else if(r<0.031)G.gems.push({x:e.x,y:e.y,k:'med'});else if(r<0.036)G.gems.push({x:e.x,y:e.y,k:'flare'});
+  const r=Math.random();if(r<0.025)G.gems.push({x:e.x,y:e.y,k:'manna'});else if(r<0.031)G.gems.push({x:e.x,y:e.y,k:'med'});else if(r<0.0335)G.gems.push({x:e.x,y:e.y,k:'flare'});else if(r<0.036)G.gems.push({x:e.x,y:e.y,k:'lots'});
   if(e.elite||((e.type==='tank'||e.type==='gunboat')&&Math.random()<0.25))G.gems.push({x:e.x,y:e.y,k:'crate'});
   if(e.elite)explode(e.x,e.y,30,0,true);
   if(e.type==='tank'||e.type==='heli'||e.type==='gunboat')explode(e.x,e.y,18,0,true)}
@@ -1219,6 +1221,7 @@ function collect(g){
  if(g.k==='xp'){P.xp+=g.v*(1+0.08*ML('growth'))*(1+0.1*(P.pass.wisdom||0));sfx('pick');while(P.xp>=P.next){P.xp-=P.next;P.lv++;P.next=xpNeed(P.lv);G.pending++}}
  else if(g.k==='med'){P.hp=Math.min(P.maxHp,P.hp+60);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:60,t:0.8,c:'g'})}
  else if(g.k==='manna'){P.hp=Math.min(P.maxHp,P.hp+20);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:20,t:0.8,c:'g'})}
+ else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');banner('제비','레벨업 선택지를 다시 뽑을 수 있다 · 보유 '+P.rerolls,1.6)}
  else if(g.k==='flare'){for(const o of G.gems)if(o.k==='xp')o.vac=true;sfx('heal');banner('','',0)}
  else if(g.k==='prayer'){PRAY++;G.prayers=(G.prayers||0)+1;saveMeta();sfx('pray');G.nums.push({x:P.x+6,y:P.y-16,v:1,t:0.6,c:'y'})}
  else if(g.k==='anvil'){const ew=P.weapons.find(evoReady);if(ew){evolve(ew);return}G.pending++;sfx('lvl');banner('모루','진화할 무기가 없어 레벨업으로 바뀌었다',1.8)}
@@ -1376,7 +1379,7 @@ function render(){
  // pickups
  for(const g of G.gems){const x=Math.round(g.x-cx),y=Math.round(g.y-cy);if(x<-14||x>W+14||y<-14||y>H+14)continue;const PS=1;
   if(g.k==='xp'){const s=SPR.gem[g.v>=20?2:g.v>=5?1:0],w=Math.round(s.W*PS),h=Math.round(s.H*PS);ctx.drawImage(s.i,x-Math.floor(w/2),y-Math.floor(h/2)+Math.round(Math.sin(tGlobal*4+g.x)*1),w,h)}
-  else{const s=g.k==='prayer'?SPR.prayer:g.k==='anvil'?SPR.anvil:g.k==='med'?SPR.medkit:g.k==='manna'?SPR.manna:g.k==='flare'?SPR.flare:SPR.crate,w=Math.round(s.W*PS),h=Math.round(s.H*PS);ctx.drawImage(shadowSpr(w),x-Math.floor(w/2),y+Math.floor(h/2)-1);ctx.drawImage(s.i,x-Math.floor(w/2),y-Math.floor(h/2)-Math.round(Math.abs(Math.sin(tGlobal*3))*2),w,h)}}
+  else{const s=g.k==='prayer'?SPR.prayer:g.k==='anvil'?SPR.anvil:g.k==='med'?SPR.medkit:g.k==='manna'?SPR.manna:g.k==='flare'?SPR.flare:g.k==='lots'?SPR.lots:SPR.crate,w=Math.round(s.W*PS),h=Math.round(s.H*PS);ctx.drawImage(shadowSpr(w),x-Math.floor(w/2),y+Math.floor(h/2)-1);ctx.drawImage(s.i,x-Math.floor(w/2),y-Math.floor(h/2)-Math.round(Math.abs(Math.sin(tGlobal*3))*2),w,h)}}
  // y-sorted
  const list=[];
  const b=G.b;const cs=40;
@@ -1662,7 +1665,7 @@ function applyOpt(o){if(o.t==='w'){const w=P.weapons.find(w=>w.k===o.k);if(w)w.l
 function autoLevel(n){for(let i=0;i<n;i++){const ops=options();applyOpt(ops.find(o=>o.t==='w'&&o.lv>1)||ops.find(o=>o.t==='w')||ops[0]);P.lv++}
   P.next=xpNeed(P.lv);for(const w of P.weapons)if(evoReady(w)){w.evo=true;w.shown=true;w.noted=true}P.hp=P.maxHp}
 let lvSel=0,lvOpenT=0;
-let lvConfirm=()=>{};
+let lvConfirm=()=>{},lvReroll=()=>{};
 function selCard(i){const cs=[...document.querySelectorAll('#scr .card')];lvSel=i;cs.forEach((c,j)=>c.classList.toggle('sel',j===i));if(cs[i])cs[i].scrollIntoView({block:'nearest'})}
 function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
  const cards=ops.map((o,i)=>{if(o.t==='auto')return`<div class="card auto" data-i="${i}"><img src="${ICON.food}"><div class="lv">AUTO</div><div class="nm">자동 선택</div><div class="ds">게임이 끝날 때까지 레벨업 화면 없이<br>만나(체력 20)를 자동으로 받습니다</div><div class="k">${i+1}</div></div>`;
@@ -1670,12 +1673,12 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
   const d=o.t==='w'?WDEF[o.k]:PDEF[o.k];let ds=o.t==='w'?wdiff(o.k,o.lv):d.desc;
   if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${PDEF[EVO[o.k].p].name}</div>`;else{const wk=Object.keys(EVO).find(k=>EVO[k].p===o.k&&(!WDEF[k].hero||WDEF[k].hero===P.hero));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
   return`<div class="card" data-i="${i}"><img src="${ICON[o.k]}"><div class="lv ${o.lv===1?'new':''}">${o.lv===1?'NEW':'LV '+o.lv}</div><div class="nm">${d.name}</div><div class="ds">${ds}</div><div class="k">${i+1}</div></div>`}).join('');
- screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${(P.rerolls||0)>0&&ops.some(o=>o.t==='w'||o.t==='p')?`<div class="btn reroll" id="reroll"><img src="${bossImg('lots',SPR.lots.i)}">제비 뽑기 · 다시 고르기 <b>${P.rerolls}</b></div>`:''}${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
  lvSel=0;selCard(0);lvOpenT=performance.now();document.querySelectorAll('#scr .card').forEach((c,j)=>c.addEventListener('mouseenter',()=>selCard(j)));
  let done=false;lvConfirm=i=>{if(done||state!=='levelup')return;const o=ops[i];if(!o)return;done=true;
   applyOpt(o);
   G.pending--;sfx('click');slots();checkReady();hideScreen();state='play';if(G.pending>0)openLevelUp()};
- const all=[...document.querySelectorAll('#scr .card')];
+ const all=[...document.querySelectorAll('#scr .card')];const rr=$('reroll');if(rr)rr.addEventListener('click',()=>{if(done||!(P.rerolls>0))return;P.rerolls--;done=true;sfx('pray');openLevelUp()});lvReroll=()=>rr&&rr.click();
  all.forEach((c,j)=>c.addEventListener('click',()=>{if(c.classList.contains('pick')){lvConfirm(+c.dataset.i);return}
   all.forEach(x=>x.classList.remove('pick'));c.classList.add('pick');selCard(j);$('lvhint').classList.add('on');sfx('click')}))}
 
