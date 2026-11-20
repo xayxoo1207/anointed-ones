@@ -475,7 +475,18 @@ function hero2(k){
 /* ===== per-stage enemy roster ===== */
 function outl(rows){const h=rows.length,w=Math.max(...rows.map(r=>r.length)),f=(x,y)=>{const c=(rows[y]||'')[x];return c&&c!=='.'};const g=[];
   for(let y=-1;y<=h;y++){let s='';for(let x=-1;x<=w;x++){if(f(x,y)){s+=rows[y][x];continue}s+=(f(x+1,y)||f(x-1,y)||f(x,y+1)||f(x,y-1))?'k':'.'}g.push(s)}return g}
-function up2(rows){const o=[];for(const r of rows){const s=r.split('').map(c=>c+c).join('');o.push(s,s)}return o}
+function stripOut(rows){const h=rows.length,w=Math.max(...rows.map(r=>r.length)),G=(x,y)=>(rows[y]||'')[x]||'.';const o=[];
+  for(let y=0;y<h;y++){let s='';for(let x=0;x<w;x++){const c=G(x,y);s+=(c==='k'&&(G(x+1,y)==='.'||G(x-1,y)==='.'||G(x,y+1)==='.'||G(x,y-1)==='.'))?'.':c}o.push(s)}return o}
+function s2x(rows){const h=rows.length,w=Math.max(...rows.map(r=>r.length)),G=(x,y)=>(y<0||y>=h||x<0||x>=w)?'.':(rows[y][x]||'.');const o=[];
+  for(let y=0;y<h;y++){let a='',b='';for(let x=0;x<w;x++){const P=G(x,y),A=G(x,y-1),B=G(x+1,y),C=G(x-1,y),D=G(x,y+1);
+    a+=(C===A&&C!==D&&A!==B?A:P)+(A===B&&A!==C&&B!==D?B:P);b+=(D===C&&D!==B&&C!==A?C:P)+(B===D&&B!==A&&D!==C?D:P)}o.push(a,b)}return o}
+function s3x(rows){const h=rows.length,w=Math.max(...rows.map(r=>r.length)),G=(x,y)=>(y<0||y>=h||x<0||x>=w)?'.':(rows[y][x]||'.');const o=[];
+  for(let y=0;y<h;y++){let r0='',r1='',r2='';for(let x=0;x<w;x++){const A=G(x-1,y-1),B=G(x,y-1),C=G(x+1,y-1),D=G(x-1,y),E=G(x,y),F=G(x+1,y),Gg=G(x-1,y+1),H=G(x,y+1),I=G(x+1,y+1);
+    if(B!==H&&D!==F){r0+=(D===B?D:E)+((D===B&&E!==C)||(B===F&&E!==A)?B:E)+(B===F?F:E);r1+=((D===B&&E!==Gg)||(D===H&&E!==A)?D:E)+E+((B===F&&E!==I)||(H===F&&E!==C)?F:E);r2+=(D===H?D:E)+((D===H&&E!==I)||(H===F&&E!==Gg)?H:E)+(H===F?F:E)}
+    else{r0+=E+E+E;r1+=E+E+E;r2+=E+E+E}}o.push(r0,r1,r2)}return o}
+function bigify(rows,n){let r=stripOut(rows);if(n===2)r=s2x(r);else if(n===3)r=s3x(r);else if(n===4)r=s2x(s2x(r));else if(n===6)r=s2x(s3x(r));return outl(r)}
+function sprBig(rows,pal){const r=raw(rows,pal),rf=flip(r);shadeDecor(r);shadeDecor(rf);return{i:r,f:rf,w:white(r),wf:white(rf),W:r.width,H:r.height}}
+function up2(rows){return bigify(rows,2)}
 function hum(o){
   const frame=leg=>{const g=Array.from({length:17},()=>Array(13).fill('.'));const P=(x,y,c)=>{if(x>=0&&x<13&&y>=0&&y<17)g[y][x]=c};const Rc=(x,y,w,h,c)=>{for(let j=0;j<h;j++)for(let i=0;i<w;i++)P(x+i,y+j,c)};
     const lc=o.greave?'g':'s',ls=o.greave?'G':'S';
@@ -512,9 +523,9 @@ function hum(o){
     else if(W==='axe'){Rc(11,4,1,8,'w');Rc(12,4,1,3,'g');P(10,4,'G')}
     else if(W==='mace'){Rc(11,6,1,6,'w');Rc(10,4,3,2,'G');P(11,3,'G')}
     if(o.round){Rc(0,8,4,4,'x');Rc(1,7,2,1,'X');Rc(1,12,2,1,'X');P(0,8,'X');P(0,11,'X');P(3,8,'X');P(3,11,'X');P(1,9,'y');P(2,10,'X')}
-    let rows=outl(g.map(r=>r.join('')));if(o.big)rows=up2(rows);return rows};
+    let rows=outl(g.map(r=>r.join('')));return rows};
   const pal=Object.assign({k:OUT,e:'#ff4a3a',b:'#1a1410',W:'#e8eef6',y:'#e8c04a',o:'#ff8a2a',r:'#c03a2a',f:'#4a3020',w:'#7a5232',g:'#c8ccd4',G:'#7a808c',s:'#c98a62',S:'#8a5a3e',d:'#2a1c14',l:'#5a3a20',x:'#8a6a3a',X:'#4a3420'},o.pal);
-  return{A:frame(0),B:frame(1),pal}}
+  const sA=frame(0),sB=frame(1);return o.big?{A:up2(sA),B:up2(sB),sA,sB,pal}:{A:sA,B:sB,pal}}
 function anim(rowsA,rowsB,pal){return{A:outl(rowsA),B:outl(rowsB||rowsA),pal:Object.assign({k:OUT},pal)}}
 const BEAST={
  bull:()=>anim(["...........H..H.","...........HBBH.",".BBBBBBBBBBBBeBB","BBbBBBBBBBBBBBBBn","BbbBBBBBBBBBBBnn",".BbbbbbbbbBBBB..",".BB.BB...BB.BB..",".BB.BB...BB.BB..",".hh.hh...hh.hh.."],
@@ -554,7 +565,7 @@ const ROSTER=[
  {grp:'블레셋 군대',grunt:['블레셋 보병',HM('phil',{head:'feather',wpn:'spear',round:1})],dog:['블레셋 척후병',HM('phil',{head:'feather',wpn:'sword',pal:{a:'#c8b080',A:'#8a7a50'}})],
   rpg:['블레셋 투창병',HM('phil',{head:'feather',wpn:'jav',strap:1})],heavy:['블레셋 방패병',HM('phil',{head:'helm',wpn:'sword',tall:1,mail:1,greave:1,pal:{h:'#c03a2a',a:'#8a909c',A:'#5a606c'}})],
   tank:['가드의 거인',HM('phil',{head:'helm',wpn:'spear',mail:1,greave:1,beard:1,big:1,pal:{h:'#c03a2a',a:'#9aa0a8',A:'#5a606c',s:'#b87a52'}})]},
- {grp:'애굽 군대',frog:['애굽 보병',HM('egy',{head:'nemes',wpn:'khopesh',kiltS:1})],boat:['애굽 병거',()=>BEAST.chariot(false)],gunboat:['바로의 병거대장',()=>{const c=BEAST.chariot(true);return{A:up2(c.A),B:up2(c.B),pal:c.pal}}]},
+ {grp:'애굽 군대',frog:['애굽 보병',HM('egy',{head:'nemes',wpn:'khopesh',kiltS:1})],boat:['애굽 병거',()=>BEAST.chariot(false)],gunboat:['바로의 병거대장',()=>{const c=BEAST.chariot(true);return{A:up2(c.A),B:up2(c.B),sA:c.A,sB:c.B,pal:c.pal}}]},
  {grp:'시날의 무리',grunt:['바벨의 벽돌공',HM('bab',{head:'band',wpn:'hammer',beard:1})],dog:['시날의 전령',HM('bab',{head:'turban',wpn:'staff',pal:{a:'#9a5a2a',A:'#6a3a18'}})],
   rpg:['탑의 감독관',HM('bab',{head:'cone',wpn:'staff',robe:1,beard:1,pal:{a:'#5a3a6a',A:'#3a2448',c:'#5a3a6a',C:'#3a2448'}})],heavy:['역청 운반꾼',HM('bab',{head:'load',wpn:'mace',beard:1,pal:{a:'#3a3028',A:'#221c18'}})],
   tank:['벽돌 거상',HM('bab',{head:'cone',wpn:'hammer',mail:1,beard:1,big:1,pal:{a:'#a0603a',A:'#6a3a20',s:'#b07040'}})]},
@@ -563,7 +574,7 @@ const ROSTER=[
   tank:['르바임 거인',HM('bashan',{head:'horned',wpn:'axe',mail:1,beard:1,big:1,pal:{s:'#a87250'}})]},
  {grp:'아말렉 족속',grunt:['아말렉 약탈자',HM('amal',{head:'hood',wpn:'sword'})],dog:['아말렉 낙타병',BEAST.camel],
   rpg:['아말렉 궁수',HM('amal',{head:'hood',wpn:'bow',pal:{h:'#c8a870',H:'#8a7048'}})],heavy:['아말렉 방패병',HM('amal',{head:'turban',wpn:'spear',tall:1,beard:1})],
-  tank:['광야의 전갈',()=>{const c=BEAST.scorpion();return{A:up2(c.A),B:up2(c.B),pal:c.pal}}]},
+  tank:['광야의 전갈',()=>{const c=BEAST.scorpion();return{A:up2(c.A),B:up2(c.B),sA:c.A,sB:c.B,pal:c.pal}}]},
  {grp:'갈대아 군대',grunt:['바벨론 군사',HM('chal',{head:'cone',wpn:'spear',beard:1,round:1})],dog:['날개 달린 사자',BEAST.lion],
   rpg:['갈대아 술사',HM('chal',{head:'cone',wpn:'staff',robe:1,beard:1,pal:{a:'#4a2a5a',A:'#2e1a3a',c:'#4a2a5a',C:'#2e1a3a',h:'#c8a040'}})],heavy:['바벨론 중장보병',HM('chal',{head:'cone',wpn:'mace',mail:1,greave:1,beard:1,tall:1})],
   tank:['금 신상',null]},
@@ -656,6 +667,7 @@ const STAGES=[
  {name:'무너진 바벨론',region:'큰 성 바벨론',type:'폐허의 전투',biome:'ruins',dur:900,boss:'beast',bossName:'일곱 머리 짐승',brief:'무너진 큰 성의 잿더미에서 짐승이 일어난다.',verse:'"무너졌도다 무너졌도다 큰 성 바벨론이여" — 계 18:2'},
  {name:'큰 바다',region:'혼돈의 깊음',type:'최후의 전투',biome:'storm',dur:900,boss:'leviathan',bossName:'리워야단',brief:'폭풍의 바다 끝, 꼬불꼬불한 뱀 리워야단. 마지막 싸움이다.',verse:'"날랜 뱀 리워야단 곧 꼬불꼬불한 뱀 리워야단을 벌하시며" — 사 27:1',final:true},
 ];
+const ET_NAME={heli:'악령'};
 const ET={
  grunt:{hp:10,spd:30,dmg:8,r:5,xp:1},
  dog:{hp:6,spd:60,dmg:6,r:4,xp:1},
@@ -677,7 +689,7 @@ const WDEF={
  fist:{name:'삼손의 주먹',desc:'가까운 적에게 주먹을 내리쳐 주변 적까지 날려버린다',hero:'samson'},
  cart:{name:'아브라함의 수레',desc:'수레가 가로줄을 3초간 왕복하며 관통한 뒤 폭발',hero:'abraham'},
  grenade:{name:'제단의 숯불',desc:'적 무리에 숯불을 던져 광역 피해'},
- drone:{name:'그룹 쉴드',desc:'그룹이 주위를 돌며 닿는 적을 공격'},
+ drone:{name:'그룹의 보호',desc:'그룹이 주위를 돌며 닿는 적을 공격'},
  flame:{name:'엘리야의 불',desc:'진행 방향으로 하늘의 불을 내린다'},
  mortar:{name:'하늘의 우박',desc:'무작위 지점에 큰 우박이 떨어진다'},
  air:{name:'불병거',desc:'불병거가 전장을 가로지르며 불을 쏟는다'},
@@ -693,7 +705,7 @@ const WS={
  rifle:l=>({dmg:7+2.5*(l-1),cd:0.6*Math.pow(0.93,l-1),n:[1,1,2,2,3,3,4,4][l-1],pierce:[0,0,0,1,1,1,2,3][l-1]}),
  grenade:l=>({dmg:20+7*l,cd:2.4*Math.pow(0.93,l-1),n:1+Math.floor(l/3),r:20+2*l}),
  drone:l=>({dmg:6+2.5*l,n:Math.min(5,1+Math.floor(l/2)),R:28+l*2}),
- flame:l=>({dmg:3+1.4*l,range:38+4*l,ang:0.42+0.03*l}),
+ flame:l=>({dmg:3+1.4*l,range:60+6*l,ang:0.38+0.03*l}),
  mortar:l=>({dmg:28+9*l,cd:3.4*Math.pow(0.92,l-1),n:1+l,r:24+l}),
  air:l=>({dmg:35+12*l,cd:Math.max(4.5,10-0.7*l),r:20+l,lines:l>=6?2:1}),
  aura:l=>({dmg:5+2.5*(l-1),R:24+3*l,cd:0.55*Math.pow(0.95,l-1)}),
@@ -719,7 +731,7 @@ const evoReady=w=>!w.evo&&w.lv>=WMAX&&(P.pass[EVO[w.k].p]||0)>0;
 const WMAX=8,PMAX=5,MAXW=6;
 const PDEF={
  vest:{name:'의의 호심경',desc:'받는 피해 -1.5'},
- boots:{name:'복음의 신',desc:'이동 속도 +8%'},
+ boots:{name:'복음을 전하는 발',desc:'이동 속도 +8%'},
  ammo:{name:'쉬지 않는 기도',desc:'무기 재사용 대기 -8%'},
  he:{name:'기름부음',desc:'모든 피해량 +12%'},
  magnet:{name:'목자의 지팡이',desc:'획득 범위 +40%'},
@@ -810,7 +822,7 @@ const METADEF=[
  {k:'regen',name:'만나',desc:'초당 체력 회복 +0.2',max:5,base:20,icon:'food'},
  {k:'might',name:'기름부음',desc:'모든 피해량 +5%',max:5,base:30,icon:'he'},
  {k:'armor',name:'의의 호심경',desc:'받는 피해 -1',max:3,base:40,icon:'vest'},
- {k:'speed',name:'복음의 신',desc:'이동 속도 +5%',max:3,base:30,icon:'boots'},
+ {k:'speed',name:'복음을 전하는 발',desc:'이동 속도 +5%',max:3,base:30,icon:'boots'},
  {k:'cd',name:'쉬지 않는 기도',desc:'무기 재사용 대기 -3%',max:4,base:40,icon:'ammo'},
  {k:'magnet',name:'목자의 지팡이',desc:'획득 범위 +20%',max:3,base:20,icon:'magnet'},
  {k:'growth',name:'솔로몬의 지혜',desc:'경험치 획득 +8%',max:5,base:25,icon:'wisdom'},
@@ -852,13 +864,15 @@ function shadeDecor(c){const w=c.width,h=c.height,x=c.getContext('2d'),im=x.getI
   x.putImageData(im,0,0);return c}
 function buildStage(){
   const b=G.b;const ep=Object.assign({},BASEPAL,b.enemy);
-  for(const k of ['grunt','dog','rpg','heavy','tank','heli','frog','boat','gunboat']){const pp=Object.assign({},ep,ESPEC[k]||{});SPR[k]=[spr(SD[k+'A'],pp),spr(SD[(SD[k+'B']?k+'B':k+'A')],pp)]}
+  const ROWS={};for(const k of ['grunt','dog','rpg','heavy','tank','heli','frog','boat','gunboat']){const pp=Object.assign({},ep,ESPEC[k]||{});const A=SD[k+'A'],B=SD[(SD[k+'B']?k+'B':k+'A')];ROWS[k]={A,B,pal:pp};SPR[k]=[spr(A,pp),spr(B,pp)]}
   SPR.fly=[spr(SD.fly,Object.assign({},ep,{m:'#2a3a22',M:'#4a5a32',W:'#c8d0e0'}))];
   {const d=hum({head:'hair',beard:1,robe:1,wpn:'staff',pal:{s:'#c08a62',e:'#1a1010',a:'#7a5a3a',A:'#5a4026',c:'#7a5a3a',C:'#5a4026',l:'#3a2414',d:'#e8e4dc',w:'#8a6a3a',y:'#ffe08a',o:'#ffb03a'}});SPR.elijah=[spr(d.A,d.pal),spr(d.B,d.pal)]}
   SPR.qmark=spr(['.kkkkk.','kyyyyyk','kykkkyk','kkk.kyk','..kyyk.','..kyk..','..kkk..','..kyk..','..kkk..'],Object.assign({},BASEPAL,{y:'#fff44f'}));
-  SPR.calf=SPR.dog;SPR.molech=SPR.rpg;SPR.dagon=SPR.frog;
-  {const R=ROSTER[G.si]||{};for(const k in R){if(k==='grp'||!R[k][1])continue;const d=R[k][1]();SPR[k]=[spr(d.A,d.pal),spr(d.B,d.pal)]}}
-  {const bc=BOSSES[G.st.boss];SPR.boss=[spr(SD[bc.spr],Object.assign({},BASEPAL,bc.pal))]}
+  SPR.calf=[sprBig(bigify(ROWS.dog.A,3),ROWS.dog.pal),sprBig(bigify(ROWS.dog.B,3),ROWS.dog.pal)];SPR.molech=[sprBig(bigify(ROWS.rpg.A,3),ROWS.rpg.pal),sprBig(bigify(ROWS.rpg.B,3),ROWS.rpg.pal)];SPR.dagon=[sprBig(bigify(ROWS.frog.A,4),ROWS.frog.pal),sprBig(bigify(ROWS.frog.B,4),ROWS.frog.pal)];
+  SPR.flyBig=[sprBig(bigify(SD.fly,2),Object.assign({},ep,{m:'#2a3a22',M:'#4a5a32',W:'#c8d0e0'}))];
+  {const R=ROSTER[G.si]||{};for(const k in R){if(k==='grp'||!R[k][1])continue;const d=R[k][1]();SPR[k]=[spr(d.A,d.pal),spr(d.B,d.pal)];ROWS[k]=d}}
+  for(const k in ROWS){const d=ROWS[k];const n=d.sA?3:2,a=d.sA||d.A,b=d.sB||d.B;SPR[k+'_E']=[sprBig(bigify(a,n),d.pal),sprBig(bigify(b,n),d.pal)]}
+  {const bc=BOSSES[G.st.boss];SPR.boss=[sprBig(bigify(SD[bc.spr],bc.sc),Object.assign({},BASEPAL,bc.pal))]}
   const bp=Object.assign({},ep,{T:'#3a2222',t:'#6a3434',R:'#5a1414',g:'#a0a6b0',c:'#ff6a4a'});
   SPR.bossTank=[spr(SD.tankA,bp),spr(SD.tankB,bp)];SPR.bossHeli=[spr(SD.heliA,bp)];SPR.bossShip=[spr(SD.shipA,Object.assign({},bp,{T:'#3a3e48',t:'#5a606c',c:'#ff6a4a'}))];
   const dp=Object.assign({},BASEPAL,b.pal);DECOR={};for(const[d]of b.decor){const r=raw(SD[d],dp),rf=flip(r);DECOR[d]={i:shadeDecor(r),f:shadeDecor(rf),W:r.width,H:r.height}}
@@ -917,7 +931,7 @@ function spawnTick(dt){npcTick(dt);
   if(G.t>=G.evt&&!G.boss){G.evt+=60;const ty=G.b.land?(Math.random()<0.5?'grunt':'dog'):'frog';const n=Math.round((24+G.si*4)*0.8);banner('어둠의 포위',((ROSTER[G.si]||{}).grp||'적의 무리')+'가 사방에서 몰려온다!',1.6);
     for(let i=0;i<n;i++){const a=i/n*TAU,R=Math.hypot(W,H)/2+10;spawnEnemy(ty,P.x+Math.cos(a)*R,P.y+Math.sin(a)*R)}}
   if(G.t>=G.elite&&!G.boss&&!G.bossSpawned&&!G.minis.some(m=>!m.dead)){G.elite+=80;const ty=G.b.land?(G.si>=1&&Math.random()<0.5?'tank':'heavy'):'gunboat';const[x,y]=ringPos(20);const e=spawnEnemy(ty,x,y,ty==='heavy'?9:4);
-    e.elite=true;{const m=e.w>24?1.4:2;e.sc=m;e.w*=m;e.h*=m}e.r=Math.round(e.r*1.8);e.kbRes=1;e.xp*=4;banner('강한 적 출현 · '+(((ROSTER[G.si]||{})[ty]||['강한 적'])[0]),'처치 시 축복의 상자 확정 획득',1.8);sfx('alarm')}
+    e.elite=true;if(SPR[ty+'_E']){e.spr=ty+'_E';e.sc=1;e.w=SPR[e.spr][0].W;e.h=SPR[e.spr][0].H}else{e.sc=2;e.w*=2;e.h*=2}e.r=Math.round(e.r*1.8);e.kbRes=1;e.xp*=4;banner((((ROSTER[G.si]||{})[ty]||[ET_NAME[ty]||'우상'])[0]),'',1.8);sfx('alarm')}
   if(G.miniIdx<4&&G.t>=G.nextMini){G.nextMini+=180;spawnMinis(G.miniIdx++)}
   if(!G.bossSpawned&&G.t>=G.st.dur)spawnBoss();
 }
@@ -926,7 +940,7 @@ function makeBoss(o){const[x,y]=ringPos(40);
     spr:o.spr,sc:o.sc,boss:true,mini:!!o.mini,name:o.name,ta:2,tb:4,tc:o.mini?999:7,ang:rnd(TAU),spiral:0};
   const s=SPR[o.spr][0];e.w=s.W*o.sc;e.h=s.H*o.sc;G.en.push(e);return e}
 const MINIS={land:[['tank'],['heli'],['heavy'],['tank','heli']],sea:[['gunboat'],['heli'],['gunboat'],['gunboat','heli']]};
-const MINIDEF={tank:{bt:'tank',spr:'calf',sc:3,r:16,name:'금송아지'},heli:{bt:'heli',spr:'fly',sc:2,r:16,name:'바알세붑'},heavy:{bt:'tank',spr:'molech',sc:3,r:18,name:'몰록'},gunboat:{bt:'ship',spr:'dagon',sc:4,r:18,name:'다곤'}};
+const MINIDEF={tank:{bt:'tank',spr:'calf',sc:1,r:16,name:'금송아지'},heli:{bt:'heli',spr:'flyBig',sc:1,r:16,name:'바알세붑'},heavy:{bt:'tank',spr:'molech',sc:1,r:18,name:'몰록'},gunboat:{bt:'ship',spr:'dagon',sc:1,r:18,name:'다곤'}};
 const LORE={
  calf:{t:'금송아지',d:'모세가 시내 산에 올라간 사이, 아론이 백성의 금 고리를 받아 송아지 형상을 만들자 백성이 "이스라엘아 이는 너를 애굽 땅에서 인도하여 낸 너의 신이로다" 하며 섬긴 우상.',r:'출애굽기 32:1-6'},
  fly:{t:'바알세붑',d:'병든 아하시야 왕이 물으러 사자를 보낸 에그론의 신. 복음서에서는 "바알세불"이라 하여 귀신의 왕을 가리키는 이름으로 불린다.',r:'열왕기하 1:2 · 마태복음 12:24'},
@@ -945,7 +959,7 @@ const sprURL={};function bossImg(key,fr){if(!sprURL[key])sprURL[key]=fr.toDataUR
 let introT=0,introId=0;
 function bossIntro(items,final){if(state!=='play')return;state='intro';introT=performance.now();const id=++introId;
  const rows=items.map(it=>`<div class="bi-row"><img src="${it.img}"><div><div class="bi-name">${it.t}</div><div class="bi-desc">${it.d}</div><div class="bi-ref">${it.r}</div></div></div>`).join('');
- screen(`<div class="panel bi"><div class="op" style="color:${final?'#ff4a3a':'#ffb04a'}">${final?'FINAL BOSS':'MINI BOSS'}</div><div class="big" style="font-size:calc(var(--p)*16);color:${final?'#ff4a3a':'#ffd34a'}">${final?'최종 보스 출현':'미니보스 출현'}</div>${rows}<div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro');
+ screen(`<div class="panel bi">${rows}<div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro');
  setTimeout(()=>{if(state==='intro'&&introId===id)leaveIntro(true)},7000)}
 function leaveIntro(force){if(!force&&performance.now()-introT<600)return;hideScreen();state='play';sfx('click')}
 function spawnMinis(k){const list=MINIS[G.b.land?'land':'sea'][k];const names=[];
@@ -954,7 +968,7 @@ function spawnMinis(k){const list=MINIS[G.b.land?'land':'sea'][k];const names=[]
 function spawnBoss(){G.bossSpawned=true;const st=G.st;
   const hp=16000*(1+G.si*0.8)*(st.final?1.5:1);
   const conf=BOSSES[st.boss];
-  G.boss=makeBoss({bt:conf.bt,spr:'boss',sc:conf.sc,r:conf.r,hp,name:st.bossName});
+  G.boss=makeBoss({bt:conf.bt,spr:'boss',sc:1,r:conf.r,hp,name:st.bossName});
   sfx('alarm');shake=6;{const L=LORE[st.boss];bossIntro([{t:L.t,d:L.d,r:L.r,img:bossImg('b_'+st.boss,SPR.boss[0].i)}],true)}}
 function curBoss(){if(G.boss&&!G.boss.dead)return G.boss;return G.minis.find(m=>!m.dead)||null}
 
@@ -1003,7 +1017,7 @@ function eShoot(x,y,a,spd,dmg,type){return;spd*=0.9;G.ebul.push({x,y,vx:Math.cos
 function nearest(x,y,maxD){let best=null,bd=maxD*maxD;for(const e of G.en){if(e.dead)continue;const dx=e.x-x,dy=e.y-y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=e}}return best}
 function onScreen(e){return e.x>cam.x-10&&e.x<cam.x+W+10&&e.y>cam.y-10&&e.y<cam.y+H+10}
 function after(t,fn){G.timers.push({t,fn})}
-function flameTick(w,s,napalm){const a=Math.atan2(P.ay,P.ax);for(let i=0;i<3;i++){const aa=a+rnd(-s.ang,s.ang),sp=rnd(80,130)*(s.range/50);part(P.x+P.ax*8,P.y-2+P.ay*8,Math.cos(aa)*sp,Math.sin(aa)*sp,s.range/sp*1.2,pick(['#fff3b0','#ffd34a','#ff8a2a','#ff4a1a']),pick([2,2,3]),0,'fire')}
+function flameTick(w,s,napalm){const a=Math.atan2(P.ay,P.ax);for(let i=0;i<4;i++){const aa=a+rnd(-s.ang,s.ang),sp=rnd(170,250)*(s.range/60);part(P.x+P.ax*8,P.y-2+P.ay*8,Math.cos(aa)*sp,Math.sin(aa)*sp,s.range/sp*1.2,pick(['#fff3b0','#ffd34a','#ff8a2a','#ff4a1a']),pick([2,2,3]),0,'fire');const fp=G.parts[G.parts.length-1];if(fp)fp.drag=0.975}
       addLight(P.x+P.ax*s.range*0.5,P.y+P.ay*s.range*0.5,s.range*1.2,'rgba(255,140,50,1)',0.05);sfx('flame');
       if(w.t<=0){w.t=0.14;if(napalm&&G.fires.length<45)G.fires.push({x:P.x+P.ax*s.range*0.75+rnd(-8,8),y:P.y+P.ay*s.range*0.75+rnd(-8,8),t:3,tick:0,dmg:14,r:13});query(P.x,P.y,s.range+10,e=>{const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy);if(d<s.range+e.r){let da=Math.atan2(dy,dx)-a;da=Math.atan2(Math.sin(da),Math.cos(da));if(Math.abs(da)<s.ang+0.15)hurt(e,s.dmg,dx/d*15,dy/d*15,Math.random()<0.6)}})}}
 function updEvo(w,dt){w.t-=dt;
@@ -1210,7 +1224,7 @@ function collect(g){
  else if(g.k==='anvil'){const ew=P.weapons.find(evoReady);if(ew){evolve(ew);return}G.pending++;sfx('lvl');banner('모루','진화할 무기가 없어 레벨업으로 바뀌었다',1.8)}
  else if(g.k==='crate'){G.pending++;sfx('lvl');for(let i=0;i<20;i++)part(P.x,P.y,rnd(-80,80),rnd(-120,-20),0.8,pick(['#ffd34a','#fff3b0','#ff8a2a']),2,200)}
 }
-function updParts(dt){if(!G)return;for(const p of G.parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.grav*dt;if(p.type==='smoke'){p.vx*=0.96;p.vy*=0.96;p.vy-=8*dt}else if(p.type==='fire'){p.vx*=0.92;p.vy*=0.92}}G.parts=G.parts.filter(p=>p.life>0)}
+function updParts(dt){if(!G)return;for(const p of G.parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.grav*dt;if(p.type==='smoke'){p.vx*=0.96;p.vy*=0.96;p.vy-=8*dt}else if(p.type==='fire'){const d=p.drag||0.92;p.vx*=d;p.vy*=d}}G.parts=G.parts.filter(p=>p.life>0)}
 
 // ================= WEATHER =================
 function initWeather(){G.wx=[];const t=G.b.weather;const n={leaf:45,rain:130,ash:80,snow:120,sand:100,storm:200}[t]||0;for(let i=0;i<n;i++)G.wx.push(newWx(t))}
@@ -1492,7 +1506,7 @@ function hud(){hudT-=1/60;if(hudT>0)return;hudT=0.08;
  
  $('pry').innerHTML=`<img src="${ICON.prayer}">${G.prayers||0}`;
  $('kil').textContent='☠'+G.kills;
- const cb=curBoss();$('boss').classList.toggle('hidden',!cb);if(cb){$('bossn').textContent=(cb.mini?'MINI · ':'')+cb.name;$('bossf').style.width=Math.max(0,cb.hp/cb.mhp*100)+'%'}}
+ const cb=curBoss();$('boss').classList.toggle('hidden',!cb);if(cb){$('bossn').textContent=cb.name;$('bossf').style.width=Math.max(0,cb.hp/cb.mhp*100)+'%'}}
 function slots(){const S=$('slots');S.innerHTML='<div class="srow" id="srw"></div><div class="srow" id="srp"></div>';let el=$('srw');for(const w of P.weapons)el.insertAdjacentHTML('beforeend',`<div class="slot ${w.evo?'evo':evoReady(w)?'ready':''}" title="${wname(w)}"><img src="${ICON[w.k]}"><i>${w.evo?'★':w.lv}</i></div>`);
  el=$('srp');for(const k in P.pass)el.insertAdjacentHTML('beforeend',`<div class="slot ps"><img src="${ICON[k]}"><i>${P.pass[k]}</i></div>`)}
 let bannerT=null;
@@ -1631,7 +1645,7 @@ function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake
  <div class="card"><img src="${ICON[e.p]}"><div class="nm">${PDEF[e.p].name}</div></div><span class="pl">▼</span>
  <div class="card gold"><img src="${ICON[w.k]}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
  <div style="margin-top:calc(var(--p)*8)"><div class="btn primary" data-act="evook">계속</div></div></div>`)}
-function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;banner('진화 준비 완료',`${WDEF[w.k].name} → ${EVO[w.k].name} · 미니보스의 모루를 획득하라`,2.6)}}
+function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;0}}
 function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>!WDEF[k].hero||WDEF[k].hero===P.hero).map(k=>{const e=EVO[k],w=P.weapons.find(x=>x.k===k);const cls=w&&w.evo?'ok':w?'have':'';
  return `<tr class="${cls}"><td><img src="${ICON[k]}"> ${WDEF[k].name}${w&&!w.evo?' '+w.lv:''}</td><td>+</td><td><img src="${ICON[e.p]}"> ${PDEF[e.p].name}${P.pass[e.p]?' ✓':''}</td><td>▶</td><td>${w&&w.evo?'★ ':''}${e.name}</td></tr>`}).join('')+'</table>'}
 // level up
