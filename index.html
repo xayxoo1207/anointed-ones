@@ -962,6 +962,7 @@ function spawnTick(dt){npcTick(dt);
     e.elite=true;if(SPR[ty+'_E']){e.spr=ty+'_E';e.sc=1;e.w=SPR[e.spr][0].W;e.h=SPR[e.spr][0].H}else{e.sc=2;e.w*=2;e.h*=2}e.r=Math.round(e.r*1.8);e.kbRes=1;e.xp*=4;banner('<span class="btag">ELITE</span>'+(((ROSTER[G.si]||{})[ty]||[ET_NAME[ty]||'우상'])[0]),'',1.8);sfx('alarm')}
   if(G.miniIdx<4&&G.t>=G.nextMini){G.nextMini+=180;spawnMinis(G.miniIdx++)}
   if(!G.bossSpawned&&G.t>=G.st.dur)spawnBoss();
+  else if(!G.bossSpawned&&!G.earlyBoss&&G.t>=(G.maxChk||0)){G.maxChk=G.t+1;if(G.pending===0&&!G.minis.some(m=>!m.dead)&&!options().some(o=>o.t==='w'||o.t==='p')){G.earlyBoss=true;banner('모든 준비가 끝났다','최종 보스가 다가온다',2.4);sfx('alarm');after(3,()=>{if(!G.bossSpawned)spawnBoss()})}}
 }
 function makeBoss(o){const[x,y]=ringPos(40);
   const e={type:'boss',bt:o.bt,x,y,hp:o.hp,mhp:o.hp,spd:(o.bt==='heli'?55:16)*0.9,dmg:(30+G.si*3)*(o.mini?0.7:1),r:o.r,xp:0,fly:o.bt==='heli',kbRes:1,kx:0,ky:0,flash:0,anim:0,face:1,alt:o.bt==='heli'?20:0,
@@ -988,7 +989,7 @@ let introT=0,introId=0;
 function bossIntro(items,final){if(state!=='play')return;state='intro';introT=performance.now();const id=++introId;
  const rows=items.map(it=>`<div class="bi-row"><img src="${it.img}"><div><div class="bi-tag" style="color:${final?'#ff4a3a':'#ffb04a'}">${final?'FINAL BOSS':'MINI BOSS'}</div><div class="bi-name">${it.t}</div><div class="bi-desc">${it.d}</div><div class="bi-ref">${it.r}</div></div></div>`).join('');
  screen(`<div class="panel bi">${rows}<div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro');
- setTimeout(()=>{if(state==='intro'&&introId===id)leaveIntro(true)},7000)}
+}
 function leaveIntro(force){if(!force&&performance.now()-introT<600)return;hideScreen();state='play';sfx('click')}
 function spawnMinis(k){const list=MINIS[G.b.land?'land':'sea'][k];const names=[];
   for(const t of list){const d=MINIDEF[t];const hp=1400*(1+G.si*0.4)*(1+k*0.7)/list.length*1.3;const e=makeBoss(Object.assign({},d,{hp,mini:true}));G.minis.push(e);names.push(d.name)}
