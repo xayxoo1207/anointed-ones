@@ -286,6 +286,15 @@ function flip(c){const d=mk(c.width,c.height),x=d.getContext('2d');x.translate(c
 function white(c){const d=mk(c.width,c.height),x=d.getContext('2d');x.drawImage(c,0,0);x.globalCompositeOperation='source-in';x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);return d}
 function spr(rows,pal){const i=raw(rows,pal);const w=white(i);return{i,f:flip(i),w,wf:flip(w),W:i.width,H:i.height}}
 const SD={};
+const PK={
+ gem:["....k....","...kWk...","..kAWak..",".kAAaaak.","kAAaaaadk","kaaaaaddk",".kaaaddk.","..kaddk..","...kdk...","....k...."],
+ prayer:["......k......",".....kyk.....",".....kyk.....","....kyWyk....","...kyWWWyk...","kkkyWWWWWykkk","kyyWWWWWWWyyk","kkkyWWWWWokkk","...kyWWWok...","....kyWok....",".....kok.....",".....kok.....","......k......"],
+ manna:["...kk.....","..kWWk.kk.","..kWwk.kWk",".kkkk.kWwk","kWWWk.kkk.","kWWwkkWWk.","kWwwkWWwwk",".kkkkWwwk.","....kkkk.."],
+ bread:["....kkkkkkkkkk....","..kkAWAAAAAAAAkk..",".kAWAAdAAAdAAAdAk.","kAAAAdAAAdAAAdAAak","kaAAAAAAAAAAAAAaak","kaaaaaaaaaaaaaaadk","kdaaaaaaaaaaaaaddk",".kdddddddddddddk..","..kkkkkkkkkkkkkk.."],
+ horn:["kk............","kAk...........","kAAk..........",".kAAk.........","..kAAkk.......","..kaAAAkk.....","...kaAAAAkkk..","....kaaAAAAAkk",".....kkaaaAAAk","......kkaaaaak","........kkkkk."],
+ chest:["..kkkkkkkkkkkkkkkk..",".kAAAAAAAAAAAAAAAAk.","kAaaaBaaaaaaaaBaaaAk","kaaaaBaaaaaaaaBaaaak","kkkkkkkkkkkkkkkkkkkk","kaaaaBaakyykaaBaaaak","kAaaaBaakyWkaaBaaaAk","kaaaaBaakkkkaaBaaaak","kaaaaBaaaaaaaaBaaaak","kdaaaBaaaaaaaaBaaadk","kddddBddddddddBddddk","kkkkkkkkkkkkkkkkkkkk"],
+ anvil:["......kkkkkkkkkkkkkkkkk.","kkkkkkQQQQQQQQQQQQQQQQQk","kQQQQQqqqqqqqqqqqqqqqqqk",".kkqqqqqqqqqqqqqqqqqqqdk","...kkkqqqqqqqqqqqqqqddk.","......kkkkqqqqqqqdkkk...",".........kqqqqqqdk......",".........kqqqqqqdk......","........kqqqqqqqqdk.....",".......kqqqqqqqqqqdk....","......kQqqqqqqqqqqqdk...","......kkkkkkkkkkkkkkk..."]};
+
 SD.playerA=["....kkkk....","...kHHhhk...","..kHhhhhhk..","..kkkkkkkkk.","...kskskk...","...ksSSk....","..krrrrrk...","krRrruuuk...","kRkuuuUukkkk",".kuskuUkggggk",".kkuuuUkkkkk","..kuuuUUk...","..kUuk.kUk..","..kuk..kuk..","..kbbk.kbbk.","..kkk..kkkk."];
 SD.playerB=SD.playerA.slice(0,12).concat(["...kUUuk....","...kuukk....","..kbbkbbk...","..kkkkkkk..."]);
 SD.gruntA=["...kkkkk....","..khHhhhk...",".khhhhhhhk..",".kkkkkkkkkk.","..ksekSk....","..ksSSk.....",".kuuuuuk....","kuuUuuUuk...","kuskuUUkkkkk","kkkuuUUggggGk",".kuuuUUkkkkk",".kuuuUUk....",".kUuk.kUk...",".kuk..kuk...",".kbbk.kbbk..",".kkk..kkkk.."];
@@ -584,16 +593,16 @@ function initStatic(){
   SPR.drone=spr(SD.angel,Object.assign({},BASEPAL,{W:'#f8f4e0',y:'#ffd34a'}));
   SPR.cart=spr(SD.cart,Object.assign({},BASEPAL,{a:'#8a6a3a',A:'#b08a4a',B:'#5a3a1e',G:'#2a2a2a'}));
   SPR.cartF=spr(SD.cart,Object.assign({},BASEPAL,{a:'#d8601a',A:'#ffb04a',B:'#7a2a0a',G:'#ffd34a'}));
-  SPR.medkit=spr(SD.medkit,Object.assign({},BASEPAL,{a:'#c8903a',A:'#e8b860'}));
-  SPR.manna=spr(['.k.k.','kWkWk','.kWk.','kWWWk','.kkk.'],Object.assign({},BASEPAL,{W:'#f8f4e0'}));
-  SPR.anvil=spr(['kkkkkkkkkkk.','kQQQQQQQQQkk','.kqqqqqqqqqk','..kkqqqqkkk.','....kqqk....','...kqqqqk...','..kqqqqqqk..','..kkkkkkkk..'],Object.assign({},BASEPAL,{q:'#6a707a',Q:'#c0c8d4'}));
+  SPR.medkit=spr(PK.bread,Object.assign({},BASEPAL,{a:'#c8903a',A:'#e8b860',d:'#8a5a22',W:'#fff0c8'}));
+  SPR.manna=spr(PK.manna,Object.assign({},BASEPAL,{W:'#f8f4e0',w:'#d0c4a4'}));
+  SPR.anvil=spr(PK.anvil,Object.assign({},BASEPAL,{q:'#6a707a',Q:'#c0c8d4',d:'#40444c'}));
   SPR.fist=spr(['.kkkkk..','kSsSsSkk','kssssssk','ksssssk.','.kkkkk..'],Object.assign({},BASEPAL,{s:'#d89a74',S:'#a8684e'}));
   SPR.animals=[['#e8e8e0','#5a5a5a'],['#d8a040','#8a5a20'],['#7a4a2a','#4a2e18']].map(([b,h])=>{const p=Object.assign({},BASEPAL,{b,h,e:'#111'});return[spr(SD.beast4,p),spr(SD.beast4B,p)]});
   {const p=Object.assign({},BASEPAL,{W:'#f8f8f0'});SPR.animals.push([spr(SD.dove,p),spr(SD.doveB,p)])}
-  SPR.prayer=spr(['...k...','..kyk..','.kyWyk.','kyWWWyk','.kyWyk.','..kyk..','...k...'],Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0'}));ICON.prayer=icon(['...k...','..kyk..','.kyWyk.','kyWWWyk','.kyWyk.','..kyk..','...k...'],Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0'}));ICON.gem=icon(SD.gem,Object.assign({},BASEPAL,{a:'#4fe36a',A:'#d6ffd0'}));
-  SPR.flare=spr(SD.flare,Object.assign({},BASEPAL,{A:'#d8c8a0'}));
-  SPR.crate=spr(SD.crate,Object.assign({},BASEPAL,{a:'#c8902a',A:'#ffd34a',y:'#fff3b0'}));
-  SPR.gem=[['#3fa9ff','#cfeeff'],['#4fe36a','#d6ffd0'],['#ff4d6d','#ffd6de']].map(c=>spr(SD.gem,Object.assign({},BASEPAL,{a:c[0],A:c[1]})));
+  SPR.prayer=spr(PK.prayer,Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0',o:'#c89a20'}));ICON.prayer=icon(['...k...','..kyk..','.kyWyk.','kyWWWyk','.kyWyk.','..kyk..','...k...'],Object.assign({},BASEPAL,{y:'#ffd34a',W:'#fffbe0'}));ICON.gem=icon(SD.gem,Object.assign({},BASEPAL,{a:'#4fe36a',A:'#d6ffd0'}));
+  SPR.flare=spr(PK.horn,Object.assign({},BASEPAL,{A:'#e0d0a8',a:'#a08860'}));
+  SPR.crate=spr(PK.chest,Object.assign({},BASEPAL,{a:'#c8902a',A:'#ffd34a',y:'#fff3b0',d:'#8a5a12',B:'#7a4a10',W:'#ffffff'}));
+  SPR.gem=[['#3fa9ff','#cfeeff','#1f62b8'],['#4fe36a','#d6ffd0','#22903a'],['#ff4d6d','#ffd6de','#a82040']].map(c=>spr(PK.gem,Object.assign({},BASEPAL,{a:c[0],A:c[1],d:c[2],W:'#ffffff'})));
   for(const k of ['sling','wave','grenade','flame','mortar','sniper','vest','boots','ammo','he','magnet','medic','food','scope'])ICON[k]=icon(SD['i_'+k],ICONPAL);
   ICON.wisdom=icon(['.k..kk..k.','kykkyykkyk','kyykyykyyk','kyyyyyyyyk','kyryycyyrk','koyyyyyyok','kkkkkkkkkk'],ICONPAL);ICON.cart=icon(SD.cart,ICONPAL);ICON.fist=icon(SD.i_fist,ICONPAL);ICON.ark=icon(SD.i_ark,ICONPAL);ICON.aura=icon(['kk..kk..kk','kWk.kk.kWk','.kWkkkkWk.','..kWWWWk..','.kWkyykWk.','.kWkyykWk.','..kWWWWk..','.kWkkkkWk.','kWk....kWk','kk......kk'],ICONPAL);ICON.drone=icon(SD.angel,ICONPAL);ICON.air=icon(SD.chariot,ICONPAL);
   DIG.w=[...Array(10)].map((_,i)=>mkDigit(i,'#ffffff'));DIG.y=[...Array(10)].map((_,i)=>mkDigit(i,'#ffd34a'));DIG.r=[...Array(10)].map((_,i)=>mkDigit(i,'#ff4a3a'));DIG.g=[...Array(10)].map((_,i)=>mkDigit(i,'#7aff7a'));
@@ -1350,7 +1359,7 @@ function render(){
    const n=Math.floor(Rr*TAU/2.5);for(let i=0;i<n;i++){const b=i/n*TAU-tGlobal*0.6;ctx.fillStyle=(i+Math.floor(tGlobal*10))%3===0?'#fff3b0':'#d8a030';ctx.fillRect(Math.round(px+Math.cos(b)*Rr),Math.round(py+Math.sin(b)*Rr),1,1)}
    for(let k=0;k<3;k++){const a0=(w.a||0)+k*TAU/3;for(let t=0;t<10;t++){const a=a0-t*0.045;ctx.globalAlpha=1-t/10;for(let r=Rr*0.25;r<=Rr;r+=1.5){ctx.fillStyle=t===0?'#ffffff':(r>Rr*0.7?'#ffd34a':'#ffb02a');ctx.fillRect(Math.round(px+Math.cos(a)*r),Math.round(py+Math.sin(a)*r),t===0?2:1,t===0?2:1)}}}ctx.globalAlpha=1}}
  // pickups
- for(const g of G.gems){const x=Math.round(g.x-cx),y=Math.round(g.y-cy);if(x<-12||x>W+12||y<-12||y>H+12)continue;const PS=2;
+ for(const g of G.gems){const x=Math.round(g.x-cx),y=Math.round(g.y-cy);if(x<-14||x>W+14||y<-14||y>H+14)continue;const PS=1;
   if(g.k==='xp'){const s=SPR.gem[g.v>=20?2:g.v>=5?1:0],w=Math.round(s.W*PS),h=Math.round(s.H*PS);ctx.drawImage(s.i,x-Math.floor(w/2),y-Math.floor(h/2)+Math.round(Math.sin(tGlobal*4+g.x)*1),w,h)}
   else{const s=g.k==='prayer'?SPR.prayer:g.k==='anvil'?SPR.anvil:g.k==='med'?SPR.medkit:g.k==='manna'?SPR.manna:g.k==='flare'?SPR.flare:SPR.crate,w=Math.round(s.W*PS),h=Math.round(s.H*PS);ctx.drawImage(shadowSpr(w),x-Math.floor(w/2),y+Math.floor(h/2)-1);ctx.drawImage(s.i,x-Math.floor(w/2),y-Math.floor(h/2)-Math.round(Math.abs(Math.sin(tGlobal*3))*2),w,h)}}
  // y-sorted
