@@ -161,6 +161,8 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .qo.pick{background:#3a2a0e;box-shadow:inset 0 0 0 calc(var(--p)*2) #ffd34a,0 0 calc(var(--p)*6) #ffb02a;color:#ffd34a}
 .qo.right{background:#1e3a14;box-shadow:inset 0 0 0 calc(var(--p)*2) #8fd16a;color:#cfffb0}
 .qo.wrong{background:#3a1414;box-shadow:inset 0 0 0 calc(var(--p)*2) #ff5a4a;color:#ffb0a0}
+.cuser{font-family:'Black Han Sans';font-size:calc(var(--p)*9);color:#fff;margin-bottom:calc(var(--p)*3)}.cuser small{display:block;font-family:'Do Hyeon';font-size:calc(var(--p)*6.5);color:#a89cb8}
+.cmsg{font-size:calc(var(--p)*6.5);color:#a89cb8;margin-top:calc(var(--p)*3);line-height:1.4}.gbtn{margin:0!important;background:#f4f4f6!important;color:#1a1a22!important;box-shadow:inset 0 0 0 var(--p) #000,0 calc(var(--p)*2) 0 #000!important}.gbtn b{color:#4285f4;margin-right:calc(var(--p)*3)}
 .btn.gold{box-shadow:inset 0 0 0 var(--p) #ffd34a,0 calc(var(--p)*2) 0 #000;color:#ffe9a0}
 .pbal{font-family:'Do Hyeon';font-size:calc(var(--p)*10);color:#ffd34a;display:flex;align-items:center;justify-content:center;gap:calc(var(--p)*3)}
 .pbal img,.mc img{width:calc(var(--p)*8);height:calc(var(--p)*8);image-rendering:pixelated}
@@ -846,7 +848,7 @@ function recompute(){const pv=k=>P.pass[k]||0;const old=P.maxHp;P.maxHp=Math.rou
 function newRun(si,hero){P=newPlayer(hero);recompute();P.hp=P.maxHp;P.revives=ML('revive');G=null;beginStage(si,{pending:0,kills:0,time:0});}
 function beginStage(i,carry){
   const st=STAGES[i];const b=BIOME[st.biome];
-  G={si:i,st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
+  G={si:i,st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],dying:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
      boss:null,bossSpawned:false,spawnAcc:0,pending:carry.pending||0,kills:carry.kills||0,totalTime:carry.time||0,stageKills:0,evt:50,minis:[],nextMini:180,miniIdx:0,clearT:-1,wx:[]};
   buildStage();P.x=0;P.y=0;P.inv=1;cam.x=-W/2;cam.y=-H/2;initWeather();
 }
@@ -983,8 +985,26 @@ function hurt(e,dmg,kx=0,ky=0,noNum){if(e.dead)return;dmg*=P.dmgMul;const crit=M
   e.hp-=dmg;e.flash=0.08;const k=1-e.kbRes;e.kx+=kx*k;e.ky+=ky*k;
   if(!noNum&&G.nums.length<90)G.nums.push({x:e.x+rnd(-3,3),y:e.y-e.h/2,v:dmg,t:0.6,c:crit?'y':'w'});
   sfx('hit');if(e.hp<=0)kill(e)}
+
+// ===== death crumble / blood =====
+function pixList(c){if(c._px)return c._px;const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,o=[];
+  for(let j=0;j<c.height;j++)for(let i=0;i<c.width;i++){const p=(j*c.width+i)*4;if(d[p+3]>0)o.push([i,j,`rgb(${d[p]},${d[p+1]},${d[p+2]})`])}return c._px=o}
+function enemyFrame(e){const set=SPR[e.spr];if(!set)return null;const fr=set[Math.floor(e.anim)%set.length];return{img:e.face<0?fr.f:fr.i,sc:e.sc||1,W:fr.W,H:fr.H}}
+function crumble(e,fr,red,step){const sc=fr.sc,w=fr.W*sc,h=fr.H*sc,x0=e.x-w/2,y0=e.y-h/2-(e.alt||0);const px=pixList(fr.img);step=step||1;
+  for(let n=0;n<px.length;n+=step){const[i,j,c]=px[n];if(!red&&c==='rgb(11,10,18)'&&Math.random()<0.6)continue;const wx=x0+i*sc,wy=y0+j*sc,dx=wx-e.x,dy=wy-(y0+h/2);
+    G.parts.push({x:wx,y:wy,vx:dx*rnd(2,4.5)+rnd(-18,18),vy:dy*rnd(1.5,3)-rnd(20,70),life:rnd(0.35,0.75),max:0.75,col:red?pick(['#ff3a2a','#c81e14','#8a0e0a','#ff6a4a']):c,size:Math.max(1,Math.round(sc*(step>1?1.5:1))),grav:260,type:'crumb'})}}
+function bleed(e,n,spirit){const cols=spirit?['#5a3a8a','#8a5ac8','#2a1a4a']:['#b01818','#d82a20','#6a0a0a','#e84030'];
+  for(let i=0;i<n;i++){const a=rnd(TAU),s=rnd(30,110);G.parts.push({x:e.x,y:e.y-(e.alt||0)-2,vx:Math.cos(a)*s,vy:Math.sin(a)*s-rnd(20,60),life:rnd(0.3,0.6),max:0.6,col:pick(cols),size:pick([1,1,2]),grav:300,type:'crumb'})}
+  if(G.b.land&&!e.fly&&!spirit){const dots=[];const r=Math.min(9,3+(e.r||5)*0.5);for(let i=0;i<7;i++)dots.push([rnd(-r,r)|0,(rnd(-r,r)*0.45)|0,pick([1,2,2,3])]);G.decals.push({x:e.x,y:e.y+3,blood:dots,born:G.t});if(G.decals.length>90)G.decals.shift()}}
+function bossDissolve(e,T){const fr=enemyFrame(e);if(!fr)return;G.dying.push({e:{x:e.x,y:e.y,alt:e.alt||0,face:e.face,anim:e.anim,spr:e.spr,sc:e.sc||1},fr,t:0,T})}
+function updDying(dt){if(!G.dying)return;for(const d of G.dying){d.t+=dt;if(!d.done&&d.t>=d.T){d.done=true;crumble(d.e,d.fr,true,2);crumble(d.e,d.fr,false,3);bleed(d.e,40,false);sfx('bigboom');shake=Math.max(shake,4)}}G.dying=G.dying.filter(d=>!d.done)}
+function drawDying(d,cx,cy){const fr=d.fr,sc=fr.sc,w=fr.W*sc,h=fr.H*sc,k=Math.min(1,d.t/(d.T*0.8));const jx=Math.round(rnd(-1,1)*k*2),jy=Math.round(rnd(-1,1)*k*2);
+  const x=Math.round(d.e.x-cx-w/2)+jx,y=Math.round(d.e.y-cy-h/2-d.e.alt)+jy;
+  const t=redTmp(fr.img);const tc=t.getContext('2d');tc.clearRect(0,0,t.width,t.height);tc.globalCompositeOperation='source-over';tc.drawImage(fr.img,0,0);tc.globalCompositeOperation='source-atop';tc.fillStyle=`rgba(${200+Math.round(55*k)},${Math.round(40*(1-k))},${Math.round(30*(1-k))},${k})`;tc.fillRect(0,0,t.width,t.height);tc.globalCompositeOperation='source-over';
+  ctx.drawImage(t,x,y,w,h);if(k>0.5){ctx.globalAlpha=(k-0.5)*0.6;ctx.drawImage(fr.img===fr.img?t:t,x-1,y,w,h);ctx.globalAlpha=1}}
+const _redT={};function redTmp(img){const key=img.width+'x'+img.height;if(!_redT[key])_redT[key]=mk(img.width,img.height);return _redT[key]}
 function kill(e){e.dead=true;G.kills++;G.stageKills++;sfx('die');
-  const ep=G.b.enemy;for(let i=0;i<(e.boss?0:6);i++)part(e.x,e.y,rnd(-60,60),rnd(-80,10),rnd(0.3,0.6),pick([ep.u,ep.U,OUT,'#7a1c1c']),1,200);
+  if(!e.boss){const fr=enemyFrame(e);if(fr)crumble(e,fr,false,e.elite?2:1);bleed(e,e.elite?22:9,e.type==='heli')}else bossDissolve(e,e.mini?1.0:1.6);
   for(let i=0;i<4;i++)part(e.x,e.y,rnd(-20,20),rnd(-20,20),0.4,'rgba(200,200,200,0.5)',2,0,'smoke');
   for(let i=0;i<3;i++)part(e.x+rnd(-3,3),e.y,rnd(-10,10),rnd(-55,-25),0.7,pick(['#fff3b0','#ffd34a']),1);
   if(e.boss){if(e.mini)miniDeath(e);else bossDeath(e);return}
@@ -1208,7 +1228,7 @@ function update(dt){
   if(g.pull){const sp=g.vac?260:Math.max(90,200-d);g.x+=dx/d*sp*dt;g.y+=dy/d*sp*dt}
   if(d<10){g.got=true;collect(g)}}
  G.gems=G.gems.filter(g=>!g.got);
- G.en=G.en.filter(e=>!e.dead);
+ G.en=G.en.filter(e=>!e.dead);updDying(dt);
  updParts(dt);
  for(const f of G.fx)f.life-=dt;G.fx=G.fx.filter(f=>f.life>0);
  for(const n of G.nums){n.t-=dt;n.y-=dt*18}G.nums=G.nums.filter(n=>n.t>0);
@@ -1367,7 +1387,7 @@ function render(){
  if(!G.b.land){ctx.fillStyle=G.b.weather==='storm'?'#6a8aa8':'#7aa8c8';for(let j=ty0;j<=ty0+th;j++)for(let i=tx0;i<=tx0+tw;i++){const h=hash(i,j,11);if(h<0.22){const ph=tGlobal*1.5+h*40,x=i*16-cx+Math.round(Math.sin(ph)*3)+4,y=j*16-cy+8;const l=Math.round(3+Math.sin(ph*0.7)*2);if(l>1){ctx.fillRect(x,y,l,1);ctx.fillRect(x+l,y+1,2,1)}}}}
  // decals
  if(G.decals.length)G.decals=G.decals.filter(d=>G.t-(d.born??G.t)<3.5);
- for(const d of G.decals){const x=Math.round(d.x-cx),y=Math.round(d.y-cy);if(x<-20||x>W+20||y<-20||y>H+20)continue;const age=G.t-(d.born??G.t);ctx.globalAlpha=age<2?1:Math.max(0,1-(age-2)/1.5);ctx.fillStyle='rgba(15,10,8,0.45)';ctx.fillRect(x-d.r,y-d.r/3,d.r*2,d.r*2/3);ctx.fillRect(x-d.r*0.7,y-d.r/2,d.r*1.4,d.r);ctx.fillStyle='rgba(15,10,8,0.3)';ctx.fillRect(x-d.r*1.2,y-1,d.r*2.4,2)}ctx.globalAlpha=1;
+ for(const d of G.decals){const x=Math.round(d.x-cx),y=Math.round(d.y-cy);if(x<-20||x>W+20||y<-20||y>H+20)continue;const age=G.t-(d.born??G.t);ctx.globalAlpha=age<2?1:Math.max(0,1-(age-2)/1.5);if(d.blood){for(const[bx,by,bs] of d.blood){ctx.fillStyle='rgba(120,10,10,0.75)';ctx.fillRect(x+bx,y+by,bs,Math.max(1,bs-1));ctx.fillStyle='rgba(180,24,20,0.6)';ctx.fillRect(x+bx,y+by,1,1)}ctx.globalAlpha=1;continue}ctx.fillStyle='rgba(15,10,8,0.45)';ctx.fillRect(x-d.r,y-d.r/3,d.r*2,d.r*2/3);ctx.fillRect(x-d.r*0.7,y-d.r/2,d.r*1.4,d.r);ctx.fillStyle='rgba(15,10,8,0.3)';ctx.fillRect(x-d.r*1.2,y-1,d.r*2.4,2)}ctx.globalAlpha=1;
  for(const f of G.fires){const x=Math.round(f.x-cx),y=Math.round(f.y-cy);ctx.fillStyle='rgba(40,10,0,0.5)';ctx.fillRect(x-f.r,y-f.r/3,f.r*2,f.r*2/3);for(let k=0;k<6;k++){const h=hash(k,Math.floor(tGlobal*12),Math.floor(f.x));ctx.fillStyle=h<0.4?'#ff4a1a':h<0.7?'#ff8a2a':'#ffd34a';ctx.fillRect(x+Math.round((hash(k,3,Math.floor(f.y))-0.5)*f.r*1.6),y+Math.round((h-0.5)*f.r*0.5),2,1)}}
  for(const w of P.weapons)if(w.k==='aura'&&!isMenu()){const px=Math.round(P.x-cx),py=Math.round(P.y-cy);
   if(!w.evo){const Rr=WS.aura(w.lv).R;ctx.fillStyle='rgba(255,255,255,0.10)';ctx.beginPath();ctx.arc(px,py,Rr,0,TAU);ctx.fill();ctx.fillStyle='rgba(255,255,255,0.08)';ctx.beginPath();ctx.arc(px,py,Rr*0.65,0,TAU);ctx.fill();
@@ -1390,6 +1410,7 @@ function render(){
  for(const e of G.en)list.push({y:e.y+(e.fly?40:e.h/2),k:1,e});
  if(!isMenu())list.push({y:P.y+8,k:2});
  if(G.npc)list.push({y:G.npc.y,k:6});
+ if(G.dying)for(const d of G.dying)list.push({y:d.e.y+20,k:7,d});
  for(const c of G.carts)list.push({y:c.y+4,k:4,c});
  for(const a of G.animals)list.push({y:a.y+(a.t===3?30:3),k:5,a});
  for(const n of G.nades)list.push({y:n.y0+(n.y1-n.y0)*(n.t/n.T),k:3,n});
@@ -1398,6 +1419,7 @@ function render(){
   if(o.k===0){const x=o.x-cx,y=o.y-cy;ctx.drawImage(shadowSpr(o.s.W*0.9),Math.round(x-o.s.W*0.45),Math.round(y-2));ctx.drawImage(o.fl?o.s.f:o.s.i,Math.round(x-o.s.W/2),Math.round(y-o.s.H))}
   else if(o.k===1)drawEnemy(o.e,cx,cy);
   else if(o.k===6)drawElijah(cx,cy);
+  else if(o.k===7)drawDying(o.d,cx,cy);
   else if(o.k===2)drawPlayer(cx,cy);
   else if(o.k===3){const n=o.n,t=n.t/n.T,x=n.x0+(n.x1-n.x0)*t-cx,y=n.y0+(n.y1-n.y0)*t-cy-Math.sin(Math.PI*t)*34;ctx.drawImage(shadowSpr(5),Math.round(n.x0+(n.x1-n.x0)*t-cx-2),Math.round(n.y0+(n.y1-n.y0)*t-cy));ctx.fillStyle=OUT;ctx.fillRect(Math.round(x)-2,Math.round(y)-2,4,4);ctx.fillStyle='#ff6a1a';ctx.fillRect(Math.round(x)-1,Math.round(y)-1,2,2);ctx.fillStyle='#ffd34a';ctx.fillRect(Math.round(x),Math.round(y)-1,1,1);addLight(n.x0+(n.x1-n.x0)*t,y+cy,12,'rgba(255,140,50,1)',0.02)}
   else if(o.k===5){const a=o.a,fr=SPR.animals[a.t][Math.floor(a.anim)%2],sc=a.big?2:1,x=Math.round(a.x-cx),y=Math.round(a.y-cy)-(a.t===3?8:0);const al=Math.min(1,a.life*4);ctx.globalAlpha=al;if(a.t!==3||true)ctx.drawImage(shadowSpr(fr.W*sc*0.8),Math.round(a.x-cx-fr.W*sc*0.4),Math.round(a.y-cy+2));ctx.drawImage(a.vx<0?fr.f:fr.i,x-Math.floor(fr.W*sc/2),y-fr.H*sc+3,fr.W*sc,fr.H*sc);ctx.globalAlpha=1}
@@ -1522,6 +1544,9 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='select')showSelect();
  else if(a==='grace')showGrace();
  else if(a==='opt')showOptions();
+ else if(a==='glogin'){if(CL.api)CL.api.login().catch(e=>{CL.msg='로그인 실패 · '+(e&&e.code||'');refreshCloud()})}
+ else if(a==='glogout'){if(CL.api)CL.api.logout()}
+ else if(a==='gsync'){cloudPush(null,true).catch(()=>{CL.msg='저장 실패 · 인터넷 연결을 확인하세요';refreshCloud()})}
  else if(a==='quizok')closeQuiz(b.dataset.ok==='1');
  else if(a==='shk'){OPT.shake=+b.dataset.v;saveOpt();document.querySelectorAll('.seg .btn').forEach(x=>x.classList.toggle('on',x===b));shake=[0,2,3][OPT.shake]}
  else if(a==='buy')buyMeta(b.dataset.k,b);
@@ -1573,7 +1598,7 @@ function showOptions(){state='heroes';
  const sl=(k,lbl)=>`<div class="orow"><div class="ol">${lbl}<b id="ov_${k}">${OPT[k]}</b></div><input type="range" min="0" max="100" step="5" value="${OPT[k]}" data-k="${k}" class="osl"></div>`;
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">OPTIONS</div><div class="big">옵션</div><div class="opts">
  ${sl('bgm','배경음')}${sl('sfx','효과음')}
- <div class="orow"><div class="ol">화면 흔들림</div><div class="seg">${['없음','중간','크게'].map((t,i)=>`<div class="btn ${OPT.shake===i?'on':''}" data-act="shk" data-v="${i}">${t}</div>`).join('')}</div></div></div>
+ <div class="orow"><div class="ol">화면 흔들림</div><div class="seg">${['없음','중간','크게'].map((t,i)=>`<div class="btn ${OPT.shake===i?'on':''}" data-act="shk" data-v="${i}">${t}</div>`).join('')}</div></div>${cloudHtml()}</div>
  <div class="btn primary" data-act="quit">◀ 메인 화면</div></div>`);
  document.querySelectorAll('.osl').forEach(s=>{const k=s.dataset.k;const upd=()=>{OPT[k]=+s.value;$('ov_'+k).textContent=OPT[k];s.style.setProperty('--v',OPT[k]+'%');applyVol();saveOpt()};s.style.setProperty('--v',OPT[k]+'%');
   s.addEventListener('input',upd);s.addEventListener('change',()=>{upd();if(k==='sfx'){initAudio();sfx('pick')}})})}
@@ -1764,10 +1789,36 @@ const DEV=location.hash==='#dev';
 function devKey(c){if(!G)return;if(c==='KeyB'&&!G.bossSpawned){G.t=G.st.dur}if(c==='KeyV'&&G.miniIdx<4){G.t=G.nextMini}if(c==='KeyL')G.pending++;if(c==='KeyK'&&G.boss)G.boss.hp=1;if(c==='KeyN'&&state==='play'){G.clearT=0.01}if(c==='KeyE'){for(const k in EVO){let w=P.weapons.find(x=>x.k===k);if(!w){w={k,lv:1,t:0};P.weapons.push(w)}w.lv=WMAX;P.pass[EVO[k].p]=1}recompute();slots()}if(c==='KeyC')G.gems.push({x:P.x+20,y:P.y,k:'anvil'});}
 window.__fs={evolve,get G(){return G},get P(){return P},get state(){return state},newRunBrief,startPlay,nextStage,openLevelUp};
 
+
+// ================= CLOUD SAVE (Google / Firebase) =================
+const FB_CONFIG=null; // ← Firebase 웹앱 설정 객체를 여기에 붙여 넣으세요
+const SAVE_KEYS=['fs_unlocked','fs_rec','fs_run','fs_hero','fs_meta','fs_pray','fs_opt'];
+const CL={ready:false,user:null,api:null,last:'',busy:false,msg:'',err:false};
+function snapSave(){const o={};try{for(const k of SAVE_KEYS){const v=localStorage.getItem(k);if(v!=null)o[k]=v}}catch(e){}return o}
+function progScore(d){try{const u=+(d.fs_unlocked||1),p=+(d.fs_pray||0),m=JSON.parse(d.fs_meta||'{}');let s=0;for(const md of METADEF)for(let i=0;i<(m[md.k]||0);i++)s+=metaCost(md,i);return u*1e6+s+p}catch(e){return 0}}
+async function cloudInit(){if(!FB_CONFIG)return;try{CL.api=await import('./fb.js');CL.api.init(FB_CONFIG);CL.ready=true;CL.api.onUser(u=>{CL.user=u;refreshCloud();if(u)cloudSync(true)})}catch(e){CL.err=true;refreshCloud()}}
+async function cloudSync(onLogin){if(!CL.user||CL.busy)return;CL.busy=true;CL.msg='동기화 중…';refreshCloud();
+  try{const r=await CL.api.load(CL.user.uid),local=snapSave();
+    if(r&&r.data&&JSON.stringify(r.data)!==JSON.stringify(local)&&progScore(r.data)>progScore(local)){applySave(r.data);return}
+    CL.busy=false;await cloudPush(local,true)}catch(e){CL.msg='동기화 실패 · 인터넷 연결을 확인하세요'}finally{CL.busy=false;refreshCloud()}}
+async function cloudPush(d,force){if(!CL.user)return;d=d||snapSave();const j=JSON.stringify(d);if(j===CL.last&&!force)return;
+  await CL.api.save(CL.user.uid,{data:d,updated:Date.now(),name:CL.user.name||''});CL.last=j;const t=new Date();CL.msg='클라우드 저장 완료 · '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');refreshCloud()}
+function applySave(d){try{for(const k of SAVE_KEYS){if(d[k]!=null)localStorage.setItem(k,d[k]);else localStorage.removeItem(k)}}catch(e){}CL.last=JSON.stringify(d);location.reload()}
+function cloudHtml(){if(!FB_CONFIG)return'';
+  let h='<div class="orow"><div class="ol">구글 계정 연동</div><div id="cloudbox">';
+  if(CL.err)h+='<div class="cmsg">연동 모듈을 불러오지 못했어요 · 인터넷 연결 후 다시 열어 주세요</div>';
+  else if(!CL.ready)h+='<div class="cmsg">불러오는 중…</div>';
+  else if(CL.user)h+=`<div class="cuser">${(CL.user.name||'')}<small>${CL.user.email||''}</small></div><div class="seg"><div class="btn" data-act="gsync">지금 저장</div><div class="btn" data-act="glogout">로그아웃</div></div><div class="cmsg">${CL.msg||'로그인되어 있어요 · 기록이 자동으로 저장돼요'}</div>`;
+  else h+=`<div class="btn wide gbtn" data-act="glogin"><b>G</b> Google로 로그인</div><div class="cmsg">로그인하면 기록이 클라우드에 저장되어 다른 기기나 앱을 다시 설치해도 이어서 할 수 있어요</div>`;
+  return h+'</div></div>'}
+function refreshCloud(){const b=document.getElementById('cloudbox');if(b){const t=document.createElement('div');t.innerHTML=cloudHtml();const nb=t.querySelector('#cloudbox');if(nb)b.replaceWith(nb)}}
+setInterval(()=>{if(CL.user&&!CL.busy&&state!=='play')cloudPush().catch(()=>{})},15000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&CL.user)cloudPush().catch(()=>{})});
+
 // ================= LOOP =================
 let last=performance.now();
 function loop(now){const dt=Math.min(1/30,(now-last)/1000);last=now;try{update(dt);render()}catch(err){console.error(err)}requestAnimationFrame(loop)}
-resize();initStatic();buildTitleHeroes();showNotice();requestAnimationFrame(loop);
+resize();initStatic();buildTitleHeroes();showNotice();requestAnimationFrame(loop);cloudInit();
 if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
 </script>
 </body>
