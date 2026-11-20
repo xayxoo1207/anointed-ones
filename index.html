@@ -79,8 +79,8 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .route em{display:none}
 .cards{display:flex;flex-direction:column;align-items:center;gap:calc(var(--p)*5);margin-top:calc(var(--p)*8)}
 .card{width:calc(var(--p)*196);min-height:calc(var(--p)*50);padding-left:calc(var(--p)*38)!important;background:#14111a;border:var(--p) solid #000;box-shadow:inset 0 0 0 var(--p) #4a4058,0 calc(var(--p)*3) 0 #000;padding:calc(var(--p)*6);padding-bottom:calc(var(--p)*6);cursor:pointer;text-align:left;position:relative}
+.lvhint{font-family:'Black Han Sans';font-size:calc(var(--p)*7);color:#ffd34a;margin:calc(var(--p)*1) 0 calc(var(--p)*2);visibility:hidden}.lvhint.on{visibility:visible}
 .card.pick{background:#3a2a0e!important;box-shadow:inset 0 0 0 calc(var(--p)*2) #ffd34a,0 0 calc(var(--p)*8) #ffb02a,0 calc(var(--p)*3) 0 #000!important;transform:translateY(calc(var(--p)*-2))}
-.card.pick::after{content:'한 번 더 누르면 선택';position:absolute;right:calc(var(--p)*6);bottom:calc(var(--p)*5);font-size:calc(var(--p)*6.5);color:#ffd34a;font-family:'Black Han Sans'}
 .card:hover,.card.sel{box-shadow:inset 0 0 0 var(--p) #9a8a68,0 calc(var(--p)*3) 0 #000;background:#221a14;transform:translateY(calc(var(--p)*-2))}
 .card img{width:calc(var(--p)*24);height:calc(var(--p)*24);image-rendering:pixelated;object-fit:contain;display:block;position:absolute;left:calc(var(--p)*7);top:calc(var(--p)*8)}
 .roster{margin-top:calc(var(--p)*4);font-size:calc(var(--p)*6.5);color:#d8c8a8;line-height:1.5}.roster b{color:#ffd34a}
@@ -209,8 +209,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #ui.land .card{width:calc(var(--p)*128);min-height:calc(var(--p)*78);padding-left:calc(var(--p)*8)!important;padding-top:calc(var(--p)*34)}
 #ui.land .card img{left:calc(var(--p)*8);top:calc(var(--p)*6)}
 #ui.land .card .k{left:auto;right:calc(var(--p)*6)}
-#ui.land .card.pick::after{right:auto;left:calc(var(--p)*8)}
-#ui.land .stglist{display:grid;grid-template-columns:1fr 1fr;width:min(calc(var(--p)*400),92vw)}
+#ui.land #ui.land .stglist{display:grid;grid-template-columns:1fr 1fr;width:min(calc(var(--p)*400),92vw)}
 #ui.land .evo-row{flex-direction:row;align-items:center}
 #ui.land .evo-row .card{width:calc(var(--p)*96);padding-left:calc(var(--p)*8)!important}
 #ui.land .evo-row .card.gold,#ui.land .evo-row .card.gold:hover{width:calc(var(--p)*150)}
@@ -1589,14 +1588,14 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
   const d=o.t==='w'?WDEF[o.k]:PDEF[o.k];let ds=o.t==='w'?wdiff(o.k,o.lv):d.desc;
   if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${PDEF[EVO[o.k].p].name}</div>`;else{const wk=Object.keys(EVO).find(k=>EVO[k].p===o.k&&(!WDEF[k].hero||WDEF[k].hero===P.hero));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
   return`<div class="card" data-i="${i}"><img src="${ICON[o.k]}"><div class="lv ${o.lv===1?'new':''}">${o.lv===1?'NEW':'LV '+o.lv}</div><div class="nm">${d.name}</div><div class="ds">${ds}</div><div class="k">${i+1}</div></div>`}).join('');
- screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div class="cards">${cards}</div>${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
  lvSel=0;selCard(0);lvOpenT=performance.now();document.querySelectorAll('#scr .card').forEach((c,j)=>c.addEventListener('mouseenter',()=>selCard(j)));
  let done=false;lvConfirm=i=>{if(done||state!=='levelup')return;const o=ops[i];if(!o)return;done=true;
   applyOpt(o);
   G.pending--;sfx('click');slots();checkReady();hideScreen();state='play';if(G.pending>0)openLevelUp()};
  const all=[...document.querySelectorAll('#scr .card')];
  all.forEach((c,j)=>c.addEventListener('click',()=>{if(c.classList.contains('pick')){lvConfirm(+c.dataset.i);return}
-  all.forEach(x=>x.classList.remove('pick'));c.classList.add('pick');selCard(j);sfx('click')}))}
+  all.forEach(x=>x.classList.remove('pick'));c.classList.add('pick');selCard(j);$('lvhint').classList.add('on');sfx('click')}))}
 
 // ================= ELIJAH QUIZ =================
 const OTB=['창세기','출애굽기','레위기','민수기','신명기','여호수아','룻기','사무엘상','열왕기상','느헤미야','에스더','욥기','시편','잠언','전도서','이사야','에스겔','다니엘','아모스','요나','하박국','스가랴','말라기'];
