@@ -618,6 +618,8 @@ function initStatic(){
   SPR.crate=spr(PK.chest,Object.assign({},BASEPAL,{a:'#c8902a',A:'#ffd34a',y:'#fff3b0',d:'#8a5a12',B:'#7a4a10',W:'#ffffff'}));
   SPR.gem=[['#3fa9ff','#cfeeff','#1f62b8'],['#4fe36a','#d6ffd0','#22903a'],['#ff4d6d','#ffd6de','#a82040']].map(c=>spr(PK.gem,Object.assign({},BASEPAL,{a:c[0],A:c[1],d:c[2],W:'#ffffff'})));
   for(const k of ['sling','wave','grenade','flame','mortar','sniper','vest','boots','ammo','he','magnet','medic','food','scope'])ICON[k]=icon(SD['i_'+k],ICONPAL);
+  SPR.wing=spr(['....kkk.....','..kkWWWkk...','.kWWWWWWWk..','kWWwWWWWWWk.','kWwWWwWWWWWk','.kwWwWWwWWWk','..kwWwWWwWWk','..kwWwWwWWWk','...kwWwWwWWk','...kwWwWwWWk','...kwwWwWwWk','....kwWwWwWk','....kwwWwWWk','....kwWwWwWk','.....kwwWwk.','.....kwWwWk.','.....kwwWk..','......kwwk..','......kwk...','.......k....'],Object.assign({},BASEPAL,{W:'#fff8e8',w:'#e8c870'}));
+  ICON.armor=icon(['..kkkkkk..','.kWWWWWWk.','kWWcWWcWWk','kWWWccWWWk','kWcWWWWcWk','.kWWccWWk.','.kWWWWWWk.','..kWWWWk..','...kWWk...','....kk....'],ICONPAL);
   ICON.wisdom=icon(['.k..kk..k.','kykkyykkyk','kyykyykyyk','kyyyyyyyyk','kyryycyyrk','koyyyyyyok','kkkkkkkkkk'],ICONPAL);ICON.cart=icon(SD.cart,ICONPAL);ICON.fist=icon(SD.i_fist,ICONPAL);ICON.ark=icon(SD.i_ark,ICONPAL);ICON.aura=icon(['kk..kk..kk','kWk.kk.kWk','.kWkkkkWk.','..kWWWWk..','.kWkyykWk.','.kWkyykWk.','..kWWWWk..','.kWkkkkWk.','kWk....kWk','kk......kk'],ICONPAL);ICON.drone=icon(SD.angel,ICONPAL);ICON.air=icon(SD.chariot,ICONPAL);
   DIG.w=[...Array(10)].map((_,i)=>mkDigit(i,'#ffffff'));DIG.y=[...Array(10)].map((_,i)=>mkDigit(i,'#ffd34a'));DIG.r=[...Array(10)].map((_,i)=>mkDigit(i,'#ff4a3a'));DIG.g=[...Array(10)].map((_,i)=>mkDigit(i,'#7aff7a'));
 }
@@ -698,6 +700,7 @@ const WDEF={
  air:{name:'불병거',desc:'불병거가 전장을 가로지르며 불을 쏟는다'},
  aura:{name:'스랍의 축복',desc:'몸을 둘러싼 하얀 빛의 영역에 닿는 적에게 계속 피해'},
  sniper:{name:'말씀의 검',desc:'가장 강한 적을 꿰뚫는 빛의 검'},
+ armor:{name:'전신갑주',desc:'하얀 보호막이 받는 피해를 줄이고 가까이 온 적을 밀쳐낸다'},
 };
 const WS={
  sling:l=>({dmg:20+7*(l-1),cd:0.85*Math.pow(0.92,l-1),n:[3,3,3,4,4,4,5,5][l-1]}),
@@ -713,8 +716,9 @@ const WS={
  air:l=>({dmg:35+12*l,cd:Math.max(4.5,10-0.7*l),r:20+l,lines:l>=6?2:1}),
  aura:l=>({dmg:5+2.5*(l-1),R:24+3*l,cd:0.55*Math.pow(0.95,l-1)}),
  sniper:l=>({dmg:45+18*l,cd:1.8*Math.pow(0.92,l-1),n:l>=5?2:1}),
+ armor:l=>({red:12+4*(l-1),dmg:4+2*l,R:16+l,cd:2.4*Math.pow(0.94,l-1)}),
 };
-const WLBL={dmg:'피해',cd:'대기',n:'개수',pierce:'관통',r:'범위',R:'반경',range:'사거리',ang:'각도',lines:'폭격선',w:'폭',boom:'폭발'};
+const WLBL={red:'피해 감소%',dmg:'피해',cd:'대기',n:'개수',pierce:'관통',r:'범위',R:'반경',range:'사거리',ang:'각도',lines:'폭격선',w:'폭',boom:'폭발'};
 const EVO={
  sling:{p:'he',name:'은혜입은 짱돌',desc:'쉬지 않고 유도 돌을 연사해 강한 적 다섯을 번갈아 강타'},
  wave:{p:'he',name:'홍해 가르기',desc:'화면 양끝에서 거대한 물벽이 밀려와 휩쓴다'},
@@ -728,9 +732,10 @@ const EVO={
  air:{p:'medic',name:'불말과 불병거',desc:'불병거 3대 편대가 전장을 휩쓴다'},
  aura:{p:'medic',name:'여호와의 은혜',desc:'황금빛 파장이 주위를 회전하며 적을 휩쓸고 체력을 서서히 회복'},
  sniper:{p:'scope',name:'좌우에 날 선 검',desc:'두꺼운 빛의 검이 일직선을 관통'},
+ armor:{p:['medic','ammo'],name:'여호와의 날개',desc:'양쪽 날개가 영웅을 감싸 적의 피해를 10%만 받는다'},
 };
 const wname=w=>w.evo?EVO[w.k].name:WDEF[w.k].name;
-const evoReady=w=>!w.evo&&w.lv>=WMAX&&(P.pass[EVO[w.k].p]||0)>0;
+const evoPs=k=>[].concat(EVO[k].p);const evoReady=w=>!w.evo&&w.lv>=WMAX&&evoPs(w.k).every(p=>(P.pass[p]||0)>0);
 const WMAX=8,PMAX=5,MAXW=6,MAXP=6;
 const PDEF={
  vest:{name:'의의 호심경',desc:'받는 피해 -1.5'},
@@ -1027,7 +1032,7 @@ function explode(x,y,r,dmg,visualOnly,enemy){
   addLight(x,y,r*3,'rgba(255,170,80,1)',0.35);shake=Math.max(shake,0.6*Math.min(5,r/7));sfx(r>40?'bigboom':'boom');
   if(G.b.land&&G.decals.length<70)G.decals.push({x,y,r:Math.min(16,r*0.5),a:1,born:G.t});if(G.decals.length>=70)G.decals.shift()}
 let gridFresh=false;function buildGridIfNeeded(){if(!gridFresh){buildGrid();gridFresh=true}}
-function hurtPlayer(d){if(P.inv>0||state!=='play')return;d=Math.max(1,Math.round(d-P.armor));P.hp-=d;P.inv=0.6;shake=Math.max(shake,3);sfx('hurt');
+function hurtPlayer(d){if(P.inv>0||state!=='play')return;const aw=P.weapons.find(w=>w.k==='armor');if(aw&&aw.evo)d=Math.max(0.1,Math.round(d*0.1*10)/10);else{d=Math.max(1,Math.round(d-P.armor));if(aw)d=Math.max(1,Math.round(d*(1-WS.armor(aw.lv).red/100)))}if(aw)aw.flash=0.25;P.hp-=d;P.inv=0.6;shake=Math.max(shake,3);sfx('hurt');
   G.nums.push({x:P.x,y:P.y-14,v:d,t:0.7,c:'r'});for(let i=0;i<6;i++)part(P.x,P.y,rnd(-50,50),rnd(-60,0),0.4,'#ff3b30',1,200);
   if(P.hp<=0){if(P.revives>0){P.revives--;P.hp=Math.round(P.maxHp*0.5);P.inv=2.5;banner('부활의 소망','다시 일어섰다!',2);sfx('evo');shake=6;addLight(P.x,P.y,200,'rgba(255,240,180,1)',0.8);
    for(const e of G.en){if(e.dead||e.boss)continue;const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<140){e.kx+=dx/d*400;e.ky+=dy/d*400}}G.ebul.length=0;
@@ -1062,6 +1067,7 @@ function updEvo(w,dt){w.t-=dt;
    addLight(ox,oy,26,'rgba(255,210,120,1)',0.05);part(ox,oy,Math.cos(a)*40,Math.sin(a)*40,0.06,'#fff3b0',2);part(P.x,P.y-2,-Math.cos(a)*30+rnd(-20,20),rnd(-70,-30),0.5,'#d8b040',1,260);sfx('shot')}break;
  case'grenade':if(w.t<=0){w.t=1.7*P.cdMul;const vis=G.en.filter(e=>!e.dead&&onScreen(e));for(let i=0;i<3;i++){let tx,ty;if(vis.length){const e=pick(vis);tx=e.x;ty=e.y}else{const a=rnd(TAU);tx=P.x+Math.cos(a)*70;ty=P.y+Math.sin(a)*70}
    G.nades.push({x0:P.x,y0:P.y-4,x1:tx,y1:ty,t:0,T:0.6+i*0.1,dmg:60,r:30,rot:0,cluster:true})}sfx('throw')}break;
+ case'armor':if(w.t<=0){w.t=1.4*P.cdMul;armorPulse(w,36,26,120)}break;
  case'drone':{w.a=(w.a||0)+dt*3.4;w.hits=w.hits||new Map();w.fire=(w.fire||0)-dt;const shoot=w.fire<=0;if(shoot)w.fire=0.6*P.cdMul;
    for(let i=0;i<6;i++){const a=w.a+i/6*TAU,x=P.x+Math.cos(a)*44,y=P.y-4+Math.sin(a)*44*0.8;
     query(x,y,10,e=>{if(Math.hypot(e.x-x,e.y-y)<e.r+5){const last=w.hits.get(e)||0;if(tGlobal-last>0.4){w.hits.set(e,tGlobal);hurt(e,18,Math.cos(a)*40,Math.sin(a)*40)}}});
@@ -1106,6 +1112,7 @@ function updWeapons(dt){
       addLight(ox,oy,22,'rgba(255,210,120,1)',0.06);part(ox,oy,Math.cos(a)*40,Math.sin(a)*40,0.08,'#fff3b0',2);sfx('shot')})}break;
   case'grenade':if(w.t<=0){w.t=s.cd*P.cdMul;for(let i=0;i<s.n;i++){let tx,ty;const vis=G.en.filter(e=>!e.dead&&onScreen(e)&&inR(e,w));if(vis.length){const e=pick(vis);tx=e.x;ty=e.y}else{const a=rnd(TAU);tx=P.x+Math.cos(a)*60;ty=P.y+Math.sin(a)*60}
       G.nades.push({x0:P.x,y0:P.y-4,x1:tx+rnd(-8,8),y1:ty+rnd(-8,8),t:0,T:0.65+i*0.08,dmg:s.dmg,r:s.r,rot:0})}sfx('throw')}break;
+  case'armor':if(w.t<=0){w.t=s.cd*P.cdMul;armorPulse(w,s.R,s.dmg,70)}break;
   case'drone':{w.a=(w.a||0)+dt*3;w.hits=w.hits||new Map();for(let i=0;i<s.n;i++){const a=w.a+i/s.n*TAU,x=P.x+Math.cos(a)*s.R,y=P.y-4+Math.sin(a)*s.R*0.8;
       query(x,y,10,e=>{if(Math.hypot(e.x-x,e.y-y)<e.r+5){const last=w.hits.get(e)||0;if(tGlobal-last>0.45){w.hits.set(e,tGlobal);hurt(e,s.dmg,Math.cos(a)*40,Math.sin(a)*40);part(x,y,rnd(-30,30),rnd(-30,30),0.15,'#9fe0ff')}}})}
       if(w.hits.size>300)w.hits.clear();break}
@@ -1241,7 +1248,7 @@ function collect(g){
  if(g.k==='xp'){P.xp+=g.v*(1+0.08*ML('growth'))*(1+0.1*(P.pass.wisdom||0));sfx('pick');while(P.xp>=P.next){P.xp-=P.next;P.lv++;P.next=xpNeed(P.lv);G.pending++}}
  else if(g.k==='med'){P.hp=Math.min(P.maxHp,P.hp+60);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:60,t:0.8,c:'g'})}
  else if(g.k==='manna'){P.hp=Math.min(P.maxHp,P.hp+20);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:20,t:0.8,c:'g'})}
- else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');banner('제비','레벨업 선택지를 다시 뽑을 수 있다 · 보유 '+P.rerolls,1.6)}
+ else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');(()=>{let seen=false;try{seen=localStorage.getItem('fs_lotsSeen')==='1';localStorage.setItem('fs_lotsSeen','1')}catch(e){}if(!seen)banner('제비','레벨업 선택지를 다시 뽑을 수 있다',1.6)})()}
  else if(g.k==='flare'){for(const o of G.gems)if(o.k==='xp')o.vac=true;sfx('heal');banner('','',0)}
  else if(g.k==='prayer'){PRAY++;G.prayers=(G.prayers||0)+1;saveMeta();sfx('pray');G.nums.push({x:P.x+6,y:P.y-16,v:1,t:0.6,c:'y'})}
  else if(g.k==='anvil'){const ew=P.weapons.find(evoReady);if(ew){evolve(ew);return}G.pending++;sfx('lvl');banner('모루','진화할 무기가 없어 레벨업으로 바뀌었다',1.8)}
@@ -1430,6 +1437,7 @@ function render(){
   const r=Math.round(m.r*(0.6+0.4*(m.t/m.T)));ctx.fillRect(x-r,y,3,1);ctx.fillRect(x+r-2,y,3,1);ctx.fillRect(x,y-r*0.6,1,3);ctx.fillRect(x,y+r*0.6-2,1,3);ctx.fillRect(x,y,1,1);
   if(m.t<0.35){const fy=y-m.t*300;if(en){ctx.fillStyle=OUT;ctx.fillRect(x-1,fy-4,3,6);ctx.fillStyle='#8a909c';ctx.fillRect(x,fy-3,1,4)}else{ctx.fillStyle=OUT;ctx.fillRect(x-3,fy-3,6,6);ctx.fillStyle='#bfe6ff';ctx.fillRect(x-2,fy-2,4,4);ctx.fillStyle='#fff';ctx.fillRect(x-2,fy-2,2,2)}}}
  // drones
+ for(const w of P.weapons)if(w.k==='armor'&&!isMenu())drawArmor(w,cx,cy);
  for(const w of P.weapons)if(w.k==='drone'&&!isMenu()){const s=w.evo?{n:6,R:44}:WS.drone(w.lv);for(let i=0;i<s.n;i++){const a=(w.a||0)+i/s.n*TAU,x=P.x+Math.cos(a)*s.R-cx,y=P.y-4+Math.sin(a)*s.R*0.8-cy;ctx.drawImage(shadowSpr(6),Math.round(x-3),Math.round(y+10));if(w.evo){const yy=y+2,pul=0.5+0.5*Math.sin(tGlobal*6+i);ctx.fillStyle=`rgba(255,40,30,${0.12+0.1*pul})`;ctx.beginPath();ctx.arc(x,yy,8+pul*2,0,TAU);ctx.fill();for(let q=0;q<3;q++){const b=tGlobal*5+i+q*TAU/3,rr=9+pul;ctx.fillStyle=q?'#ff4a2a':'#ffb03a';ctx.fillRect(Math.round(x+Math.cos(b)*rr),Math.round(yy+Math.sin(b)*rr*0.7),1,1);ctx.fillStyle='rgba(255,60,30,0.5)';ctx.fillRect(Math.round(x+Math.cos(b-0.35)*rr),Math.round(yy+Math.sin(b-0.35)*rr*0.7),1,1)}addLight(x+cx,yy+cy,22,'rgba(255,50,30,1)',0.06)}ctx.drawImage(SPR.drone.i,Math.round(x-5),Math.round(y-3+Math.sin(tGlobal*8+i)));addLight(x+cx,y+cy,14,'rgba(255,230,140,1)',0.02)}}
  // bullets
  for(const b of G.bul){const x=Math.round(b.x-cx),y=Math.round(b.y-cy),n=Math.hypot(b.vx,b.vy);
@@ -1507,6 +1515,15 @@ function drawBossArrow(a){const c=Math.cos(a),s=Math.sin(a),m=13,t=Math.min((W/2
  const sa=Math.round(a/(Math.PI/4))*(Math.PI/4),C=Math.round(Math.cos(sa)*1e6)/1e6,S=Math.round(Math.sin(sa)*1e6)/1e6;const F=(px,py)=>{const u=px*C+py*S,v=-px*S+py*C,av=Math.abs(v);return u<=8&&av<=6*(8-u)/12&&u>=-4+4*(1-Math.min(1,av/6))};
  for(let j=-10;j<=10;j++)for(let i=-10;i<=10;i++){const f=F(i,j);if(!f&&!(F(i+1,j)||F(i-1,j)||F(i,j+1)||F(i,j-1)))continue;
   ctx.fillStyle=!f?'#0b0a12':(i*S-j*C)>0.8?(blink?'#b81e18':'#d8a020'):(blink?'#ff3b30':'#ffd34a');ctx.fillRect(cx0+i,cy0+j,1,1)}}
+function armorPulse(w,Rr,dmg,kb){w.pulse=0.35;let hit=false;query(P.x,P.y,Rr+14,e=>{const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<Rr+e.r){hurt(e,dmg,dx/d*kb,dy/d*kb);hit=true}});if(hit)sfx('punch')}
+function drawArmor(w,cx,cy){const x=Math.round(P.x-cx),y=Math.round(P.y-cy-3);const t=tGlobal;
+ if(!w.evo){const R=WS.armor(w.lv).R,pul=Math.sin(t*3)*0.5;ctx.fillStyle=`rgba(255,255,255,${0.08+(w.flash>0?0.15:0)})`;ctx.beginPath();ctx.arc(x,y,R+pul,0,TAU);ctx.fill();
+  for(let i=0;i<64;i++){const a=i/64*TAU,px=Math.round(x+Math.cos(a)*(R+pul)),py=Math.round(y+Math.sin(a)*(R+pul));ctx.fillStyle=(i+Math.floor(t*12))%8<2?'rgba(255,255,255,0.85)':'rgba(220,235,255,0.4)';ctx.fillRect(px,py,1,1)}
+  if(w.pulse>0){const k=1-w.pulse/0.35;ctx.strokeStyle=`rgba(255,255,255,${0.6*(1-k)})`;ctx.beginPath();ctx.arc(x,y,R+k*10,0,TAU);ctx.stroke()}}
+ else{const sw=Math.round(Math.sin(t*2.2)*1.5),s=SPR.wing;ctx.globalAlpha=0.9;ctx.drawImage(s.i,x+3+sw,y-15);ctx.drawImage(s.f,x-3-s.W-sw,y-15);ctx.globalAlpha=1;
+  addLight(P.x,P.y-4,30,'rgba(255,240,190,1)',0.025);if(w.pulse>0){const k=1-w.pulse/0.35;ctx.strokeStyle=`rgba(255,230,150,${0.7*(1-k)})`;ctx.beginPath();ctx.arc(x,y,36*k+8,0,TAU);ctx.stroke()}
+  if(Math.random()<0.25)part(P.x+rnd(-14,14),P.y+rnd(-16,6),0,rnd(-20,-6),0.6,pick(['#fff8e0','#ffe9a0']),1)}
+ if(w.pulse>0)w.pulse-=1/60;if(w.flash>0)w.flash-=1/60}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
  const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;
  if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
@@ -1671,12 +1688,12 @@ function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake
  const e=EVO[w.k];slots();
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">WEAPON EVOLUTION</div><div class="halle">할렐루야!</div><div class="big" style="color:#ffd34a">무기 진화!</div><div class="rg">모루 위에서 무기가 새롭게 단련되었다</div>
  <div class="evo-row"><div class="card"><img src="${ICON[w.k]}"><div class="lv">LV 8</div><div class="nm">${WDEF[w.k].name}</div></div><span class="pl">+</span>
- <div class="card"><img src="${ICON[e.p]}"><div class="nm">${PDEF[e.p].name}</div></div><span class="pl">▼</span>
+ ${evoPs(w.k).map(p=>`<div class="card"><img src="${ICON[p]}"><div class="nm">${PDEF[p].name}</div></div>`).join('<span class="pl">+</span>')}<span class="pl">▼</span>
  <div class="card gold"><img src="${ICON[w.k]}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
  <div style="margin-top:calc(var(--p)*8)"><div class="btn primary" data-act="evook">계속</div></div></div>`)}
 function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;0}}
 function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>!WDEF[k].hero||WDEF[k].hero===P.hero).map(k=>{const e=EVO[k],w=P.weapons.find(x=>x.k===k);const cls=w&&w.evo?'ok':w?'have':'';
- return `<tr class="${cls}"><td><img src="${ICON[k]}"> ${WDEF[k].name}${w&&!w.evo?' '+w.lv:''}</td><td>+</td><td><img src="${ICON[e.p]}"> ${PDEF[e.p].name}${P.pass[e.p]?' ✓':''}</td><td>▶</td><td>${w&&w.evo?'★ ':''}${e.name}</td></tr>`}).join('')+'</table>'}
+ return `<tr class="${cls}"><td><img src="${ICON[k]}"> ${WDEF[k].name}${w&&!w.evo?' '+w.lv:''}</td><td>+</td><td>${[].concat(e.p).map(p=>`<img src="${ICON[p]}"> ${PDEF[p].name}${P.pass[p]?' ✓':''}`).join('<br>')}</td><td>▶</td><td>${w&&w.evo?'★ ':''}${e.name}</td></tr>`}).join('')+'</table>'}
 // level up
 function options(){const o=[];
  for(const w of P.weapons)if(w.lv<WMAX)o.push({t:'w',k:w.k,lv:w.lv+1});
@@ -1697,9 +1714,9 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
  const cards=ops.map((o,i)=>{if(o.t==='auto')return`<div class="card auto" data-i="${i}"><img src="${ICON.food}"><div class="lv">AUTO</div><div class="nm">자동 선택</div><div class="ds">게임이 끝날 때까지 레벨업 화면 없이<br>만나(체력 20)를 자동으로 받습니다</div><div class="k">${i+1}</div></div>`;
   if(o.t==='f')return`<div class="card" data-i="${i}"><img src="${ICON.food}"><div class="nm">만나</div><div class="ds">체력 20 회복 (작은 회복)</div><div class="k">${i+1}</div></div>`;
   const d=o.t==='w'?WDEF[o.k]:PDEF[o.k];let ds=o.t==='w'?wdiff(o.k,o.lv):d.desc;
-  if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${PDEF[EVO[o.k].p].name}</div>`;else{const wk=Object.keys(EVO).find(k=>EVO[k].p===o.k&&(!WDEF[k].hero||WDEF[k].hero===P.hero));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
+  if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${evoPs(o.k).map(p=>PDEF[p].name).join(' + ')}</div>`;else{const wk=Object.keys(EVO).find(k=>evoPs(k).includes(o.k)&&(!WDEF[k].hero||WDEF[k].hero===P.hero));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
   return`<div class="card" data-i="${i}"><img src="${ICON[o.k]}"><div class="lv ${o.lv===1?'new':''}">${o.lv===1?'NEW':'LV '+o.lv}</div><div class="nm">${d.name}</div><div class="ds">${ds}</div><div class="k">${i+1}</div></div>`}).join('');
- screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${(P.rerolls||0)>0&&ops.some(o=>o.t==='w'||o.t==='p')?`<div class="btn reroll" id="reroll"><img src="${bossImg('lots',SPR.lots.i)}">제비 뽑기 · 다시 고르기 <b>${P.rerolls}</b></div>`:''}${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${(P.rerolls||0)>0&&ops.some(o=>o.t==='w'||o.t==='p')?`<div class="btn reroll" id="reroll"><img src="${bossImg('lots',SPR.lots.i)}">제비 다시 뽑기 <b>${P.rerolls}</b></div>`:''}${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
  lvSel=0;selCard(0);lvOpenT=performance.now();document.querySelectorAll('#scr .card').forEach((c,j)=>c.addEventListener('mouseenter',()=>selCard(j)));
  let done=false;lvConfirm=i=>{if(done||state!=='levelup')return;const o=ops[i];if(!o)return;done=true;
   applyOpt(o);
@@ -1786,7 +1803,7 @@ function closeQuiz(ok){hideScreen();state='play';if(G.npc)G.npc.leave=0.01;banne
 
 // ================= DEV =================
 const DEV=location.hash==='#dev';
-function devKey(c){if(!G)return;if(c==='KeyB'&&!G.bossSpawned){G.t=G.st.dur}if(c==='KeyV'&&G.miniIdx<4){G.t=G.nextMini}if(c==='KeyL')G.pending++;if(c==='KeyK'&&G.boss)G.boss.hp=1;if(c==='KeyN'&&state==='play'){G.clearT=0.01}if(c==='KeyE'){for(const k in EVO){let w=P.weapons.find(x=>x.k===k);if(!w){w={k,lv:1,t:0};P.weapons.push(w)}w.lv=WMAX;P.pass[EVO[k].p]=1}recompute();slots()}if(c==='KeyC')G.gems.push({x:P.x+20,y:P.y,k:'anvil'});}
+function devKey(c){if(!G)return;if(c==='KeyB'&&!G.bossSpawned){G.t=G.st.dur}if(c==='KeyV'&&G.miniIdx<4){G.t=G.nextMini}if(c==='KeyL')G.pending++;if(c==='KeyK'&&G.boss)G.boss.hp=1;if(c==='KeyN'&&state==='play'){G.clearT=0.01}if(c==='KeyE'){for(const k in EVO){let w=P.weapons.find(x=>x.k===k);if(!w){w={k,lv:1,t:0};P.weapons.push(w)}w.lv=WMAX;evoPs(k).forEach(p=>P.pass[p]=1)}recompute();slots()}if(c==='KeyC')G.gems.push({x:P.x+20,y:P.y,k:'anvil'});}
 window.__fs={evolve,get G(){return G},get P(){return P},get state(){return state},newRunBrief,startPlay,nextStage,openLevelUp};
 
 
