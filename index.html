@@ -10,6 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="ANOINTED ONES">
+<meta name="application-name" content="ANOINTED ONES">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <style>
@@ -39,6 +40,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #kil{position:absolute;right:calc(var(--p)*22);top:calc(var(--p)*13);font-size:calc(var(--p)*6);text-shadow:var(--p) var(--p) 0 #000}
 #tmr{position:absolute;left:0;right:0;text-align:center;top:calc(var(--p)*24);font-size:calc(var(--p)*11);text-shadow:var(--p) var(--p) 0 #000,0 0 calc(var(--p)*4) #000}
 #tmr.boss{color:#ff5a4a}
+#scr .kbf{outline:calc(var(--p)*1) solid #ffd34a!important;outline-offset:calc(var(--p)*1);filter:brightness(1.15)}
 #tsub{position:absolute;left:0;right:0;text-align:center;top:calc(var(--p)*37);font-size:calc(var(--p)*7);color:#ffb04a;text-shadow:var(--p) var(--p) 0 #000}
 #stl{position:absolute;left:calc(var(--p)*5);top:calc(var(--p)*47);font-size:calc(var(--p)*7);color:#d8c9a8;text-shadow:var(--p) var(--p) 0 #000}
 #stl b{color:#ff5a4a;font-weight:normal}
@@ -1139,6 +1141,21 @@ function genTiles(b){const out=[];
     out.push(c)}return out}
 
 // ================= INPUT =================
+let kbEl=null;
+function kbItems(){return [...document.querySelectorAll('#scr [data-act], #scr .qo, #scr .osl')].filter(el=>{const r=el.getBoundingClientRect();if(r.width<=0||r.height<=0)return false;if(el.closest('.tlock'))return false;const cs=getComputedStyle(el);return cs.visibility!=='hidden'&&cs.display!=='none'&&cs.pointerEvents!=='none'})}
+function kbFocus(el){if(kbEl)kbEl.classList.remove('kbf');kbEl=el;if(el){el.classList.add('kbf');try{el.scrollIntoView({block:'nearest',inline:'nearest'})}catch(e){}}}
+function kbValid(){return kbEl&&document.contains(kbEl)&&kbItems().includes(kbEl)}
+function kbMove(dx,dy){const L=kbItems();if(!L.length)return;
+ if(!kbValid()){const pr=L.find(el=>el.classList.contains('primary'))||L.find(el=>el.classList.contains('sel'))||L[0];kbFocus(pr);sfx('click');return}
+ const r=kbEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let best=null,bs=1e9;
+ for(const el of L){if(el===kbEl||el.contains(kbEl)||kbEl.contains(el))continue;const q=el.getBoundingClientRect(),x=q.left+q.width/2-cx,y=q.top+q.height/2-cy,along=x*dx+y*dy;if(along<=2)continue;const sc=along+Math.abs(x*dy-y*dx)*2.2;if(sc<bs){bs=sc;best=el}}
+ if(!best){let far=null,fs=-1e9;for(const el of L){if(el===kbEl||el.contains(kbEl)||kbEl.contains(el))continue;const q=el.getBoundingClientRect(),x=q.left+q.width/2-cx,y=q.top+q.height/2-cy,along=-(x*dx+y*dy)-Math.abs(x*dy-y*dx)*2.2;if(along>fs){fs=along;far=el}}best=far}
+ if(best&&best!==kbEl){kbFocus(best);sfx('click')}}
+function kbMenuKey(e){const c=e.code,dir={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[c];
+ if(dir){e.preventDefault();if(kbValid()&&kbEl.classList.contains('osl')&&dir[0]){const st=+kbEl.step||5;kbEl.value=Math.max(+kbEl.min,Math.min(+kbEl.max,+kbEl.value+dir[0]*st));kbEl.dispatchEvent(new Event('input',{bubbles:true}));kbEl.dispatchEvent(new Event('change',{bubbles:true}));return true}kbMove(dir[0],dir[1]);return true}
+ if(c==='Enter'||c==='Space'||c==='NumpadEnter'){if(kbValid()&&kbEl.classList.contains('osl')){e.preventDefault();return true}if(kbValid()){e.preventDefault();if(!e.repeat){const el=kbEl;el.click();if(!document.contains(el))kbEl=null}return true}return false}
+ if((c==='Escape'||c==='Backspace')&&state!=='pause'){const back=[...document.querySelectorAll('#scr .btn')].find(b=>b.textContent.trim().startsWith('◀'));if(back){e.preventDefault();back.click();return true}}
+ return false}
 addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(state==='notice'){e.preventDefault();if(!e.repeat)leaveNotice();return}
   if(state==='title'&&!menuShown){e.preventDefault();if(!e.repeat)revealMenu();return}
@@ -1146,6 +1163,7 @@ addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
   if(e.code==='KeyM'){muted=!muted;if(master)master.gain.value=muted?0:0.32}
   if((e.code==='Escape'||e.code==='KeyP')){if(state==='play')openPause();else if(state==='pause')closePause()}
+  if(state!=='play'&&state!=='levelup'&&state!=='notice'&&state!=='intro'&&!(state==='title'&&!menuShown)){if(kbMenuKey(e))return}
   if(state==='quiz'){const bs=[...document.querySelectorAll('#scr .qo')];if(/^Digit[1-3]$/.test(e.code)){const b=bs[+e.code.slice(5)-1];if(b)b.click()}else if(e.code==='Enter'||e.code==='Space'){e.preventDefault();const p=document.querySelector('#scr .qo.pick');if(p)p.click()}}
   if(state==='levelup'&&e.code==='KeyR'){lvReroll();return}
   if(state==='levelup'){const cs=[...document.querySelectorAll('#scr .card')];
