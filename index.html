@@ -163,6 +163,18 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .qo.wrong{background:#3a1414;box-shadow:inset 0 0 0 calc(var(--p)*2) #ff5a4a;color:#ffb0a0}
 .cuser{font-family:'Black Han Sans';font-size:calc(var(--p)*9);color:#fff;margin-bottom:calc(var(--p)*3)}.cuser small{display:block;font-family:'Do Hyeon';font-size:calc(var(--p)*6.5);color:#a89cb8}
 .cmsg{font-size:calc(var(--p)*6.5);color:#a89cb8;margin-top:calc(var(--p)*3);line-height:1.4}.gbtn{margin:0!important;background:#f4f4f6!important;color:#1a1a22!important;box-shadow:inset 0 0 0 var(--p) #000,0 calc(var(--p)*2) 0 #000!important}.gbtn b{color:#4285f4;margin-right:calc(var(--p)*3)}
+.cprog{position:relative;width:calc(var(--p)*190);height:calc(var(--p)*9);margin:calc(var(--p)*4) auto;background:#1a1620;box-shadow:inset 0 0 0 var(--p) #4a4058}.cprog i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#c8902a,#ffd34a)}.cprog span{position:relative;font-family:'Black Han Sans';font-size:calc(var(--p)*6.5);color:#fff;line-height:calc(var(--p)*9);text-shadow:0 1px 0 #000}
+.cdet{display:flex;gap:calc(var(--p)*5);align-items:center;width:calc(var(--p)*190);margin:calc(var(--p)*4) auto;padding:calc(var(--p)*5);background:#14111a;box-shadow:inset 0 0 0 var(--p) #c8a060;text-align:left;min-height:calc(var(--p)*30);box-sizing:border-box}.cdet.empty{justify-content:center;color:#8a7a9a;font-size:calc(var(--p)*7)}
+.cdet img{width:calc(var(--p)*26);height:calc(var(--p)*26);image-rendering:pixelated;object-fit:contain;flex:none}.cdet b{display:block;font-family:'Black Han Sans';font-size:calc(var(--p)*9);color:#fff}.cdet small{display:block;color:#ffd34a;font-size:calc(var(--p)*6)}.cdet p{margin:calc(var(--p)*2) 0 0;color:#c8bca4;font-size:calc(var(--p)*6.5);line-height:1.4}
+.csec{width:calc(var(--p)*190);margin:calc(var(--p)*6) auto calc(var(--p)*2);text-align:left;font-family:'Black Han Sans';font-size:calc(var(--p)*8);color:#ffd34a}.csec span{color:#8a7a9a;font-size:calc(var(--p)*6)}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--p)*3);width:calc(var(--p)*190);margin:0 auto}
+.citem{background:#14111a;box-shadow:inset 0 0 0 var(--p) #3a3446;padding:calc(var(--p)*3) calc(var(--p)*1);cursor:pointer;font-size:calc(var(--p)*5.5);color:#e8e0d0;line-height:1.2;word-break:keep-all}.citem img{width:calc(var(--p)*20);height:calc(var(--p)*20);image-rendering:pixelated;object-fit:contain;display:block;margin:0 auto calc(var(--p)*2)}
+.citem.ev{box-shadow:inset 0 0 0 var(--p) #a07820}.citem.sel{box-shadow:inset 0 0 0 calc(var(--p)*2) #ffd34a;background:#2a200e}
+.citem.lk img,.cdet img.lk{filter:brightness(0);opacity:0.55}.citem.lk{color:#5a5068}
+.rlist{width:calc(var(--p)*200);margin:calc(var(--p)*5) auto;display:flex;flex-direction:column;gap:calc(var(--p)*2)}
+.rrow{display:flex;align-items:center;flex-wrap:wrap;gap:calc(var(--p)*1.5);padding:calc(var(--p)*3);background:#14111a;box-shadow:inset 0 0 0 var(--p) #3a3446;font-size:calc(var(--p)*6);color:#8a7a9a;text-align:left}
+.rrow.kn{color:#e8e0d0;box-shadow:inset 0 0 0 var(--p) #6a5a30}.rrow.own{background:#1e1a24}.rrow i{font-style:normal;color:#6a6078}
+.rq{display:inline-flex;align-items:center;gap:calc(var(--p)*1)}.rq img{width:calc(var(--p)*9);height:calc(var(--p)*9);image-rendering:pixelated}.rq img.lk{filter:brightness(0);opacity:0.5}.rq em{font-style:normal;color:#ffd34a}.rq.gold{color:#ffd34a}
 .btn.gold{box-shadow:inset 0 0 0 var(--p) #ffd34a,0 calc(var(--p)*2) 0 #000;color:#ffe9a0}
 .pbal{font-family:'Do Hyeon';font-size:calc(var(--p)*10);color:#ffd34a;display:flex;align-items:center;justify-content:center;gap:calc(var(--p)*3)}
 .pbal img,.mc img{width:calc(var(--p)*8);height:calc(var(--p)*8);image-rendering:pixelated}
@@ -173,6 +185,8 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .mrow.can{opacity:1;cursor:pointer;box-shadow:inset 0 0 0 var(--p) #ffd34a}
 .mrow.can:hover{background:#221a10}
 .mrow.max{opacity:1;box-shadow:inset 0 0 0 var(--p) #3a5a2a}
+.mtog{font-family:'Press Start 2P';font-size:calc(var(--p)*5);padding:calc(var(--p)*3) calc(var(--p)*4);border:var(--p) solid #000;cursor:pointer;flex:none}.mtog.on{background:#2a4a1a;color:#b8f08a;box-shadow:inset 0 0 0 var(--p) #6ab04a}.mtog.off{background:#2a2230;color:#8a7a9a;box-shadow:inset 0 0 0 var(--p) #4a4058}
+.mrow.moff>img,.mrow.moff .mt{opacity:0.45}
 .mrow.no{background:#3a1010}
 .mrow>img{width:calc(var(--p)*14);height:calc(var(--p)*14);image-rendering:pixelated;flex:none}
 .mt{flex:1;min-width:0}
@@ -632,6 +646,7 @@ function initStatic(){
   {const prof=[[0,10],[0,10],[1,9],[2,8],[2,7],[3,7],[3,6],[4,6],[4,6],[3,5],[3,4]];const F=[0,1,2].map(f=>prof.map(([a,b],r)=>{let s='';for(let x=0;x<10;x++){if(x<a||x>=b){s+='.';continue}const rel=x-a,wd=b-a;s+=(rel===((r*2+f*3)%wd))?'g':((r+f)%3===0?'w':(rel===0?'w':'W'))}return s}));
    const wp=Object.assign({},BASEPAL,{W:'#e8f0f4',w:'#a8bcc8',g:'#6a8494'});SPR.whirl=F.map(f=>spr(outl(f),wp));SPR.pillar=F.map(f=>sprBig(bigify(outl(f),3),wp))}
   ICON.whirl=icon(['..kkkkk..','.kWwWwWk.','kwWwWwWwk','.kWwWwWk.','..kwWwk..','...kWwk..','...kwk...','....k....'],Object.assign({},ICONPAL,{W:'#eef4f6',w:'#98b0bc'}));
+  ICON.tempt=icon(['k........k','kHk....kHk','.kHkkkkHk.','.kRRRRRRk.','kRyyRRyyRk','kRkyRRkyRk','kRRRRrRRRk','kRkWkWkWRk','.kRkkkkRk.','..kkkkkk..'],Object.assign({},ICONPAL,{R:'#c8201c',r:'#8a1010',y:'#ffd34a',H:'#f0e0c8',W:'#ffffff'}));
   ICON.loaves=icon(['.kkkk.....','kAAAAk.kk.','kAaaAk.kck','kAAAAk.kck','.kkkk..kck','..kkkkkkck','.kcccccccck','kcckcccccck','.kcccccccck','..kkkkkkkk'],Object.assign({},ICONPAL,{c:'#7aa0b8'}));
   SPR.wing=spr(['....kkk.....','..kkWWWkk...','.kWWWWWWWk..','kWWwWWWWWWk.','kWwWWwWWWWWk','.kwWwWWwWWWk','..kwWwWWwWWk','..kwWwWwWWWk','...kwWwWwWWk','...kwWwWwWWk','...kwwWwWwWk','....kwWwWwWk','....kwwWwWWk','....kwWwWwWk','.....kwwWwk.','.....kwWwWk.','.....kwwWk..','......kwwk..','......kwk...','.......k....'],Object.assign({},BASEPAL,{W:'#fff8e8',w:'#e8c870'}));
   ICON.armor=icon(['..kkkkkk..','.kWWWWWWk.','kWWcWWcWWk','kWWWccWWWk','kWcWWWWcWk','.kWWccWWk.','.kWWWWWWk.','..kWWWWk..','...kWWk...','....kk....'],ICONPAL);
@@ -764,6 +779,7 @@ const PDEF={
  medic:{name:'생명수',desc:'최대 체력 +15'},
  scope:{name:'진리의 허리띠',desc:'치명타 확률 +5%'},
  wisdom:{name:'솔로몬의 지혜',desc:'경험치 획득 +10%'},
+ tempt:{lock:7,name:'사탄의 유혹',desc:'적 출현 +15% · 받는 피해 +10% · 경험치 +15% · 기도 +20%'},
  loaves:{lock:5,name:'오병이어',desc:'체력이 서서히 찬다 · 초당 회복 +0.4'},
 };
 
@@ -854,10 +870,13 @@ const METADEF=[
  {k:'magnet',name:'목자의 지팡이',desc:'획득 범위 +20%',max:3,base:20,icon:'magnet'},
  {k:'growth',name:'솔로몬의 지혜',desc:'경험치 획득 +8%',max:5,base:25,icon:'wisdom'},
  {k:'luck',name:'기도 응답',desc:'기도 획득 확률 +15%',max:3,base:30,icon:'prayer'},
+ {k:'tempt',name:'사탄의 유혹',desc:'적 출현 +5% · 받는 피해 +4% · 경험치 +6% · 기도 +8%',max:5,base:40,icon:'tempt',lock:7},
  {k:'revive',name:'부활의 소망',desc:'쓰러지면 한 번 체력 50%로 다시 일어남',max:1,base:150,icon:'aura'},
 ];
 let META={},PRAY=0;try{META=JSON.parse(localStorage.getItem('fs_meta')||'{}')||{};PRAY=parseInt(localStorage.getItem('fs_pray')||'0')||0}catch(e){}
-const ML=k=>META[k]||0;
+let META_OFF={};try{META_OFF=JSON.parse(localStorage.getItem('fs_metaoff')||'{}')||{}}catch(e){}
+function saveMetaOff(){try{localStorage.setItem('fs_metaoff',JSON.stringify(META_OFF))}catch(e){}}
+const MLr=k=>META[k]||0;const ML=k=>META_OFF[k]?0:MLr(k);
 function saveMeta(){try{localStorage.setItem('fs_meta',JSON.stringify(META));localStorage.setItem('fs_pray',String(PRAY))}catch(e){}}
 const metaCost=(d,lv)=>d.base*(lv+1);
 let savedRun=null;try{const r=JSON.parse(localStorage.getItem('fs_run')||'null');if(r&&(r.hero||r.P)&&STAGES[r.next]){savedRun=r}}catch(e){}
@@ -950,8 +969,8 @@ function spawnEnemy(type,x,y,mul){const d=ET[type];const sm=(1+G.si*0.28)*(1+G.t
   e.mhp=e.hp;const s=SPR[type][0];e.w=s.W;e.h=s.H;G.en.push(e);return e}
 function ringPos(extra=30){const a=rnd(TAU),R=Math.hypot(W,H)/2+extra;return[P.x+Math.cos(a)*R,P.y+Math.sin(a)*R]}
 function spawnTick(dt){npcTick(dt);
-  const alive=G.en.length,cap=Math.round((140+G.si*8+Math.floor(G.t/30))*0.8);
-  let rate=(1.2+G.t/40)*(1+G.si*0.12)*0.8;if(G.boss)rate*=0.35;else if(G.minis.some(m=>!m.dead))rate*=0.6;
+  const alive=G.en.length,cap=Math.round((140+G.si*8+Math.floor(G.t/30))*0.8*(1+0.15*(P.pass.tempt||0))*(1+0.05*ML('tempt')));
+  let rate=(1.2+G.t/40)*(1+G.si*0.12)*0.8*(1+0.15*(P.pass.tempt||0))*(1+0.05*ML('tempt'));if(G.boss)rate*=0.35;else if(G.minis.some(m=>!m.dead))rate*=0.6;
   G.spawnAcc+=rate*dt;
   const pool=(G.b.land?POOL_LAND:POOL_SEA).filter(p=>G.t>=p[0]*Math.max(0.3,1-G.si*0.12));
   const tot=pool.reduce((a,p)=>a+p[2],0);
@@ -1034,7 +1053,7 @@ function kill(e){e.dead=true;G.kills++;G.stageKills++;sfx('die');
   for(let i=0;i<3;i++)part(e.x+rnd(-3,3),e.y,rnd(-10,10),rnd(-55,-25),0.7,pick(['#fff3b0','#ffd34a']),1);
   if(e.boss){if(e.mini)miniDeath(e);else bossDeath(e);return}
   dropGem(e.x,e.y,e.xp);
-  if(Math.random()<0.03*(1+0.15*ML('luck'))*(1+0.12*G.si)*(e.elite?20:1))G.gems.push({x:e.x+rnd(-4,4),y:e.y+rnd(-4,4),k:'prayer'});
+  if(Math.random()<0.03*(1+0.15*ML('luck'))*(1+0.12*G.si)*(1+0.2*(P.pass.tempt||0))*(1+0.08*ML('tempt'))*(e.elite?20:1))G.gems.push({x:e.x+rnd(-4,4),y:e.y+rnd(-4,4),k:'prayer'});
   const r=Math.random();if(r<0.025)G.gems.push({x:e.x,y:e.y,k:'manna'});else if(r<0.031)G.gems.push({x:e.x,y:e.y,k:'med'});else if(r<0.0335)G.gems.push({x:e.x,y:e.y,k:'flare'});else if(r<0.036)G.gems.push({x:e.x,y:e.y,k:'lots'});
   if(e.elite||((e.type==='tank'||e.type==='gunboat')&&Math.random()<0.25))G.gems.push({x:e.x,y:e.y,k:'crate'});
   if(e.elite)explode(e.x,e.y,30,0,true);
@@ -1052,7 +1071,7 @@ function explode(x,y,r,dmg,visualOnly,enemy){
   addLight(x,y,r*3,'rgba(255,170,80,1)',0.35);shake=Math.max(shake,0.6*Math.min(5,r/7));sfx(r>40?'bigboom':'boom');
   if(G.b.land&&G.decals.length<70)G.decals.push({x,y,r:Math.min(16,r*0.5),a:1,born:G.t});if(G.decals.length>=70)G.decals.shift()}
 let gridFresh=false;function buildGridIfNeeded(){if(!gridFresh){buildGrid();gridFresh=true}}
-function hurtPlayer(d){if(P.inv>0||state!=='play')return;const aw=P.weapons.find(w=>w.k==='armor');if(aw&&!aw.evo&&aw.up!==false){aw.up=false;aw.t=3*P.cdMul;P.inv=0.5;const s=WS.armor(aw.lv);armorPulse(aw,s.R,s.dmg,110);sfx('hit');shake=Math.max(shake,2);for(let i=0;i<26;i++){const a=rnd(TAU),sp=rnd(40,110);part(P.x+Math.cos(a)*8,P.y-4+Math.sin(a)*10,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.25,0.5),pick(['#ffffff','#dfeaff','#b8ccf0']),pick([1,2]),120)}addLight(P.x,P.y,50,'rgba(220,235,255,1)',0.3);return}
+function hurtPlayer(d){if(P.inv>0||state!=='play')return;d*=(1+0.1*(P.pass.tempt||0))*(1+0.04*ML('tempt'));const aw=P.weapons.find(w=>w.k==='armor');if(aw&&!aw.evo&&aw.up!==false){aw.up=false;aw.t=3*P.cdMul;P.inv=0.5;const s=WS.armor(aw.lv);armorPulse(aw,s.R,s.dmg,110);sfx('hit');shake=Math.max(shake,2);for(let i=0;i<26;i++){const a=rnd(TAU),sp=rnd(40,110);part(P.x+Math.cos(a)*8,P.y-4+Math.sin(a)*10,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.25,0.5),pick(['#ffffff','#dfeaff','#b8ccf0']),pick([1,2]),120)}addLight(P.x,P.y,50,'rgba(220,235,255,1)',0.3);return}
   if(aw&&aw.evo)d=Math.max(0.1,Math.round(d*0.1*10)/10);else d=Math.max(1,Math.round(d-P.armor));P.hp-=d;P.inv=0.6;shake=Math.max(shake,3);sfx('hurt');
   G.nums.push({x:P.x,y:P.y-14,v:d,t:0.7,c:'r'});for(let i=0;i<6;i++)part(P.x,P.y,rnd(-50,50),rnd(-60,0),0.4,'#ff3b30',1,200);
   if(P.hp<=0){if(P.revives>0){P.revives--;P.hp=Math.round(P.maxHp*0.5);P.inv=2.5;banner('부활의 소망','다시 일어섰다!',2);sfx('evo');shake=6;addLight(P.x,P.y,200,'rgba(255,240,180,1)',0.8);
@@ -1268,7 +1287,7 @@ function update(dt){
  hud();
 }
 function collect(g){
- if(g.k==='xp'){P.xp+=g.v*(1+0.08*ML('growth'))*(1+0.1*(P.pass.wisdom||0));sfx('pick');while(P.xp>=P.next){P.xp-=P.next;P.lv++;P.next=xpNeed(P.lv);G.pending++}}
+ if(g.k==='xp'){P.xp+=g.v*(1+0.08*ML('growth'))*(1+0.1*(P.pass.wisdom||0))*(1+0.15*(P.pass.tempt||0))*(1+0.06*ML('tempt'));sfx('pick');while(P.xp>=P.next){P.xp-=P.next;P.lv++;P.next=xpNeed(P.lv);G.pending++}}
  else if(g.k==='med'){P.hp=Math.min(P.maxHp,P.hp+60);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:60,t:0.8,c:'g'})}
  else if(g.k==='manna'){P.hp=Math.min(P.maxHp,P.hp+20);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:20,t:0.8,c:'g'})}
  else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');0}
@@ -1607,6 +1626,11 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='select')showSelect();
  else if(a==='grace')showGrace();
  else if(a==='opt')showOptions();
+ else if(a==='recipes')openRecipes();
+ else if(a==='pauseback')openPause();
+ else if(a==='coll')showColl();
+ else if(a==='cpick'){sfx('click');showColl(b.dataset.id)}
+ else if(a==='mtog'){const k=b.dataset.k;if(META_OFF[k])delete META_OFF[k];else META_OFF[k]=1;saveMetaOff();sfx('click');const y=$('scr').scrollTop;showGrace();$('scr').scrollTop=y}
  else if(a==='glogin'){if(CL.api)CL.api.login().catch(e=>{CL.msg='로그인 실패 · '+(e&&e.code||'');refreshCloud()})}
  else if(a==='glogout'){if(CL.api)CL.api.logout()}
  else if(a==='gsync'){cloudPush(null,true).catch(()=>{CL.msg='저장 실패 · 인터넷 연결을 확인하세요';refreshCloud()})}
@@ -1654,7 +1678,7 @@ function toTitle(){const tv=pickVerse();state='title';$('hud').classList.add('hi
  screen(`<div class="panel tpanel"><div class="ttop"><div class="ttl" style="color:#ffd34a">ANOINTED</div><div class="ttl" style="margin-top:calc(var(--p)*3);color:#ffd34a">ONES</div><div class="sub" style="font-size:calc(var(--p)*14);margin-top:calc(var(--p)*5)">어노인티드 원즈</div>
  <div class="hint tverse">"${tv[0]}"<br>— ${tv[1]}</div></div>
  <div id="tsp"></div><div class="tbot"> <div class="menu">${cont}<div class="btn ${savedRun?'':'primary'} wide" data-act="start">새 여정 시작</div>
- <div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="select">스테이지 선택</div>
+ <div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="coll">컬렉션</div><div class="btn wide" data-act="select">스테이지 선택</div>
  <div class="btn wide" data-act="opt">옵션</div></div>
  <div class="ctrl">화면 아무 곳이나 드래그해서 이동 · 공격은 자동<br>PC: WASD / 방향키 · ESC 일시정지 · M 소리<br><span style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 보조장비를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</span></div></div></div>`,'titlebg')}
 function showOptions(){state='heroes';
@@ -1665,19 +1689,35 @@ function showOptions(){state='heroes';
  <div class="btn primary" data-act="quit">◀ 메인 화면</div></div>`);
  document.querySelectorAll('.osl').forEach(s=>{const k=s.dataset.k;const upd=()=>{OPT[k]=+s.value;$('ov_'+k).textContent=OPT[k];s.style.setProperty('--v',OPT[k]+'%');applyVol();saveOpt()};s.style.setProperty('--v',OPT[k]+'%');
   s.addEventListener('input',upd);s.addEventListener('change',()=>{upd();if(k==='sfx'){initAudio();sfx('pick')}})})}
+
+let COLL={};try{COLL=JSON.parse(localStorage.getItem('fs_coll')||'{}')||{}}catch(e){}
+function stHint(l){return `ST.${String(l-1).padStart(2,'0')} ${STAGES[l-2]?STAGES[l-2].name:''} 클리어 시 해금`}
+function showColl(sel){state='heroes';const items=[];
+ const add=(sec,o)=>{o.sec=sec;items.push(o)};
+ for(const k of ['david','moses','abraham','samson','noah','enoch']){const h=HEROES[k];const ok=!h.lock||unlocked>=h.lock;add('영웅',{id:'h_'+k,ok,img:HEROIMG[k],name:h.name,sub:h.role,desc:h.desc,hint:ok?'':stHint(h.lock)})}
+ for(const k in WDEF){const d=WDEF[k];let ok=true,hint='';if(d.hero){const h=HEROES[d.hero];if(h.lock&&unlocked<h.lock){ok=false;hint=stHint(h.lock)}}else if(d.lock&&unlocked<d.lock){ok=false;hint=stHint(d.lock)}
+  add('무기',{id:'w_'+k,ok,img:ICON[k],name:d.name,sub:d.hero?HEROES[d.hero].name+' 전용':'공용 무기',desc:d.desc,hint})}
+ for(const k in EVO){const e=EVO[k],ok=!!(COLL.evo&&COLL.evo[k]);add('진화 무기',{id:'e_'+k,ok,evo:1,img:ICON[k],name:e.name,sub:WDEF[k].name+' + '+evoPs(k).map(p=>PDEF[p].name).join(' + '),desc:e.desc,hint:ok?'':'아직 진화시키지 못했어요 · 무기 LV8 + 짝이 되는 패시브 + 모루'})}
+ for(const k in PDEF){const d=PDEF[k],ok=!d.lock||unlocked>=d.lock;add('패시브',{id:'p_'+k,ok,img:ICON[k],name:d.name,sub:'패시브',desc:d.desc,hint:ok?'':stHint(d.lock)})}
+ const got=items.filter(i=>i.ok).length;const cur=items.find(i=>i.id===sel)||null;
+ const secs=['영웅','무기','진화 무기','패시브'].map(s=>{const L=items.filter(i=>i.sec===s);return `<div class="csec">${s} <span>${L.filter(i=>i.ok).length}/${L.length}</span></div><div class="cgrid">${L.map(i=>`<div class="citem ${i.ok?'':'lk'} ${i.evo?'ev':''} ${cur&&cur.id===i.id?'sel':''}" data-act="cpick" data-id="${i.id}"><img src="${i.img}"><div>${i.ok?i.name:'???'}</div></div>`).join('')}</div>`}).join('');
+ const det=cur?`<div class="cdet"><img src="${cur.img}" class="${cur.ok?'':'lk'}"><div><b>${cur.ok?cur.name:'???'}</b><small>${cur.ok?cur.sub:'잠겨 있음'}</small><p>${cur.ok?cur.desc:cur.hint}</p></div></div>`:`<div class="cdet empty">항목을 눌러 자세히 보기</div>`;
+ const y=$('scr').scrollTop;
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">COLLECTION</div><div class="big">컬렉션</div><div class="cprog"><i style="width:${Math.round(got/items.length*100)}%"></i><span>수집 ${got} / ${items.length}</span></div>${det}${secs}<div class="btn primary" data-act="quit">◀ 메인 화면</div></div>`);
+ if(sel)$('scr').scrollTop=y}
 function showGrace(){state='heroes';
- const rows=METADEF.map(d=>{const lv=ML(d.k),max=lv>=d.max,cost=metaCost(d,lv),can=!max&&PRAY>=cost;
+ const rows=METADEF.filter(d=>!d.lock||unlocked>=d.lock).map(d=>{const lv=MLr(d.k),off=!!META_OFF[d.k],max=lv>=d.max,cost=metaCost(d,lv),can=!max&&PRAY>=cost;
   const pips=[...Array(d.max)].map((_,i)=>`<i class="${i<lv?'on':''}"></i>`).join('');
-  return `<div class="mrow ${max?'max':can?'can':''}" ${max?'':`data-act="buy" data-k="${d.k}"`}><img src="${ICON[d.icon]}"><div class="mt"><div class="mn">${d.name}</div><div class="md">${d.desc}</div><div class="mp">${pips}</div></div><div class="mc">${max?'MAX':`<img src="${ICON.prayer}">${cost}`}</div></div>`}).join('');
- const spent=METADEF.reduce((a,d)=>{let t=0;for(let i=0;i<ML(d.k);i++)t+=metaCost(d,i);return a+t},0);
+  return `<div class="mrow ${max?'max':can?'can':''} ${off&&lv>0?'moff':''}" ${max?'':`data-act="buy" data-k="${d.k}"`}><img src="${ICON[d.icon]}"><div class="mt"><div class="mn">${d.name}</div><div class="md">${d.desc}</div><div class="mp">${pips}</div></div>${lv>0?`<div class="mtog ${off?'off':'on'}" data-act="mtog" data-k="${d.k}">${off?'OFF':'ON'}</div>`:''}<div class="mc">${max?'MAX':`<img src="${ICON.prayer}">${cost}`}</div></div>`}).join('');
+ const spent=METADEF.reduce((a,d)=>{let t=0;for(let i=0;i<MLr(d.k);i++)t+=metaCost(d,i);return a+t},0);
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">GRACE OF THE LORD</div><div class="big">주님의 은혜</div>
  <div class="pbal"><img src="${ICON.prayer}"> 기도 <b>${PRAY}</b></div><div class="hint" style="margin-top:calc(var(--p)*2)">적을 처치하면 일정 확률로 기도를 얻어요. 강화는 모든 영웅과 모든 게임에 계속 적용돼요.</div>
  <div class="mlist">${rows}</div>
  <div class="btn" data-act="quit">◀ 메인 화면</div>${spent?`<div class="btn small" data-act="refund">모두 되돌리기 (기도 ${spent} 돌려받기)</div>`:''}</div>`)}
-function buyMeta(k,el){const d=METADEF.find(x=>x.k===k),lv=ML(k);if(lv>=d.max)return;const c=metaCost(d,lv);if(PRAY<c){sfx('hurt');el.classList.add('no');setTimeout(()=>el.classList.remove('no'),300);return}
+function buyMeta(k,el){const d=METADEF.find(x=>x.k===k),lv=MLr(k);if(lv>=d.max)return;const c=metaCost(d,lv);if(PRAY<c){sfx('hurt');el.classList.add('no');setTimeout(()=>el.classList.remove('no'),300);return}
  PRAY-=c;META[k]=lv+1;saveMeta();sfx('lvl');const y=$('scr').scrollTop;showGrace();$('scr').scrollTop=y}
 let refundArm=0;function refundMeta(el){if(performance.now()-refundArm>2500){refundArm=performance.now();el.textContent='정말 되돌릴까요? 한 번 더 누르면 되돌려요';return}
- let t=0;for(const d of METADEF)for(let i=0;i<ML(d.k);i++)t+=metaCost(d,i);PRAY+=t;META={};saveMeta();refundArm=0;sfx('click');showGrace()}
+ let t=0;for(const d of METADEF)for(let i=0;i<MLr(d.k);i++)t+=metaCost(d,i);PRAY+=t;META={};META_OFF={};saveMetaOff();saveMeta();refundArm=0;sfx('click');showGrace()}
 function showSelect(){state='select';
  const list=STAGES.map((st,i)=>{const lock=i>=unlocked,r=REC[i];
   return `<div class="stg ${lock?'lock':''} ${r?'done':''}" ${lock?'':`data-act="stage" data-i="${i}"`}>
@@ -1701,7 +1741,7 @@ function showBrief(){state='brief';$('hud').classList.add('hidden');const st=G.s
  <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="quit">◀ 메인</div></div>`)}
 function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden');$('boss').classList.add('hidden');
  $('stl').innerHTML=`<b>ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}}
-function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="op" style="color:#ffd34a;font-size:calc(var(--p)*5)">EVOLUTION</div><div style="font-size:calc(var(--p)*7);color:#c8b898">무기 LV8 + 보조장비 보유 → 미니보스의 모루</div>${recipes()}<div class="btn primary" data-act="resume">계속</div><div class="btn" data-act="mute">${muted?'소리 켜기':'소리 끄기'}</div><div class="btn" data-act="quit">메인 화면</div></div>`)}
+function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="btn primary" data-act="resume">계속</div><div class="btn gold" data-act="recipes">무기 조합표</div><div class="btn" data-act="mute">${muted?'소리 켜기':'소리 끄기'}</div><div class="btn" data-act="quit">메인 화면</div></div>`)}
 function closePause(){hideScreen();state='play'}
 function fmtT(t){return Math.floor(t/60)+'분 '+String(Math.floor(t%60)).padStart(2,'0')+'초'}
 function gameOver(){state='over';sfx('bigboom');setTimeout(()=>{
@@ -1729,7 +1769,8 @@ function hallelujah(){if(!AC||muted)return;const t0=AC.currentTime+0.05;
  const seq=[[[48,60,64,67],0,0.42],[[53,60,65,69],0.42,0.2],[[55,62,67,71],0.62,0.38],[[48,60,64,67,72],1.0,2.1]];
  for(const[ch,st,du]of seq){choir(ch,t0+st,du+0.05,0.11);for(const m of ch.slice(-1))tone('triangle',mf(m+12),mf(m+12),du,0.05,t0+st-AC.currentTime,master)}
  [84,88,91,96,100].forEach((m,i)=>tone('sine',mf(m),mf(m),0.6,0.04,1.0+i*0.07+t0-AC.currentTime,master));nz(1.6,0.12,7000,1.0+t0-AC.currentTime,'highpass')}
-function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake=5;addLight(P.x,P.y,160,'rgba(255,210,90,1)',0.8);
+function evolve(w){try{COLL.evo=COLL.evo||{};COLL.evo[w.k]=1;localStorage.setItem('fs_coll',JSON.stringify(COLL))}catch(e){}
+w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake=5;addLight(P.x,P.y,160,'rgba(255,210,90,1)',0.8);
  for(let i=0;i<40;i++){const a=rnd(TAU),sp=rnd(40,140);part(P.x,P.y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.5,1),pick(['#ffd34a','#fff3b0','#ff9a2a']),2,0,'fire')}
  const e=EVO[w.k];slots();
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">WEAPON EVOLUTION</div><div class="halle">할렐루야!</div><div class="big" style="color:#ffd34a">무기 진화!</div><div class="rg">모루 위에서 무기가 새롭게 단련되었다</div>
@@ -1738,12 +1779,24 @@ function evolve(w){w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake
  <div class="card gold"><img src="${ICON[w.k]}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
  <div style="margin-top:calc(var(--p)*8)"><div class="btn primary" data-act="evook">계속</div></div></div>`)}
 function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;0}}
-function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>!WDEF[k].hero||WDEF[k].hero===P.hero).map(k=>{const e=EVO[k],w=P.weapons.find(x=>x.k===k);const cls=w&&w.evo?'ok':w?'have':'';
+function wAvail(k){const d=WDEF[k];if(d.lock&&unlocked<d.lock)return false;if(d.hero)return d.hero===P.hero;return true}
+function openRecipes(){state='pause';const known=k=>!!(COLL.evo&&COLL.evo[k]);
+ const wOk=k=>{const d=WDEF[k];if(d.hero){const h=HEROES[d.hero];return !h.lock||unlocked>=h.lock}return !d.lock||unlocked>=d.lock};
+ const pOk=p=>{const d=PDEF[p];return !d.lock||unlocked>=d.lock};
+ const Q=(img)=>`<span class="rq"><img src="${img}" class="lk">???</span>`;
+ const rows=Object.keys(EVO).map(k=>{const e=EVO[k],kn=known(k),w=P.weapons.find(x=>x.k===k);
+  const wc=wOk(k)?`<span class="rq"><img src="${ICON[k]}">${WDEF[k].name}${w&&!w.evo?` <em>LV${w.lv}</em>`:''}</span>`:Q(ICON[k]);
+  const pc=evoPs(k).map(p=>kn&&pOk(p)?`<span class="rq"><img src="${ICON[p]}">${PDEF[p].name}${P.pass[p]?' <em>✓</em>':''}</span>`:Q(ICON[p])).join('<i>+</i>');
+  const rc=kn?`<span class="rq gold"><img src="${ICON[k]}">${w&&w.evo?'★ ':''}${e.name}</span>`:Q(ICON[k]);
+  return `<div class="rrow ${kn?'kn':''} ${w?'own':''}">${wc}<i>+</i>${pc}<i>▶</i>${rc}</div>`}).join('');
+ const n=Object.keys(EVO).filter(known).length;
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">EVOLUTION</div><div class="big" style="font-size:calc(var(--p)*16)">무기 조합표</div><div class="hint">무기 LV8 + 짝이 되는 패시브 보유 → 미니보스의 모루 · 발견 ${n}/${Object.keys(EVO).length}</div><div class="rlist">${rows}</div><div class="btn primary" data-act="pauseback">◀ 돌아가기</div></div>`)}
+function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>wAvail(k)||P.weapons.some(w=>w.k===k)).map(k=>{const e=EVO[k],w=P.weapons.find(x=>x.k===k);const cls=w&&w.evo?'ok':w?'have':'';
  return `<tr class="${cls}"><td><img src="${ICON[k]}"> ${WDEF[k].name}${w&&!w.evo?' '+w.lv:''}</td><td>+</td><td>${[].concat(e.p).map(p=>`<img src="${ICON[p]}"> ${PDEF[p].name}${P.pass[p]?' ✓':''}`).join('<br>')}</td><td>▶</td><td>${w&&w.evo?'★ ':''}${e.name}</td></tr>`}).join('')+'</table>'}
 // level up
 function options(){const o=[];
  for(const w of P.weapons)if(w.lv<WMAX)o.push({t:'w',k:w.k,lv:w.lv+1});
- if(P.weapons.length<MAXW)for(const k in WDEF)if(!WDEF[k].hero&&!(WDEF[k].lock&&unlocked<WDEF[k].lock)&&!P.weapons.find(w=>w.k===k))o.push({t:'w',k,lv:1});
+ if(P.weapons.length<MAXW)for(const k in WDEF)if(wAvail(k)&&!P.weapons.find(w=>w.k===k))o.push({t:'w',k,lv:1});
  const npass=Object.keys(P.pass).filter(k=>P.pass[k]>0).length;for(const k in PDEF)if(!(PDEF[k].lock&&unlocked<PDEF[k].lock)&&(P.pass[k]||0)<PMAX&&((P.pass[k]||0)>0||npass<MAXP))o.push({t:'p',k,lv:(P.pass[k]||0)+1});
  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}
  const r=o.slice(0,3);if(!r.length){r.push({t:'f'});r.push({t:'auto'})}return r}
@@ -1760,7 +1813,7 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
  const cards=ops.map((o,i)=>{if(o.t==='auto')return`<div class="card auto" data-i="${i}"><img src="${ICON.food}"><div class="lv">AUTO</div><div class="nm">자동 선택</div><div class="ds">게임이 끝날 때까지 레벨업 화면 없이<br>만나(체력 20)를 자동으로 받습니다</div><div class="k">${i+1}</div></div>`;
   if(o.t==='f')return`<div class="card" data-i="${i}"><img src="${ICON.food}"><div class="nm">만나</div><div class="ds">체력 20 회복 (작은 회복)</div><div class="k">${i+1}</div></div>`;
   const d=o.t==='w'?WDEF[o.k]:PDEF[o.k];let ds=o.t==='w'?wdiff(o.k,o.lv):d.desc;
-  if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${evoPs(o.k).map(p=>PDEF[p].name).join(' + ')}</div>`;else{const wk=Object.keys(EVO).find(k=>evoPs(k).includes(o.k)&&(!WDEF[k].hero||WDEF[k].hero===P.hero));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
+  if(o.t==='w')ds+=`<div class="evo-h">★ 진화: LV8 + ${evoPs(o.k).map(p=>PDEF[p].name).join(' + ')}</div>`;else{const wk=Object.keys(EVO).find(k=>evoPs(k).includes(o.k)&&(P.weapons.some(w=>w.k===k)||wAvail(k)));if(wk)ds+=`<div class="evo-h">★ ${WDEF[wk].name} → ${EVO[wk].name} 재료${P.weapons.find(w=>w.k===wk)?' (보유 중)':''}</div>`}
   return`<div class="card" data-i="${i}"><img src="${ICON[o.k]}"><div class="lv ${o.lv===1?'new':''}">${o.lv===1?'NEW':'LV '+o.lv}</div><div class="nm">${d.name}</div><div class="ds">${ds}</div><div class="k">${i+1}</div></div>`}).join('');
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">PROMOTION</div><div class="big" style="font-size:calc(var(--p)*18)">레벨 업!${G.pending>1?` <span style="font-size:calc(var(--p)*9);color:#c8b898">+${G.pending-1}</span>`:''}</div><div id="lvhint" class="lvhint">한 번 더 누르면 선택</div><div class="cards">${cards}</div>${(P.rerolls||0)>0&&ops.some(o=>o.t==='w'||o.t==='p')?`<div class="btn reroll" id="reroll"><img src="${bossImg('lots',SPR.lots.i)}">제비 다시 뽑기 <b>${P.rerolls}</b></div>`:''}${matchMedia('(hover:hover)').matches?'<div class="ctrl" style="margin-top:calc(var(--p)*6)">방향키 / WASD 로 이동 · Enter 또는 Space 로 선택 · 숫자키 1~3 두 번 눌러 선택</div>':''}</div>`);
  lvSel=0;selCard(0);lvOpenT=performance.now();document.querySelectorAll('#scr .card').forEach((c,j)=>c.addEventListener('mouseenter',()=>selCard(j)));
@@ -1878,7 +1931,7 @@ window.__fs={evolve,get G(){return G},get P(){return P},get state(){return state
 
 // ================= CLOUD SAVE (Google / Firebase) =================
 const FB_CONFIG=null; // ← Firebase 웹앱 설정 객체를 여기에 붙여 넣으세요
-const SAVE_KEYS=['fs_unlocked','fs_rec','fs_run','fs_hero','fs_meta','fs_pray','fs_opt'];
+const SAVE_KEYS=['fs_unlocked','fs_rec','fs_run','fs_hero','fs_meta','fs_metaoff','fs_pray','fs_opt','fs_coll'];
 const CL={ready:false,user:null,api:null,last:'',busy:false,msg:'',err:false};
 function snapSave(){const o={};try{for(const k of SAVE_KEYS){const v=localStorage.getItem(k);if(v!=null)o[k]=v}}catch(e){}return o}
 function progScore(d){try{const u=+(d.fs_unlocked||1),p=+(d.fs_pray||0),m=JSON.parse(d.fs_meta||'{}');let s=0;for(const md of METADEF)for(let i=0;i<(m[md.k]||0);i++)s+=metaCost(md,i);return u*1e6+s+p}catch(e){return 0}}
