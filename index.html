@@ -668,7 +668,7 @@ const ROSTER=[
  {grp:'갈대아 군대',grunt:['바벨론 군사',HM('chal',{head:'cone',wpn:'spear',beard:1,round:1})],dog:['날개 달린 사자',BEAST.lion],
   rpg:['갈대아 술사',HM('chal',{head:'cone',wpn:'staff',robe:1,beard:1,pal:{a:'#4a2a5a',A:'#2e1a3a',c:'#4a2a5a',C:'#2e1a3a',h:'#c8a040'}})],heavy:['바벨론 중장보병',HM('chal',{head:'cone',wpn:'mace',mail:1,greave:1,beard:1,tall:1})],
   tank:['금 신상',null]},
- {grp:'바다에서 나온 짐승들',frog:['깊음의 바다뱀',BEAST.serpent],boat:['네 날개 가진 표범',BEAST.leopard],gunboat:['갈빗대를 문 곰',BEAST.bear]},
+ {grp:'바다에서 나온 짐승들',frog:['깊음의 바다뱀',()=>{const c=BEAST.serpent();Object.assign(c.pal,{q:'#3a9a88',Q:'#8ad8c0',n:'#24584e'});return c}],boat:['네 날개 가진 표범',BEAST.leopard],gunboat:['갈빗대를 문 곰',()=>{const c=BEAST.bear();Object.assign(c.pal,{B:'#76625a',b:'#4a3c36'});return c}]},
  {grp:'모압과 미디안',grunt:['모압 군사',HM('moab',{head:'helm',wpn:'spear',round:1,beard:1})],dog:['미디안 낙타병',()=>{const c=BEAST.camel();Object.assign(c.pal,{a:'#2a4a3a',c:'#c8a040',h:'#4a3a2a'});return c}],
   rpg:['브올의 술사',HM('moab',{head:'hood',wpn:'staff',robe:1,beard:1,pal:{h:'#4a3a5a',H:'#7a6a8a',c:'#4a3a5a',C:'#2e2438',a:'#4a3a5a',A:'#2e2438'}})],heavy:['모압 중장병',HM('moab',{head:'turban',wpn:'axe',mail:1,greave:1,tall:1,beard:1})],
   tank:['에밈 거인',HM('moab',{head:'hair',wpn:'mace',mail:1,beard:1,big:1,pal:{s:'#a87250',d:'#3a2a1a'}})]},
@@ -745,6 +745,7 @@ function initStatic(){
   {const fp=Object.assign({},BASEPAL,{f:'#5a7a9a',F:'#3a5a7a',w:'#c8d8e0',e:'#111',m:'#3a2a2a'});const fr=["........ff..........", ".......fFffff.......", ".ff..fffffffffff....", "fFf.ffffffffffffff..", "fFfffffffffffffffef.", ".Fffffffffffffffffff", ".fFffwwwwwwwwwwwwwmm", "fFf.wwwwwwwwwwwwwww.", ".ff..wwwwwwwwwwwww..", ".......wwwwwwwww...."];SPR.bigfish=[sprBig(bigify(fr,2),fp),sprBig(bigify(fr,3),fp)];ICON.fish=icon(outl(fr.map(r=>r.replace(/(.)./g,'$1')).filter((_,i)=>i%2===0)),fp)}
   {const lp=Object.assign({},BASEPAL,{A:'#e8c04a',a:'#a8801a',y:'#fff3b0',o:'#ff8a2a'});const lr=['..o..','.oyo.','..y..','..A..','.AaA.','..A..','..A..','.AAA.','AaAaA'];SPR.lamp=spr(outl(lr),lp);ICON.lamp=icon(outl(['..o..o..','.oyooyo.','..y..y..','A.A..A.A','AAAAAAAA','...AA...','..AaaA..']),lp)}
   {const fp=Object.assign({},BASEPAL,{W:'#fffbe8',y:'#ffd34a',o:'#ff8a2a',r:'#d8401a',R:'#8a2010'});const F=[["...y...","..yoy..","..oyo..",".oyWyo.",".oyWyo.","royWyor",".rooor.","..RrR.."],["....y..","...yo..","..oyyo.",".oyWWo.",".oyWyo.","royWyor",".rooor.","..RrR.."],["..y....","..oy...",".oyyo..",".oWWyo.",".oyWyo.","royWyor",".rooor.","..RrR.."]];SPR.torchFire=F.map(f=>spr(outl(f),fp));const cp=Object.assign({},fp,{c:'#2a1410',C:'#5a1e10'});const CF=[["...y.....","..yo..y..","..oy.yo..",".oWyoyWo.",".oyWyWyo.","royyWyyor","rCcCrCcCr",".CcCCCcC.","..CCCCC.."],[".....y...","..y..oy..","..oy.yo..",".oWyoWyo.",".oyWyWyo.","royWyyyor","rCcCrCcCr",".CcCCCcC.","..CCCCC.."],["....y....",".y..yo...",".yo.oy.y.",".oWyoyWo.",".oyWyWyo.","royyWyyor","rCcCrCcCr",".CcCCCcC.","..CCCCC.."]];SPR.coalFire=CF.map(f=>spr(outl(f),cp))}
+  ICON.grenade=icon(['...ky.....','..kyok..k.','..koyok.ky','.koyWyokyo','.koyWWyoko','koyWWWyook','kyyWWWyyok','kCcCrCcCk.','.kCCCCCk..','..kkkkk...'],Object.assign({},ICONPAL,{W:'#fffbe8',y:'#ffd34a',o:'#ff8a2a',r:'#d8401a',c:'#2a1410',C:'#5a1e10'}));
   ICON.word=icon(['.kkkkkkkk.','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','.kkkkkkkk.'],Object.assign({},ICONPAL,{W:'#fbfbf6',g:'#c8a040'}));
   ICON.torch=icon(['....y.....','...yoy....','...oyo....','....B.....','..kcck....','.kcccck...','.kcCcck...','.kcccck...','..kcck....','...kk.....'],Object.assign({},ICONPAL,{c:'#b8683a',C:'#7a3e1e',y:'#ffe08a',o:'#ff8a2a',B:'#5a3a1e'}));
   ICON.trumpet=icon(['k........k','kAk....kAk','.kAAkkAAk.','..kAAAAk..','...kAAk...','...kaak...','...kAAk...','...kaak...','...kAAk...','....kk....'],Object.assign({},ICONPAL,{A:'#e8dcc0',a:'#a89878'}));
@@ -797,8 +798,8 @@ const BIOME={
    pal:{T:'#3a3330',t:'#55453c',c:'#1e1e22',q:'#6e6258',Q:'#90847a',a:'#7d6c48',A:'#a8946a',R:'#a33',G:'#3c3f47',g:'#5b5f68'},
    enemy:{h:'#5a5048',H:'#7a6e62',u:'#4e4640',U:'#332e2a',T:'#4a4038',t:'#6a5c50'},
    decor:[['wall',4],['pillar',3],['asherah',1],['altar',1],['stones',1]],density:0.42,root:44},
- storm:{land:false,base:'#0c1e2e',spk:['#10283c','#081624','#153250'],detail:'wave',ambient:'#7a86a6',weather:'storm',
-   pal:{q:'#4d545c',Q:'#737b85',W:'#cfe6f5'},enemy:{T:'#3e4652',t:'#626c7a',u:'#2a3240',U:'#1a2030',h:'#222832',H:'#3a4250'},
+ storm:{land:false,base:'#1a3a52',spk:['#204660','#142e44','#285470'],detail:'wave',ambient:'#a2acc6',weather:'storm',
+   pal:{q:'#4d545c',Q:'#737b85',W:'#cfe6f5'},enemy:{T:'#5a6472',t:'#8a94a2',u:'#46505e',U:'#2e3644',h:'#3a4250',H:'#5a6474'},
    decor:[['rock',3],['islet',1]],density:0.1,root:41},
  plains:{land:true,base:'#8a8448',spk:['#9a9454','#7a743c','#a8a060'],detail:'grass',ambient:'#d8b890',weather:'sand',
    pal:{n:'#5a6a2a',N:'#7a8a3a',t:'#6a4a2a',T:'#7a6440',c:'#2a2a2a',q:'#8a7a58',Q:'#b0a078',G:'#3c3f47',g:'#5b5f68',a:'#9a8458',A:'#c4ac78',b:'#2a2018'},
@@ -2006,7 +2007,7 @@ function showBrief(){state='brief';$('hud').classList.add('hidden');const st=G.s
  screen(`<div class="panel"><div class="op">STAGE ${String(G.si+1).padStart(2,'0')} / ${String(STAGES.length).padStart(2,'0')}${G.hard?'<span class="htag">주님의 시험</span>':''}</div>
  <div class="big">${st.name}</div><div class="rg">${st.region} &nbsp; <span class="tag">${st.type}</span></div>
  ${route(G.si)}<div class="brief">${st.brief}<br><div class="verse">${st.verse}</div><span style="color:#ff8a6a">15분 생존 · 3분마다 미니보스 출현${G.hard?'<br>무기 · 패시브 각 3개까지 · 적 속도 +20% · 적 피해 +35%':''}<br>15:00 최종 보스 「${st.bossName}」 처치 시 승리</span>${roster()}<div style="margin-top:calc(var(--p)*4);color:#c8b898">영웅: ${HEROES[P.hero].name} · ${WDEF[HEROES[P.hero].w].name}</div></div>
- <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="quit">◀ 메인</div></div>`)}
+ <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="select">◀ 뒤로</div><div class="btn" data-act="quit">메인</div></div>`)}
 function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden');$('boss').classList.add('hidden');
  $('stl').innerHTML=`<b>${G.hard?'시험 ':''}ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}showTutorial()}
 function showTutorial(){let seen=false;try{seen=localStorage.getItem('fs_tut')==='1';localStorage.setItem('fs_tut','1')}catch(e){}if(seen)return;state='intro';introT=performance.now();
