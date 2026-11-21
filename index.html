@@ -59,6 +59,11 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #scr{position:absolute;inset:0;display:flex;align-items:safe center;justify-content:center;pointer-events:auto;background:rgba(5,4,10,.66);overflow-y:auto;padding:calc(var(--p)*8 + env(safe-area-inset-top,0px)) env(safe-area-inset-right,0px) calc(var(--p)*8 + env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,0px)}
 #scr.clear{background:transparent}
 .panel{text-align:center;max-width:94%}
+.tbot{position:relative}.tpress{position:absolute;left:0;right:0;top:40%;text-align:center;font-family:'Black Han Sans';font-size:calc(var(--p)*10);color:#fff3d0;text-shadow:0 calc(var(--p)*1) 0 #000,0 0 calc(var(--p)*6) #000;animation:tblink 1.3s ease-in-out infinite;pointer-events:none;opacity:0;transition:opacity .3s}
+.tbot.tlock .tpress{opacity:1}.tbot .menu{transition:opacity .35s}.tbot.tlock .menu{opacity:0;pointer-events:none}
+@keyframes tblink{0%,100%{filter:brightness(1)}50%{filter:brightness(0.45)}}
+.tlogo{display:block;width:calc(var(--p)*192);max-width:96%;margin:0 auto;image-rendering:pixelated;filter:drop-shadow(0 0 calc(var(--p)*6) rgba(0,0,0,0.7))}
+#ui.land .tlogo{width:calc(var(--p)*96)}
 .ttl{font-family:'Press Start 2P';font-size:calc(var(--p)*19);color:#f2ead8;text-shadow:calc(var(--p)*2) calc(var(--p)*2) 0 #7a1414,calc(var(--p)*3) calc(var(--p)*3) 0 #000;letter-spacing:calc(var(--p)*1)}
 .sub{font-family:'Black Han Sans';font-size:calc(var(--p)*22);color:#ff3b30;text-shadow:calc(var(--p)*2) calc(var(--p)*2) 0 #000;margin-top:calc(var(--p)*4)}
 .hint{font-size:calc(var(--p)*8);color:#b8ac94;margin-top:calc(var(--p)*6)}
@@ -202,6 +207,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 .bi-row{display:flex;gap:calc(var(--p)*6);align-items:center;text-align:left;margin-top:calc(var(--p)*7);background:#120e14cc;box-shadow:inset 0 0 0 var(--p) #5a2a2a;padding:calc(var(--p)*5)}
 .bi-row img{width:calc(var(--p)*44);height:calc(var(--p)*36);object-fit:contain;image-rendering:pixelated;flex:none;filter:drop-shadow(0 0 calc(var(--p)*3) #ff4a3a)}
 .btag{display:block;font-family:'Press Start 2P';font-size:calc(var(--p)*5);color:#ffd34a;letter-spacing:calc(var(--p)*0.6);margin-bottom:calc(var(--p)*3)}
+.tut{margin:calc(var(--p)*8) auto;width:calc(var(--p)*190);padding:calc(var(--p)*6);background:#14111a;box-shadow:inset 0 0 0 var(--p) #5a4a2a}.tut p{margin:calc(var(--p)*3) 0;font-size:calc(var(--p)*8);line-height:1.5;color:#e8e0d0}
 .bi-tag{font-family:'Press Start 2P';font-size:calc(var(--p)*4.5);letter-spacing:calc(var(--p)*0.5);margin-bottom:calc(var(--p)*2)}
 .bi-name{font-family:'Black Han Sans';font-size:calc(var(--p)*12);color:#fff}
 .bi-desc{font-size:calc(var(--p)*8);color:#e8dcc4;line-height:1.45;margin-top:calc(var(--p)*2);word-break:keep-all}
@@ -620,7 +626,7 @@ const BOSSES={
 const ICONPAL=Object.assign({},BASEPAL,{a:'#8a6a3a',A:'#b08a4a',B:'#6b4a2a',c:'#4ab8ff',W:'#f2f2f8',u:'#7a6a4a',U:'#5a4a2a'});
 const HEROIMG={};
 let lastHero='david';try{lastHero=localStorage.getItem('fs_hero')||'david'}catch(e){}
-if(!['david','moses','abraham','samson','noah'].includes(lastHero))lastHero='david';
+if(!['david','moses','abraham','samson','noah','enoch'].includes(lastHero))lastHero='david';
 const isMenu=()=>state==='title'||state==='select'||state==='heroes';
 const PLAYERPAL=Object.assign({},BASEPAL,{h:'#3e5a3a',H:'#6f9455',u:'#4a5f3b',U:'#2e3c27',r:'#ff3b30',R:'#a3171f',P:'#5a6470',p:'#7a8490'});
 let SPR={},ICON={},DECOR={},TILES=[];
@@ -792,12 +798,14 @@ function applyVol(){if(sfxG)sfxG.gain.value=Math.pow(OPT.sfx/100,1.5)*1.0;if(bgm
 function initAudio(){if(AC)return;try{AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=0.32;master.connect(AC.destination);musicG=AC.createGain();musicG.gain.value=0.5;sfxG=AC.createGain();sfxG.connect(master);bgmG=AC.createGain();bgmG.connect(master);musicG.connect(bgmG);applyVol();
   noiseBuf=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;setInterval(musicTick,25)}catch(e){AC=null}}
 function tone(type,f0,f1,dur,vol,delay=0,dest){const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);o.connect(g);g.connect(dest||sfxG);o.start(t);o.stop(t+dur+0.05)}
+function swish(){const t=AC.currentTime,s=AC.createBufferSource();s.buffer=noiseBuf;const f=AC.createBiquadFilter();f.type='bandpass';f.Q.value=2.5;f.frequency.setValueAtTime(7000,t);f.frequency.exponentialRampToValueAtTime(1400,t+0.2);const g=AC.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.55,t+0.03);g.gain.exponentialRampToValueAtTime(0.001,t+0.22);s.connect(f);f.connect(g);g.connect(sfxG);s.start(t,Math.random()*0.5);s.stop(t+0.25);
+  tone('sine',2400,3200,0.16,0.05);tone('triangle',1600,2100,0.12,0.03,0.01)}
 function nz(dur,vol,freq,delay=0,type='lowpass',dest,q=1){const t=AC.currentTime+delay,s=AC.createBufferSource();s.buffer=noiseBuf;const f=AC.createBiquadFilter();f.type=type;f.frequency.value=freq;f.Q.value=q;const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);s.connect(f);f.connect(g);g.connect(dest||sfxG);s.start(t,Math.random()*0.5);s.stop(t+dur+0.05)}
 const THR={sling:0.08,shot:0.05,hit:0.04,die:0.05,pick:0.03,boom:0.06,flame:0.12};
 function sfx(n){if(!AC||muted)return;const now=AC.currentTime;if(lastS[n]&&now-lastS[n]<(THR[n]||0.02))return;lastS[n]=now;
  switch(n){
   case'shot':nz(0.07,0.25,2400,0,'bandpass');tone('square',300,90,0.05,0.06);break;
-  case'sniper':nz(0.25,0.5,1600,0,'lowpass');tone('sawtooth',900,60,0.2,0.12);break;
+  case'sniper':swish();break;
   case'hit':tone('square',220,120,0.04,0.05);break;
   case'die':nz(0.1,0.15,900,0,'lowpass');break;
   case'boom':nz(0.5,0.6,500,0,'lowpass');tone('sine',90,30,0.4,0.5);break;
@@ -827,19 +835,20 @@ function sfx(n){if(!AC||muted)return;const now=AC.currentTime;if(lastS[n]&&now-l
 // ---- 찬양 멜로디 (모두 저작권이 만료된 공개 찬송가·영가) ----
 const SONGS=[
  {name:'성도들 행진할 때 (When the Saints Go Marching In)',bpm:138,bar:4,key:0,tr:2,mel:'R:1 C4:1 E4:1 F4:1 G4:4 R:1 C4:1 E4:1 F4:1 G4:4 R:1 C4:1 E4:1 F4:1 G4:2 E4:2 C4:2 E4:2 D4:4 R:2 E4:1 E4:1 D4:1 C4:3 C4:1 E4:2 G4:2 G4:1 F4:3 R:1 E4:1 F4:1 G4:2 E4:2 C4:2 D4:2 C4:4 R:2'},
- {name:'나 같은 죄인 살리신 (Amazing Grace)',bpm:96,bar:3,key:7,tr:0,mel:'R:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:2 E4:1 D4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 D5:2 B4:1 D5:2 B4:0.5 D5:0.5 B4:2 G4:1 D4:2 E4:0.5 G4:0.5 E4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:3'},
+ {name:'주 하나님 지으신 모든 세계 (How Great Thou Art)',bpm:84,bar:4,key:0,tr:0,mel:'R:3 G3:1 C4:1 C4:1 C4:1 C4:1 C4:1 D4:1 E4:2 E4:1 D4:1 C4:1 B3:1 C4:3 G3:1 B3:1 B3:1 B3:1 B3:1 B3:1 C4:1 D4:2 D4:1 C4:1 B3:1 A3:1 B3:3 G3:1 C4:1 C4:1 C4:1 C4:1 C4:1 D4:1 E4:2 F4:1 E4:1 D4:1 C4:1 E4:3 E4:1 D4:1 C4:1 B3:1 C4:1 D4:2 E4:1 D4:1 C4:3 R:1 E4:1 F4:1 G4:3 E4:1 E4:2 D4:1 C4:1 D4:3 B3:1 C4:2 D4:1 E4:1 D4:3 R:1 E4:1 F4:1 G4:3 E4:1 G4:2 F4:1 E4:1 D4:3 R:1 E4:1 F4:1 G4:3 E4:1 E4:2 D4:1 C4:1 D4:3 G4:1 A4:2 G4:1 E4:1 D4:3 R:1 C5:2 B4:1 A4:1 G4:2 E4:1 D4:1 C4:4 R:4'},
  {name:'기뻐하며 경배하세 (Ode to Joy)',bpm:126,bar:4,key:0,tr:2,mel:'E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 E4:1.5 D4:0.5 D4:2 E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 D4:1.5 C4:0.5 C4:2 D4:1 D4:1 E4:1 C4:1 D4:1 E4:0.5 F4:0.5 E4:1 C4:1 D4:1 E4:0.5 F4:0.5 E4:1 D4:1 C4:1 D4:1 G3:2 E4:1 E4:1 F4:1 G4:1 G4:1 F4:1 E4:1 D4:1 C4:1 C4:1 D4:1 E4:1 D4:1.5 C4:0.5 C4:2'},
  {name:'고요한 밤 거룩한 밤 (Silent Night)',bpm:84,bar:3,key:0,tr:0,mel:'G4:1.5 A4:0.5 G4:1 E4:3 G4:1.5 A4:0.5 G4:1 E4:3 D5:2 D5:1 B4:3 C5:2 C5:1 G4:3 A4:2 A4:1 C5:1.5 B4:0.5 A4:1 G4:1.5 A4:0.5 G4:1 E4:3 A4:2 A4:1 C5:1.5 B4:0.5 A4:1 G4:1.5 A4:0.5 G4:1 E4:3 D5:2 D5:1 F5:1.5 D5:0.5 B4:1 C5:3 E5:3 C5:1.5 G4:0.5 E4:1 G4:1.5 F4:0.5 D4:1 C4:6'},
  {name:'예수 사랑하심은 (Jesus Loves Me)',bpm:112,bar:4,key:0,tr:2,mel:'G4:1 E4:1 E4:1 D4:1 E4:1 G4:1 G4:2 A4:1 A4:1 C5:1 A4:1 A4:1 G4:1 G4:2 G4:1 E4:1 E4:1 D4:1 E4:1 G4:1 G4:2 A4:1 A4:1 G4:1 C4:1 E4:1 D4:1 C4:2 G4:2 E4:1 G4:1 A4:1 C5:3 G4:2 E4:1 C4:1 E4:1 D4:3 G4:2 E4:1 G4:1 A4:1 C5:2 A4:1 G4:1 C4:1 E4:1 D4:1 C4:4'},
  {name:'만복의 근원 하나님 (Old Hundredth)',bpm:92,bar:4,key:7,tr:0,mel:'G4:2 G4:1 F#4:1 E4:1 D4:1 G4:1 A4:1 B4:2 R:2 B4:2 B4:1 B4:1 A4:1 G4:1 C5:1 B4:1 A4:2 R:2 G4:2 A4:1 B4:1 A4:1 G4:1 E4:1 F#4:1 G4:2 R:2 D5:2 B4:1 G4:1 A4:1 C5:1 B4:1 A4:1 G4:2 R:2'},
  {name:'기쁘다 구주 오셨네 (Joy to the World)',bpm:120,bar:4,key:0,tr:2,mel:'C5:2 B4:1.5 A4:0.5 G4:3 F4:1 E4:2 D4:2 C4:3 G4:1 A4:3 A4:1 B4:3 B4:1 C5:6 C5:1 C5:1 B4:1 A4:1 G4:1 G4:1.5 F4:0.5 E4:1 C5:1 C5:1 B4:1 A4:1 G4:1 G4:1.5 F4:0.5 E4:1 E4:1 E4:1 E4:1 E4:1 E4:0.5 F4:0.5 G4:3 F4:0.5 E4:0.5 D4:1 D4:1 D4:1 D4:0.5 E4:0.5 F4:3 E4:0.5 D4:0.5 C4:1 C5:2 A4:1 G4:1.5 F4:0.5 E4:1 F4:1 E4:2 D4:2 C4:4'},
+ {name:'메인 · 나 같은 죄인 살리신 (Amazing Grace)',bpm:78,bar:3,key:7,tr:0,mel:'R:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:2 E4:1 D4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 D5:2 B4:1 D5:2 B4:0.5 D5:0.5 B4:2 G4:1 D4:2 E4:0.5 G4:0.5 E4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:3'}
 ];
 (function(){const NB={C:0,D:2,E:4,F:5,G:7,A:9,B:11};for(const S of SONGS){const ev=[];let t=0;for(const tok of S.mel.trim().split(/\s+/)){const[n,d]=tok.split(':');const dur=parseFloat(d);if(n!=='R'){const m=n.match(/^([A-G])(#|b)?(\d)$/);ev.push({t,dur,midi:12*(+m[3]+1)+NB[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)})}t+=dur}
  S.ev=ev;S.len=Math.ceil(t/S.bar)*S.bar;S.chords=[];for(let k=0;k<S.len/S.bar;k++){const bt=k*S.bar;let e=ev.find(x=>x.t<=bt+0.01&&x.t+x.dur>bt)||ev.find(x=>x.t>=bt&&x.t<bt+S.bar)||ev[0];const r=((e.midi-S.key)%12+12)%12;S.chords.push([11,2].includes(r)?7:[5,9].includes(r)?5:0)}}})();
 const mf=m=>440*Math.pow(2,(m-69)/12);
 const mus={song:-1,t0:0,i:0,b:0,bt0:0};
 function musicTick(){if(!AC||muted)return;if(!(state==='play'||state==='brief'||state==='levelup'||state==='intro'||state==='quiz'||isMenu())){mus.song=-1;return}
- const si=isMenu()?5:(G?G.si:0);const now=AC.currentTime;
+ const si=isMenu()?7:(G?G.si:0);const now=AC.currentTime;
  if(si!==mus.song){mus.song=si;mus.t0=mus.bt0=now+0.15;mus.i=0;mus.b=0}
  const S=SONGS[si],spb=60/S.bpm,ahead=now+0.2,loop=S.len*spb,boss=G&&G.boss&&state==='play';
  while(true){const e=S.ev[mus.i],t=mus.t0+e.t*spb;if(t>ahead)break;
@@ -879,7 +888,7 @@ function saveMetaOff(){try{localStorage.setItem('fs_metaoff',JSON.stringify(META
 const MLr=k=>META[k]||0;const ML=k=>META_OFF[k]?0:MLr(k);
 function saveMeta(){try{localStorage.setItem('fs_meta',JSON.stringify(META));localStorage.setItem('fs_pray',String(PRAY))}catch(e){}}
 const metaCost=(d,lv)=>d.base*(lv+1);
-let savedRun=null;try{const r=JSON.parse(localStorage.getItem('fs_run')||'null');if(r&&(r.hero||r.P)&&STAGES[r.next]){savedRun=r}}catch(e){}
+let savedRun=null;try{const r=JSON.parse(localStorage.getItem('fs_run')||'null');if(r){try{localStorage.removeItem('fs_run')}catch(e){}}}catch(e){}
 function storeRun(){try{if(savedRun){localStorage.setItem('fs_run',JSON.stringify({hero:savedRun.hero||(savedRun.P&&savedRun.P.hero),next:savedRun.next,kills:savedRun.kills||0,time:savedRun.time||0}))}else localStorage.removeItem('fs_run')}catch(e){}}
 function saveUnlock(n){unlocked=Math.max(unlocked,n);try{localStorage.setItem('fs_unlocked',unlocked)}catch(e){}}
 
@@ -891,7 +900,7 @@ function recompute(){const pv=k=>P.pass[k]||0;const old=P.maxHp;P.maxHp=Math.rou
 function newRun(si,hero){P=newPlayer(hero);recompute();P.hp=P.maxHp;P.revives=ML('revive');G=null;beginStage(si,{pending:0,kills:0,time:0});}
 function beginStage(i,carry){
   const st=STAGES[i];const b=BIOME[st.biome];
-  G={si:i,st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],dying:[],whirls:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
+  G={si:i,st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],dying:[],whirls:[],swords:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
      boss:null,bossSpawned:false,spawnAcc:0,pending:carry.pending||0,kills:carry.kills||0,totalTime:carry.time||0,stageKills:0,evt:50,minis:[],nextMini:180,miniIdx:0,clearT:-1,wx:[]};
   buildStage();P.x=0;P.y=0;P.inv=1;cam.x=-W/2;cam.y=-H/2;initWeather();
 }
@@ -938,6 +947,7 @@ function genTiles(b){const out=[];
 // ================= INPUT =================
 addEventListener('keydown',e=>{keys[e.code]=true;initAudio();
   if(state==='notice'){e.preventDefault();if(!e.repeat)leaveNotice();return}
+  if(state==='title'&&!menuShown){e.preventDefault();if(!e.repeat)revealMenu();return}
   if(state==='intro'){e.preventDefault();if(!e.repeat)leaveIntro();return}
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
   if(e.code==='KeyM'){muted=!muted;if(master)master.gain.value=muted?0:0.32}
@@ -1121,9 +1131,7 @@ function updEvo(w,dt){w.t-=dt;
    for(let l=-1;l<=1;l++){const px=-Math.sin(ang)*l*45,py=Math.cos(ang)*l*45;G.jets.push({x:P.x+px-Math.cos(ang)*(len+Math.abs(l)*20),y:P.y+oy+py-Math.sin(ang)*(len+Math.abs(l)*20),vx:Math.cos(ang)*260,vy:Math.sin(ang)*260,life:(len*2+40)/260,drop:0,dmg:110,r:28,face:dir})}}break;
  case'sniper':if(w.t<=0){w.t=1.2*P.cdMul;const cand=G.en.filter(e=>!e.dead&&onScreen(e)).sort((a,b)=>b.hp-a.hp);
    for(let i=0;i<3&&i<cand.length;i++){const tg=cand[i];after(i*0.12,()=>{const a=Math.atan2(tg.y-P.y,tg.x-P.x),ex=P.x+Math.cos(a)*360,ey=P.y+Math.sin(a)*360;
-    for(const e of G.en){if(e.dead)continue;const t=clamp(((e.x-P.x)*(ex-P.x)+(e.y-P.y)*(ey-P.y))/(360*360),0,1);if(Math.hypot(e.x-(P.x+(ex-P.x)*t),e.y-(P.y+(ey-P.y)*t))<e.r+8)hurt(e,230,Math.cos(a)*90,Math.sin(a)*90)}
-    G.tracers.push({x0:P.x,y0:P.y-2,x1:ex,y1:ey,t:0.3,rail:true});for(let k=0;k<20;k++){const d=rnd(360);part(P.x+Math.cos(a)*d,P.y+Math.sin(a)*d,rnd(-30,30),rnd(-30,30),0.4,pick(['#fff3b0','#ffffff','#ffd34a']),pick([1,2]))}
-    addLight(P.x+Math.cos(a)*60,P.y+Math.sin(a)*60,90,'rgba(255,230,140,1)',0.2);sfx('sniper');shake=Math.max(shake,0.6*(3))})}}break;
+    G.swords.push({x:P.x,y:P.y-3,a,d:0,max:360,v:620,dmg:230,hit:new Set(),r:8,big:true});sfx('sniper');shake=Math.max(shake,1)})}}break;
  }}
 function nearestN(x,y,maxD,n){const a=[];for(const e of G.en){if(e.dead)continue;const d=(e.x-x)**2+(e.y-y)**2;if(d<maxD*maxD)a.push([d,e])}a.sort((p,q)=>p[0]-q[0]);return a.slice(0,n).map(p=>p[1])}
 function throwStone(t,dmg,big){const a=Math.atan2(t.y-P.y,t.x-P.x);G.bul.push({x:P.x,y:P.y-6,vx:Math.cos(a)*(big?260:310),vy:Math.sin(a)*(big?260:310),dmg,pierce:0,life:big?1.6:0.9,hit:new Set(),kind:big?'bigstone':'stone',home:big?t:null,blast:big?30:0});
@@ -1165,8 +1173,7 @@ function updWeapons(dt){
       const len=Math.hypot(W,H)/2+40;G.jets.push({x:P.x-Math.cos(ang)*len,y:P.y+oy-Math.sin(ang)*len,vx:Math.cos(ang)*260,vy:Math.sin(ang)*260,life:len*2/260,drop:0,dmg:s.dmg,r:s.r,face:dir})}}break;
   case'sniper':if(w.t<=0){w.t=s.cd*P.cdMul;const cand=G.en.filter(e=>!e.dead&&onScreen(e)&&inR(e,w)).sort((a,b)=>b.hp-a.hp);
       for(let i=0;i<s.n&&i<cand.length;i++){const tg=cand[i];after(i*0.15,()=>{const a=Math.atan2(tg.y-P.y,tg.x-P.x),ex=P.x+Math.cos(a)*320,ey=P.y+Math.sin(a)*320;
-        for(const e of G.en){if(e.dead)continue;const t=clamp(((e.x-P.x)*(ex-P.x)+(e.y-P.y)*(ey-P.y))/(320*320),0,1);const px=P.x+(ex-P.x)*t,py=P.y+(ey-P.y)*t;if(Math.hypot(e.x-px,e.y-py)<e.r+3)hurt(e,s.dmg,Math.cos(a)*60,Math.sin(a)*60)}
-        G.tracers.push({x0:P.x,y0:P.y-2,x1:ex,y1:ey,t:0.18});addLight(P.x,P.y,40,'rgba(255,240,190,1)',0.1);sfx('sniper');shake=Math.max(shake,0.6*(1.5))})}}break;
+        G.swords.push({x:P.x,y:P.y-3,a,d:0,max:320,v:560,dmg:s.dmg,hit:new Set(),r:3,big:false});P.face=Math.cos(a)<0?-1:1;sfx('sniper')})}}break;
  }}}
 
 // ================= BOSS AI =================
@@ -1277,7 +1284,7 @@ function update(dt){
   if(g.pull){const sp=g.vac?260:Math.max(90,200-d);g.x+=dx/d*sp*dt;g.y+=dy/d*sp*dt}
   if(d<10){g.got=true;collect(g)}}
  G.gems=G.gems.filter(g=>!g.got);
- G.en=G.en.filter(e=>!e.dead);updDying(dt);updWhirls(dt);
+ G.en=G.en.filter(e=>!e.dead);updDying(dt);updWhirls(dt);updSwords(dt);
  updParts(dt);
  for(const f of G.fx)f.life-=dt;G.fx=G.fx.filter(f=>f.life>0);
  for(const n of G.nums){n.t-=dt;n.y-=dt*18}G.nums=G.nums.filter(n=>n.t>0);
@@ -1407,6 +1414,7 @@ let _jes=null;function jesusSil(){if(_jes)return _jes;const w=70,h=90,c=mk(w,h),
  const cr=['...t....t...t..','t.tBbt.bBbt.tBt','BbBbBBbBbBbBbBb','bBbBbbBbBBbBbBB','.t.bBbt.Bbb.t.t','...t.....t.....'];
  const o=mk(w,h),ox=o.getContext('2d');ox.drawImage(g,0,0);ox.save();ox.shadowColor='rgba(255,230,160,0.9)';ox.shadowBlur=4;ox.drawImage(c,0,0);ox.restore();
  const CP={B:'#2e2018',b:'#6a4c38',t:'#1a100a'};cr.forEach((row,j)=>{for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='.')continue;ox.fillStyle=CP[ch];ox.fillRect(28+i,j+4,1,1)}});return _jes=o}
+const LOGO_PNG='data:image/png;base64,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';function buildLogo(){return LOGO_PNG}
 function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(skyC,0,0);
  let gy=Math.round(H*0.66),spH=H*0.3;const sp=state==='title'&&document.getElementById('tsp');
  if(sp){const r=sp.getBoundingClientRect(),cr=cv.getBoundingClientRect();if(r.height>4){gy=Math.round((r.bottom-cr.top)/cr.height*H)-2;spH=r.height/cr.height*H}}
@@ -1417,7 +1425,7 @@ function drawTitleScene(){if(!skyC||skyW!==W||skyH!==H)buildSky();ctx.drawImage(
  ctx.drawImage(glowTex('rgba(255,215,130,1)'),cx-90,cy-90,180,180);ctx.drawImage(glowTex('rgba(255,240,200,1)'),cx-34,cy-34,68,68);ctx.restore();
  // far mountains with boss silhouette
  ctx.fillStyle='#2a1030';for(let x=0;x<W;x++){const h=hz-18-mtn[x][1];ctx.fillRect(x,h,1,H-h)}
- {const J=jesusSil(),js=Math.max(1,Math.round(W/108)),jw=J.width*js,jh=J.height*js,jx=Math.round(W/2-jw/2),jy=Math.round(gy-spH+2);
+ {const J=jesusSil(),js=Math.max(1,Math.min(Math.round(W/108),Math.floor(spH/40))),jw=J.width*js,jh=J.height*js,jx=Math.round(W/2-jw/2),jy=Math.round(gy-spH+2);
   ctx.drawImage(J,jx,jy,jw,jh);const ea=0.75+0.25*Math.sin(tGlobal*2);ctx.save();ctx.shadowColor='#fff6c8';ctx.shadowBlur=4*js;ctx.globalAlpha=ea;ctx.fillStyle='#fffdf0';ctx.fillRect(jx+33*js,jy+12*js,js,js);ctx.fillRect(jx+37*js,jy+12*js,js,js);ctx.restore()}
  ctx.fillStyle='#180a1c';for(let x=0;x<W;x++){const h=hz-mtn[x][0];ctx.fillRect(x,h,1,H-h)}
  // small idols on ridge
@@ -1471,6 +1479,7 @@ function render(){
  if(G.npc)list.push({y:G.npc.y,k:6});
  if(G.dying)for(const d of G.dying)list.push({y:d.e.y+20,k:7,d});
  for(const h of G.whirls)list.push({y:h.y+4,k:8,h});
+ for(const s of G.swords)list.push({y:s.y+2,k:10,s});
  for(const w of P.weapons)if(w.k==='whirl'&&w.evo&&!isMenu())list.push({y:P.y+30,k:9,w});
  for(const c of G.carts)list.push({y:c.y+4,k:4,c});
  for(const a of G.animals)list.push({y:a.y+(a.t===3?30:3),k:5,a});
@@ -1482,6 +1491,7 @@ function render(){
   else if(o.k===6)drawElijah(cx,cy);
   else if(o.k===7)drawDying(o.d,cx,cy);
   else if(o.k===8)drawWhirl(o.h,cx,cy);
+  else if(o.k===10)drawSword(o.s,cx,cy);
   else if(o.k===9)drawPillars(o.w,cx,cy);
   else if(o.k===2)drawPlayer(cx,cy);
   else if(o.k===3){const n=o.n,t=n.t/n.T,x=n.x0+(n.x1-n.x0)*t-cx,y=n.y0+(n.y1-n.y0)*t-cy-Math.sin(Math.PI*t)*34;ctx.drawImage(shadowSpr(5),Math.round(n.x0+(n.x1-n.x0)*t-cx-2),Math.round(n.y0+(n.y1-n.y0)*t-cy));ctx.fillStyle=OUT;ctx.fillRect(Math.round(x)-2,Math.round(y)-2,4,4);ctx.fillStyle='#ff6a1a';ctx.fillRect(Math.round(x)-1,Math.round(y)-1,2,2);ctx.fillStyle='#ffd34a';ctx.fillRect(Math.round(x),Math.round(y)-1,1,1);addLight(n.x0+(n.x1-n.x0)*t,y+cy,12,'rgba(255,140,50,1)',0.02)}
@@ -1589,6 +1599,17 @@ function updWhirls(dt){for(const h of G.whirls){h.life-=dt;h.anim+=dt*12;if(!h.t
 function nearestFresh(h){let best=null,bd=180*180;for(const e of G.en){if(e.dead||h.hits.has(e))continue;const d=(e.x-h.x)**2+(e.y-h.y)**2;if(d<bd){bd=d;best=e}}return best}
 function drawWhirl(h,cx,cy){const fr=SPR.whirl[Math.floor(h.anim)%3];ctx.globalAlpha=Math.min(1,h.life*3);ctx.drawImage(shadowSpr(8),Math.round(h.x-cx-4),Math.round(h.y-cy+4));ctx.drawImage(fr.i,Math.round(h.x-cx-fr.W/2),Math.round(h.y-cy-fr.H+5));ctx.globalAlpha=1}
 function drawPillars(w,cx,cy){for(let i=0;i<3;i++){const a=w.a+i/3*TAU,x=P.x+Math.cos(a)*34,y=P.y+Math.sin(a)*26,fr=SPR.pillar[Math.floor(tGlobal*12+i)%3];ctx.drawImage(shadowSpr(16),Math.round(x-cx-8),Math.round(y-cy+6));ctx.globalAlpha=0.92;ctx.drawImage(fr.i,Math.round(x-cx-fr.W/2),Math.round(y-cy-fr.H+8));ctx.globalAlpha=1}}
+function updSwords(dt){for(const s of G.swords){const st=s.v*dt,n=Math.ceil(st/6);for(let k=0;k<n;k++){s.x+=Math.cos(s.a)*st/n;s.y+=Math.sin(s.a)*st/n;s.d+=st/n;
+   query(s.x,s.y,s.r+14,e=>{if(!s.hit.has(e)&&Math.hypot(e.x-s.x,e.y-s.y)<e.r+s.r){s.hit.add(e);hurt(e,s.dmg,Math.cos(s.a)*(s.big?90:60),Math.sin(s.a)*(s.big?90:60));for(let q=0;q<4;q++)part(e.x,e.y-3,Math.cos(s.a)*rnd(40,90)+rnd(-20,20),Math.sin(s.a)*rnd(40,90)+rnd(-20,20),0.25,(s.big?pick(['#ffd34a','#fff3b0']):'#ffffff'),1)}})}
+  if(Math.random()<(s.big?0.9:0.4))part(s.x+rnd(-2,2),s.y+rnd(-2,2),rnd(-10,10),rnd(-10,10),0.25,s.big?pick(['#ffd34a','#fff3b0']):'#ffffff',1)}
+ G.swords=G.swords.filter(s=>s.d<s.max)}
+function drawSword(s,cx,cy){const x=s.x-cx,y=s.y-cy,c=Math.cos(s.a),sn=Math.sin(s.a),k=s.big?2:1,TL=(s.big?60:36);
+ for(let i=0;i<TL;i+=1){const al=(1-i/TL)*(s.big?0.55:0.4);ctx.fillStyle=s.big?`rgba(255,215,90,${al})`:`rgba(255,255,255,${al})`;const px=Math.round(x-c*(i+6*k)),py=Math.round(y-sn*(i+6*k));ctx.fillRect(px,py,1,1);if(s.big||i<TL*0.5){ctx.fillRect(Math.round(px-sn),Math.round(py+c),1,1)}}
+ const P2=(u,v,col)=>{ctx.fillStyle=col;ctx.fillRect(Math.round(x+c*u-sn*v),Math.round(y+sn*u+c*v),1,1)};
+ const C1=s.big?'#fff6b0':'#ffffff',C2=s.big?'#ffd34a':'#e6eef8',C3=s.big?'#e8b020':'#c8d4e4';
+ for(let u=-5*k;u<=8*k;u++){P2(u,0,C1);if(k>1||u>-2)P2(u,-1,u%3?C2:C1);if(k>1)P2(u,1,C3)}
+ for(let v=-3*k;v<=3*k;v++)P2(-6*k,v,C2);for(let u=-10*k;u<-6*k;u++)P2(u,0,C3);P2(-10*k-1,0,C2);
+ addLight(s.x,s.y,s.big?30:16,s.big?'rgba(255,220,120,1)':'rgba(220,235,255,1)',0.06)}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
  const fr=SPR['hero_'+P.hero][P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;
  if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);heroGlow(fr,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.drawImage(P.face<0?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
@@ -1620,9 +1641,9 @@ let bannerT=null;
 function banner(t,s,dur){if(!t)return;const b=$('banner');b.innerHTML=t+(s?`<small>${s}</small>`:'');b.classList.add('on');clearTimeout(bannerT);bannerT=setTimeout(()=>b.classList.remove('on'),dur*1000)}
 function screen(html,cls){$('banner').classList.remove('on');const s=$('scr');s.className=cls||'';s.innerHTML=html;s.classList.remove('hidden')}
 function hideScreen(){$('scr').classList.add('hidden');$('scr').innerHTML=''}
-$('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNotice();return}if(state==='intro'){leaveIntro();return}const b=e.target.closest('[data-act]');if(!b)return;initAudio();sfx('click');const a=b.dataset.act;
+$('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNotice();return}if(state==='title'&&!menuShown){initAudio();revealMenu();return}if(state==='intro'){leaveIntro();return}const b=e.target.closest('[data-act]');if(!b)return;initAudio();sfx('click');const a=b.dataset.act;
  if(a==='start'){showHeroes(0)}
- else if(a==='hero'){savedRun=null;storeRun();lastHero=b.dataset.k;try{localStorage.setItem('fs_hero',lastHero)}catch(e){}newRunBrief(pendingSi,lastHero)}
+ else if(a==='hero'){savedRun=null;storeRun();lastHero=b.dataset.k;try{localStorage.setItem('fs_hero',lastHero)}catch(e){}showSelect()}
  else if(a==='select')showSelect();
  else if(a==='grace')showGrace();
  else if(a==='opt')showOptions();
@@ -1639,7 +1660,7 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='buy')buyMeta(b.dataset.k,b);
  else if(a==='refund')refundMeta(b);
  else if(a==='cont')contRun();
- else if(a==='stage'){showHeroes(+b.dataset.i)}
+ else if(a==='stage'){newRunBrief(+b.dataset.i,lastHero)}
  else if(a==='go')startPlay();
  else if(a==='resume')closePause();
  else if(a==='quit')toTitle();
@@ -1672,15 +1693,15 @@ const VERSES=[
  ['여호와께서 너희를 위하여 싸우시리니 너희는 가만히 있을지니라','출애굽기 14:14'],
 ];
 let lastVerse=-1;function pickVerse(){let i;do{i=Math.floor(Math.random()*VERSES.length)}while(i===lastVerse&&VERSES.length>1);lastVerse=i;return VERSES[i]}
+let menuShown=false;function revealMenu(){if(menuShown||state!=='title')return false;menuShown=true;const t=document.querySelector('.tbot');if(t)t.classList.remove('tlock');sfx('click');return true}
 function toTitle(){const tv=pickVerse();state='title';$('hud').classList.add('hidden');$('boss').classList.add('hidden');
  P=newPlayer(lastHero);beginStage(0,{});cam.x=0;cam.y=0;
  const cont=savedRun?`<div class="btn primary wide" data-act="cont">이어하기 ▶</div>`:'';
- screen(`<div class="panel tpanel"><div class="ttop"><div class="ttl" style="color:#ffd34a">ANOINTED</div><div class="ttl" style="margin-top:calc(var(--p)*3);color:#ffd34a">ONES</div><div class="sub" style="font-size:calc(var(--p)*14);margin-top:calc(var(--p)*5)">어노인티드 원즈</div>
+ screen(`<div class="panel tpanel"><div class="ttop"><img class="tlogo" src="${buildLogo()}" alt="ANOINTED ONES"><div class="sub" style="font-size:calc(var(--p)*14);margin-top:calc(var(--p)*2)">어노인티드 원즈</div>
  <div class="hint tverse">"${tv[0]}"<br>— ${tv[1]}</div></div>
- <div id="tsp"></div><div class="tbot"> <div class="menu">${cont}<div class="btn ${savedRun?'':'primary'} wide" data-act="start">새 여정 시작</div>
- <div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="coll">컬렉션</div><div class="btn wide" data-act="select">스테이지 선택</div>
- <div class="btn wide" data-act="opt">옵션</div></div>
- <div class="ctrl">화면 아무 곳이나 드래그해서 이동 · 공격은 자동<br>PC: WASD / 방향키 · ESC 일시정지 · M 소리<br><span style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 보조장비를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</span></div></div></div>`,'titlebg')}
+ <div id="tsp"></div><div class="tbot ${menuShown?'':'tlock'}"><div class="tpress">화면을 터치하세요</div> <div class="menu">${cont}<div class="btn primary wide" data-act="start">시작</div>
+ <div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="coll">컬렉션</div>
+ <div class="btn wide" data-act="opt">옵션</div></div></div></div>`,'titlebg')}
 function showOptions(){state='heroes';
  const sl=(k,lbl)=>`<div class="orow"><div class="ol">${lbl}<b id="ov_${k}">${OPT[k]}</b></div><input type="range" min="0" max="100" step="5" value="${OPT[k]}" data-k="${k}" class="osl"></div>`;
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">OPTIONS</div><div class="big">옵션</div><div class="opts">
@@ -1723,14 +1744,14 @@ function showSelect(){state='select';
   return `<div class="stg ${lock?'lock':''} ${r?'done':''}" ${lock?'':`data-act="stage" data-i="${i}"`}>
    <div class="no">ST.${String(i+1).padStart(2,'0')}</div>
    <div class="nm">${lock?'??? (잠김)':st.name}</div>
-   <div class="rg2">${lock?'이전 스테이지을 클리어하면 해금':st.region+' · '+st.type}</div>
+   <div class="rg2">${lock?'이전 스테이지를 클리어하면 해금':st.region+' · '+st.type}</div>
    <div class="st">${r?`✓ 클리어 ${r.clears}회 · 최고 LV ${r.lv}`:lock?'🔒':'미클리어'}</div></div>`}).join('');
  screen(`<div class="panel"><div class="op">SELECT STAGE</div><div class="big">스테이지 선택</div>
- <div class="hint" style="margin-top:0">2번째 스테이지부터는 앞 스테이지을 깬 만큼 강화된 상태로 출전</div>
- <div class="stglist">${list}</div><div class="btn" data-act="quit">◀ 메인 화면</div></div>`)}
+ <div class="hint" style="margin-top:0">영웅: ${(HEROES[lastHero]||HEROES.david).name} · 모든 스테이지는 레벨 1부터 시작해요</div>
+ <div class="stglist">${list}</div><div class="btn" data-act="start">◀ 영웅 선택</div></div>`)}
 function showHeroes(si){state='heroes';pendingSi=si;
  const order=['david','moses','abraham','samson','noah','enoch'];const cards=order.map(k=>{const h=HEROES[k];const lk=h.lock&&unlocked<h.lock;if(lk)return `<div class="hero lock"><img src="${HEROIMG[k]}" style="filter:brightness(0)"><div class="hn">???<span>LOCKED</span></div><div class="hr" style="background:#5a5068">잠김</div><div class="hd">ST.${String(h.lock-1).padStart(2,'0')} ${STAGES[h.lock-2].name}를 클리어하면 새 영웅이 합류합니다.</div></div>`;return `<div class="hero ${k===lastHero?'sel':''}" data-act="hero" data-k="${k}"><img src="${HEROIMG[k]}"><div class="hn">${h.name}<span>${h.en}</span>${h.lock?'<span style="color:#8fd16a">NEW</span>':''}</div><div class="hr">${h.role}</div><div class="hd">${h.desc}</div><div class="hw"><img src="${ICON[h.w]}"> ${WDEF[h.w].name} · 체력 ${h.hp} · 속도 ${h.spd}${h.armor?' · 방어 '+h.armor:''}</div></div>`}).join('');
- screen(`<div class="panel"><div class="op">CHOOSE YOUR HERO</div><div class="big">영웅 선택</div><div class="hint" style="margin-top:0">ST.${String(si+1).padStart(2,'0')} ${STAGES[si].name}</div><div class="stglist">${cards}</div><div class="btn" data-act="quit">◀ 메인 화면</div></div>`)}
+ screen(`<div class="panel"><div class="op">CHOOSE YOUR HERO</div><div class="big">영웅 선택</div><div class="stglist">${cards}</div><div class="btn" data-act="quit">◀ 메인 화면</div></div>`)}
 let pendingSi=0;
 function newRunBrief(i,h){newRun(i,h);showBrief()}
 function roster(){const R=ROSTER[G.si];if(!R)return'';const ks=G.b.land?['grunt','dog','rpg','heavy','tank']:['frog','boat','gunboat'];return `<div class="roster"><b>등장하는 적 · ${R.grp}</b><br>${ks.map(k=>R[k][0]).concat(['악령']).join(' · ')}</div>`}
@@ -1740,7 +1761,9 @@ function showBrief(){state='brief';$('hud').classList.add('hidden');const st=G.s
  ${route(G.si)}<div class="brief">${st.brief}<br><div class="verse">${st.verse}</div><span style="color:#ff8a6a">15분 생존 · 3분마다 미니보스 출현<br>15:00 최종 보스 「${st.bossName}」 처치 시 승리</span>${roster()}<div style="margin-top:calc(var(--p)*4);color:#c8b898">영웅: ${HEROES[P.hero].name} · ${WDEF[HEROES[P.hero].w].name}</div></div>
  <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="quit">◀ 메인</div></div>`)}
 function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden');$('boss').classList.add('hidden');
- $('stl').innerHTML=`<b>ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}}
+ $('stl').innerHTML=`<b>ST.${String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}showTutorial()}
+function showTutorial(){let seen=false;try{seen=localStorage.getItem('fs_tut')==='1';localStorage.setItem('fs_tut','1')}catch(e){}if(seen)return;state='intro';introT=performance.now();
+ screen(`<div class="panel bi"><div class="op" style="color:#ffd34a">HOW TO PLAY</div><div class="big" style="font-size:calc(var(--p)*16)">이렇게 싸워요</div><div class="tut"><p>화면 아무 곳이나 드래그해서 이동 · 공격은 자동</p><p style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 보조장비를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</p></div><div class="nkey">아무 키나 누르시면 계속합니다.</div></div>`,'intro')}
 function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="btn primary" data-act="resume">계속</div><div class="btn gold" data-act="recipes">무기 조합표</div><div class="btn" data-act="mute">${muted?'소리 켜기':'소리 끄기'}</div><div class="btn" data-act="quit">메인 화면</div></div>`)}
 function closePause(){hideScreen();state='play'}
 function fmtT(t){return Math.floor(t/60)+'분 '+String(Math.floor(t%60)).padStart(2,'0')+'초'}
@@ -1748,12 +1771,12 @@ function gameOver(){state='over';sfx('bigboom');setTimeout(()=>{
  screen(`<div class="panel"><div class="op" style="color:#ff3b30">FALLEN</div><div class="big" style="color:#ff3b30">쓰러짐</div><div class="rg">스테이지 ${G.si+1} · ${G.st.name}</div>
  <div class="stats">도달 레벨 <b>${P.lv}</b><br>얻은 기도 <b>${G.prayers||0}</b> (보관됨)<br>총 처치 <b>${G.kills}</b><br>총 전투 시간 <b>${fmtT(G.totalTime)}</b></div>
  <div class="btn primary" data-act="retry">이 스테이지 재도전</div><div class="btn" data-act="select">스테이지 선택</div><div class="btn" data-act="quit">메인 화면</div></div>`)},900)}
-function stageClear(){const newHero=Object.keys(HEROES).find(k=>HEROES[k].lock===G.si+2&&unlocked<HEROES[k].lock);const newW=Object.keys(WDEF).find(k=>WDEF[k].lock===G.si+2&&unlocked<WDEF[k].lock)||Object.keys(PDEF).find(k=>PDEF[k].lock===G.si+2&&unlocked<PDEF[k].lock);saveUnlock(G.si+2);saveRec(G.si,P.lv,G.stageKills);const clearPray=10+G.si*10;PRAY+=clearPray;G.prayers=(G.prayers||0)+clearPray;saveMeta();savedRun=G.st.final?null:{hero:P.hero,next:G.si+1,kills:G.kills,time:G.totalTime};storeRun();
+function stageClear(){const newHero=Object.keys(HEROES).find(k=>HEROES[k].lock===G.si+2&&unlocked<HEROES[k].lock);const newW=Object.keys(WDEF).find(k=>WDEF[k].lock===G.si+2&&unlocked<WDEF[k].lock)||Object.keys(PDEF).find(k=>PDEF[k].lock===G.si+2&&unlocked<PDEF[k].lock);saveUnlock(G.si+2);saveRec(G.si,P.lv,G.stageKills);const clearPray=10+G.si*10;PRAY+=clearPray;G.prayers=(G.prayers||0)+clearPray;saveMeta();savedRun=null;storeRun();
  if(G.st.final){state='win';screen(`<div class="panel"><div class="op" style="color:#8fd16a">VICTORY</div><div class="big">선한 싸움을 마치다</div><div class="brief">엘라 골짜기에서 큰 바다까지, 모든 우상과 괴수를 물리쳤다.<div class="verse">"내가 선한 싸움을 싸우고 나의 달려갈 길을 마치고 믿음을 지켰으니" — 딤후 4:7</div></div>${route(STAGES.length)}
   <div class="stats">최종 레벨 <b>${P.lv}</b><br>총 처치 <b>${G.kills}</b><br>총 전투 시간 <b>${fmtT(G.totalTime)}</b></div><div class="btn primary" data-act="quit">메인 화면으로</div><div class="btn" data-act="select">스테이지 선택</div></div>`);return}
  state='clear';screen(`<div class="panel"><div class="op" style="color:#8fd16a">STAGE ${String(G.si+1).padStart(2,'0')} CLEAR</div><div class="big">승리</div><div class="rg">${G.st.bossName} 처치 · ${G.st.name} 정복</div>
  <div class="stats">처치 <b>${G.stageKills}</b> &nbsp; 현재 레벨 <b>${P.lv}</b> &nbsp; 기도 <b>${G.prayers||0}</b> <span style="color:#ffd34a">(클리어 보너스 +${clearPray})</span><br>다음 스테이지는 레벨 1부터 새로 시작해요<br><span style="color:#ffe9a0">주님의 은혜에서 영웅을 강화하고 출전하세요</span></div>${newHero?`<div class="unl"><img src="${HEROIMG[newHero]}"><div><b>새 영웅 해금!</b><br>${HEROES[newHero].name} · ${HEROES[newHero].role}<br><small>새 여정이나 스테이지 선택에서 고를 수 있어요</small></div></div>`:''}${newW?`<div class="unl"><img src="${ICON[newW]}" style="image-rendering:pixelated"><div><b>${WDEF[newW]?'새 무기':'새 패시브'} 해금!</b><br>${(WDEF[newW]||PDEF[newW]).name}<br><small>이제 레벨업 화면에 등장해요</small></div></div>`:''}
- ${route(G.si+1)}<div class="menu"><div class="btn primary wide" data-act="quit">메인 화면으로</div><div class="btn wide" data-act="next">다음 스테이지 바로 출전 ▶</div><div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="select">스테이지 선택</div></div></div>`)}
+ ${route(G.si+1)}<div class="menu"><div class="btn primary wide" data-act="next">다음 스테이지 계속하기 ▶</div><div class="btn wide" data-act="quit">메인 화면으로 가기</div></div></div>`)}
 function freshHero(h){P=newPlayer(h);recompute();P.hp=P.maxHp;P.revives=ML('revive');P.inv=1}
 function contRun(){const r=savedRun;if(!r)return toTitle();savedRun=null;storeRun();freshHero(r.hero||(r.P&&r.P.hero));beginStage(r.next,{pending:0,kills:r.kills||0,time:r.time||0});showBrief()}
 function nextStage(){savedRun=null;storeRun();const c={pending:0,kills:G.kills,time:G.totalTime};freshHero(P.hero);beginStage(G.si+1,c);showBrief()}
