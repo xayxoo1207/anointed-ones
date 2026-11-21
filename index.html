@@ -755,6 +755,26 @@ function initStatic(){
   ICON.double=icon(['.k....k...','kyk..kyk..','koyk.koyk.','kyWokyWok.','koWyoWyok.','.koookook.','..kAAAAAk.','.kAaAaAaAk','.kkkkkkkk.'],Object.assign({},ICONPAL,{W:'#fffbe8',y:'#ffd34a',o:'#ff8a2a',A:'#8a6a42',a:'#5a4228'}));
   ICON.first=icon(['....kk....','...kyyk...','..kyyyyk..','.kyykkyyk.','..kyyyyk..','.kyykkyyk.','..kyyyyk..','...kggk...','..kgkkgk..','...k..k...'],Object.assign({},ICONPAL,{y:'#e8c04a',g:'#7a9a3a'}));
   ICON.crown=icon(['k...kk...k','kk.kyyk.kk','kykyyyykyk','kyyyyyyyyk','kyryyyyryk','kyyyyyyyyk','kkkkkkkkkk'],Object.assign({},ICONPAL,{y:'#e8c04a',r:'#c8302a'}));
+  ICON.e_sling=icon(outl(['...WWWg...','..WWWWWWg.','.WWWWWgWWW','WWWWWWWWWg','gWWWgWWWWW','.gWWWWWWg.','..ggWWWg..','....gg....']),Object.assign({},ICONPAL,{W:'#f2ecd8',g:'#b8b0a0'}));
+  ICON.e_grenade=icon(outl(['...y..y...','..yoyyoy..','.yoyWWyoy.','.oyWWWWyo.','oyWWWWWWyo','oyWWWWWWyo','royWWWWyor','.royyyyor.','..rooooR..','...RRRR...']),Object.assign({},ICONPAL,{W:'#fffbe8',y:'#ffd34a',o:'#ff8a2a',r:'#d8401a',R:'#8a2010'}));
+  ICON.e_wave=icon(outl(["Wb......bW","bWb....bWb","bbB....Bbb","bbB.yy.Bbb","bbB.yy.Bbb","bbBy..yBbb","bbByyyyBbb","bbByyyyBbb"]),Object.assign({},ICONPAL,{"b":"#2a72c8","B":"#8acaff","W":"#f2fbff","y":"#d8b878"}));
+  ICON.e_ark=icon(outl(["..W.....B.",".WWW...BB.","WWeWW.BeBB","WWWWW.BBBB",".WWW...BBB",".W.W...B.B","..........","yyyyyyyyyy","ByByByByBy"]),Object.assign({},ICONPAL,{"W":"#f2f2ea","e":"#1a1410","B":"#8a5a2a","y":"#c8a040"}));
+  ICON.e_fist=icon(outl(["..y.yy.y..",".y......y.","y..kkkk..y","..kssssk..","y.kSsSsk.y","..kssssk..","y..kkkk..y",".y......y.","..y.yy.y.."]),Object.assign({},ICONPAL,{"s":"#d89a74","S":"#a8684e","y":"#ffd34a"}));
+  ICON.e_cart=icon(outl(["..o..y.o..",".oyo.oyo..","oyWyoyWyo.","kkkkkkkkkk","kBrBrBrBk.","kBBBBBBBk.","kkkkkkkkk.",".kGk..kGk.","..k....k.."]),Object.assign({},ICONPAL,{"o":"#ff8a2a","y":"#ffd34a","W":"#fffbe8","B":"#8a5a2a","r":"#d8401a","G":"#ffd34a"}));
+  ICON.e_flame=icon(outl(["...yWWy...","...oyyo...","...oyyo...","..oyWWyo..","..oyWWyo..","..royyor..","kkkkkkkkkk","kQqQqQqQqk","kqqqqqqqqk"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#fffbe8","o":"#ff8a2a","r":"#d8401a","q":"#8a8a90","Q":"#b8b8c0"}));
+  ICON.e_mortar=icon(outl([".gGGGGGg..","gGGgGGGGg.","GGGGGGGGGg",".gggggggg.","..W...W...",".WcW.WcW..","..W...W.W.","....W..WcW","...WcW..W."]),Object.assign({},ICONPAL,{"g":"#4a4a58","G":"#6a6a7a","W":"#e8f4ff","c":"#8acaff"}));
+  ICON.e_air=icon(outl(["o.....yy..","yo...yyyy.","oyo..yWey.","yoyyyyyyy.","kkkkkkyyo.","kyByByk.yo","kkkkkkk..y",".kyk.kyk..","..k...k..."]),Object.assign({},ICONPAL,{"o":"#ff8a2a","y":"#ffd34a","W":"#fffbe8","e":"#1a1410","B":"#d8401a"}));
+  ICON.e_aura=icon(outl(["y.yy..yy.y","yy.yyyy.yy",".yy.yy.yy.","..yyWWyy..","...yWWy...","..yyWWyy..",".yy.yy.yy.","yy.yyyy.yy","y.yy..yy.y"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#ffffff"}));
+  ICON.e_sniper=icon(outl(["........yy",".......yWy","......yWy.",".....yWy..","....yWy...","...yWy....",".kyWy.....","kkWy......","kkk.......","ok........"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#fffbe8","o":"#c8a040"}));
+  ICON.e_whirl=icon(outl(["WWWWWWWWWW","wWWWWWWWWw",".wWWWWWWw.",".wWwWWwWw.","..wWWWWw..","..wWwWw...","...wWWw...","...wWw....","....ww....","....w....."]),Object.assign({},ICONPAL,{"W":"#eef4f6","w":"#98b0bc"}));
+  ICON.e_armor=icon(outl(["W........W","WW......WW","wWW....WWw","wWWW..WWWw",".wWWyyWWw.",".wWWyyWWw.","..wWWWWw..","..wWWWWw..","...wWWw...","....ww...."]),Object.assign({},ICONPAL,{"W":"#fff8e8","w":"#e8c870","y":"#ffd34a"}));
+  ICON.e_torch=icon(outl(["y........g","oy......gW","yoy....gW.",".yoy..gW..","..By.gW...","...BgW....","...gBB....","..gW.BB...",".gW...BB..","gW.....BB."]),Object.assign({},ICONPAL,{"y":"#ffd34a","o":"#ff8a2a","B":"#7a4a1e","g":"#a0a6b0","W":"#f2f2f8"}));
+  ICON.e_fish=icon(outl(["....ffff..","..ffffffff","fffeffffFf","FfffffffFF","mmmrrrrFff","rWrWrWrfFf","mmmrrrrFff","FFffffffFF","..ffffffff"]),Object.assign({},ICONPAL,{"f":"#5a7a9a","F":"#3a5a7a","e":"#ffd34a","m":"#3a2a2a","r":"#a8302a","W":"#f2f2ea"}));
+  ICON.e_lamp=icon(outl(["y..y..y..y",".y..y..y..","y..y..y..y","o.o.o.o.o.","A.A.A.A.A.","AAAAAAAAA.","....A.....","...AaA....","..AAAAA..."]),Object.assign({},ICONPAL,{"y":"#ffffff","o":"#ff8a2a","A":"#e8c04a","a":"#a8801a"}));
+  ICON.e_trumpet=icon(outl(["......y..y","....AAy.y.","..AAAAA.y.","AAaAAAAAy.","AAAAAAA.y.","..AAAAA.y.","....AAy.y.","......y..y"]),Object.assign({},ICONPAL,{"A":"#e8c04a","a":"#a8801a","y":"#fff3b0"}));
+  ICON.e_net=icon(outl(["WkWkWkWkWk","kfkWkfkWkf","WkfffkWkWk","kfffffkfkW","WkfffkfffW","kWkWkfffff","WkfkWkfffk","kfffkWkWkW"]),Object.assign({},ICONPAL,{"W":"#d8c8a0","f":"#8acaff"}));
+  ICON.e_word=icon(outl(["y...yy...y",".y..yy..y.","..y.yy.y..","kkkkkkkkkk","kWWWWkWWWk","kWggWkWggk","kWWWWkWWWk","kWggWkWggk","kkkkkkkkkk"]),Object.assign({},ICONPAL,{"W":"#fbfbf6","g":"#c8a040","y":"#ffe08a"}));
+  ICON.e_drone=icon(SD.angel,Object.assign({},ICONPAL,{k:'#a01810',W:'#ffc8b8',y:'#ff4a2a'}));
   ICON.word=icon(['.kkkkkkkk.','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','kWggWkWggk','kWWWWkWWWk','.kkkkkkkk.'],Object.assign({},ICONPAL,{W:'#fbfbf6',g:'#c8a040'}));
   ICON.torch=icon(['....y.....','...yoy....','...oyo....','....B.....','..kcck....','.kcccck...','.kcCcck...','.kcccck...','..kcck....','...kk.....'],Object.assign({},ICONPAL,{c:'#b8683a',C:'#7a3e1e',y:'#ffe08a',o:'#ff8a2a',B:'#5a3a1e'}));
   ICON.trumpet=icon(['k........k','kAk....kAk','.kAAkkAAk.','..kAAAAk..','...kAAk...','...kaak...','...kAAk...','...kaak...','...kAAk...','....kk....'],Object.assign({},ICONPAL,{A:'#e8dcc0',a:'#a89878'}));
@@ -947,6 +967,7 @@ const EVO={
  net:{p:'boots',name:'153마리 물고기',desc:'세 겹의 큰 그물이 적을 꼼짝 못하게 묶고 계속 피해를 준다'},
  armor:{p:['medic','ammo'],name:'여호와의 날개',desc:'양쪽 날개가 영웅을 감싸 적에게 받는 피해가 10%로 줄어든다'},
 };
+const EICON=k=>ICON['e_'+k]||ICON[k];
 const wname=w=>w.evo?EVO[w.k].name:WDEF[w.k].name;
 const evoPs=k=>[].concat(EVO[k].p);const evoReady=w=>!w.evo&&w.lv>=WMAX&&evoPs(w.k).every(p=>(P.pass[p]||0)>=(EVO[w.k].full?PMAX:1));
 const WMAX=8,PMAX=5,MAXW=6,MAXP=6;
@@ -1935,7 +1956,7 @@ function hud(){hudT-=1/60;if(hudT>0)return;hudT=0.08;
  $('pry').innerHTML=`<img src="${ICON.prayer}">${G.prayers||0}`;
  $('kil').textContent='☠'+G.kills;
  const cb=curBoss();$('boss').classList.toggle('hidden',!cb);if(cb){$('bossn').textContent=cb.name;$('bossf').style.width=Math.max(0,cb.hp/cb.mhp*100)+'%'}}
-function slots(){const S=$('slots');S.innerHTML='<div class="srow" id="srw"></div><div class="srow" id="srp"></div>';let el=$('srw');for(const w of P.weapons)el.insertAdjacentHTML('beforeend',`<div class="slot ${w.evo?'evo':evoReady(w)?'ready':''}" title="${wname(w)}"><img src="${ICON[w.k]}"><i>${w.evo?'★':w.lv}</i></div>`);
+function slots(){const S=$('slots');S.innerHTML='<div class="srow" id="srw"></div><div class="srow" id="srp"></div>';let el=$('srw');for(const w of P.weapons)el.insertAdjacentHTML('beforeend',`<div class="slot ${w.evo?'evo':evoReady(w)?'ready':''}" title="${wname(w)}"><img src="${w.evo?EICON(w.k):ICON[w.k]}"><i>${w.evo?'★':w.lv}</i></div>`);
  el=$('srp');for(const k in P.pass)el.insertAdjacentHTML('beforeend',`<div class="slot ps"><img src="${ICON[k]}"><i>${P.pass[k]}</i></div>`)}
 let bannerT=null;
 function banner(t,s,dur){if(!t)return;const b=$('banner');b.innerHTML=t+(s?`<small>${s}</small>`:'');b.classList.add('on');clearTimeout(bannerT);bannerT=setTimeout(()=>b.classList.remove('on'),dur*1000)}
@@ -2022,7 +2043,7 @@ function collItems(){const items=[];
  for(const k of ['david','moses','abraham','samson','noah','enoch','gideon','jonah','john']){const h=HEROES[k];const ok=heroOwned(k)&&(!h.lock||unlocked>=h.lock);add('영웅',{id:'h_'+k,ok,img:HEROIMG[k],name:h.name,sub:h.role,desc:h.desc,hint:ok?'':(unlocked>=h.lock?`영웅 선택에서 기도 ${h.price}으로 합류`:stHint(h.lock))})}
  for(const k in WDEF){if(k==='word')continue;const d=WDEF[k];let ok=true,hint='';if(d.hero){const h=HEROES[d.hero];if(h.lock&&unlocked<h.lock){ok=false;hint=stHint(h.lock)}}else if(d.lock&&unlocked<d.lock){ok=false;hint=stHint(d.lock)}
   add('무기',{id:'w_'+k,ok,img:ICON[k],name:d.name,sub:d.hero?HEROES[d.hero].name+' 전용':'공용 무기',desc:d.desc,hint})}
- for(const k in EVO){if(k==='word')continue;const e=EVO[k],ok=!!(COLL.evo&&COLL.evo[k]);add('진화 무기',{id:'e_'+k,ok,evo:1,img:ICON[k],name:e.name,sub:WDEF[k].name+' + '+evoPs(k).map(p=>PDEF[p].name).join(' + '),desc:e.desc,hint:ok?'':'아직 진화시키지 못했어요 · 무기 LV8 + 짝이 되는 패시브 + 모루'})}
+ for(const k in EVO){if(k==='word')continue;const e=EVO[k],ok=!!(COLL.evo&&COLL.evo[k]);add('진화 무기',{id:'e_'+k,ok,evo:1,img:EICON(k),name:e.name,sub:WDEF[k].name+' + '+evoPs(k).map(p=>PDEF[p].name).join(' + '),desc:e.desc,hint:ok?'':'아직 진화시키지 못했어요 · 무기 LV8 + 짝이 되는 패시브 + 모루'})}
  for(const k in PDEF){const d=PDEF[k];if(d.hlock){add('패시브',{id:'p_'+k,ok:hardOk(d),x:1,img:ICON[k],name:d.name,sub:'주님의 시험 보상 패시브',desc:d.desc,hint:`주님의 시험 ST.${String(d.hlock).padStart(2,'0')} 클리어 시 해금`});continue}const ok=!d.lock||unlocked>=d.lock;add('패시브',{id:'p_'+k,ok,img:ICON[k],name:d.name,sub:'패시브',desc:d.desc,hint:ok?'':stHint(d.lock)})}
  {const comp=items.every(i=>i.ok);const h=HEROES.jesus;
   add('영웅',{id:'h_jesus',ok:comp,x:1,img:HEROIMG.jesus,name:h.name,sub:h.role,desc:h.desc,hint:'컬렉션을 모두 완성하면 해금'});
@@ -2112,7 +2133,7 @@ w.evo=true;w.t=0.3;w.hits=null;state='evo';hallelujah();shake=5;addLight(P.x,P.y
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">WEAPON EVOLUTION</div><div class="halle">할렐루야!</div><div class="big" style="color:#ffd34a">무기 진화!</div><div class="rg">모루 위에서 무기가 새롭게 단련되었다</div>
  <div class="evo-row"><div class="card"><img src="${ICON[w.k]}"><div class="lv">LV 8</div><div class="nm">${WDEF[w.k].name}</div></div><span class="pl">+</span>
  ${evoPs(w.k).map(p=>`<div class="card"><img src="${ICON[p]}"><div class="nm">${PDEF[p].name}</div></div>`).join('<span class="pl">+</span>')}<span class="pl">▼</span>
- <div class="card gold"><img src="${ICON[w.k]}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
+ <div class="card gold"><img src="${EICON(w.k)}"><div class="lv">★ EVO</div><div class="nm">${e.name}</div><div class="ds">${e.desc}</div></div></div>
  <div style="margin-top:calc(var(--p)*8)"><div class="btn primary" data-act="evook">계속</div></div></div>`)}
 function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;0}}
 function wAvail(k){const d=WDEF[k];if(d.lock&&unlocked<d.lock)return false;if(d.hero)return d.hero===P.hero;return true}
@@ -2123,7 +2144,7 @@ function openRecipes(){state='pause';const known=k=>!!(COLL.evo&&COLL.evo[k]);
  const rows=Object.keys(EVO).map(k=>{const e=EVO[k],kn=known(k),w=P.weapons.find(x=>x.k===k);
   const wc=wOk(k)?`<span class="rq"><img src="${ICON[k]}">${WDEF[k].name}${w&&!w.evo?` <em>LV${w.lv}</em>`:''}</span>`:Q(ICON[k]);
   const pc=evoPs(k).map(p=>kn&&pOk(p)?`<span class="rq"><img src="${ICON[p]}">${PDEF[p].name}${P.pass[p]?' <em>✓</em>':''}</span>`:Q(ICON[p])).join('<i>+</i>');
-  const rc=kn?`<span class="rq gold"><img src="${ICON[k]}">${w&&w.evo?'★ ':''}${e.name}</span>`:Q(ICON[k]);
+  const rc=kn?`<span class="rq gold"><img src="${EICON(k)}">${w&&w.evo?'★ ':''}${e.name}</span>`:Q(EICON(k));
   return `<div class="rrow ${kn?'kn':''} ${w?'own':''}">${wc}<i>+</i>${pc}<i>▶</i>${rc}</div>`}).join('');
  const n=Object.keys(EVO).filter(known).length;
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">EVOLUTION</div><div class="big" style="font-size:calc(var(--p)*16)">무기 조합표</div><div class="hint">무기 LV8 + 짝이 되는 패시브 보유 → 미니보스의 모루 · 발견 ${n}/${Object.keys(EVO).length}</div><div class="rlist">${rows}</div><div class="btn primary" data-act="pauseback">◀ 돌아가기</div></div>`)}
