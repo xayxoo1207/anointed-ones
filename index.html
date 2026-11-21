@@ -40,6 +40,7 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #kil{position:absolute;right:calc(var(--p)*22);top:calc(var(--p)*13);font-size:calc(var(--p)*6);text-shadow:var(--p) var(--p) 0 #000}
 #tmr{position:absolute;left:0;right:0;text-align:center;top:calc(var(--p)*24);font-size:calc(var(--p)*11);text-shadow:var(--p) var(--p) 0 #000,0 0 calc(var(--p)*4) #000}
 #tmr.boss{color:#ff5a4a}
+.tcredit{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + var(--p)*3);text-align:center;font-family:'Press Start 2P',monospace;font-size:calc(var(--p)*4);letter-spacing:calc(var(--p)*0.5);color:rgba(255,236,200,0.45);pointer-events:none;z-index:5}
 #scr .kbf{outline:calc(var(--p)*1) solid #ffd34a!important;outline-offset:calc(var(--p)*1);filter:brightness(1.15)}
 #tsub{position:absolute;left:0;right:0;text-align:center;top:calc(var(--p)*37);font-size:calc(var(--p)*7);color:#ffb04a;text-shadow:var(--p) var(--p) 0 #000}
 #stl{position:absolute;left:calc(var(--p)*5);top:calc(var(--p)*47);font-size:calc(var(--p)*7);color:#d8c9a8;text-shadow:var(--p) var(--p) 0 #000}
@@ -1976,7 +1977,7 @@ function toTitle(){const tv=pickVerse();state='title';$('hud').classList.add('hi
  <div class="hint tverse">"${tv[0]}"<br>— ${tv[1]}</div></div>
  <div id="tsp"></div><div class="tbot ${menuShown?'':'tlock'}"><div class="tpress">화면을 터치하세요</div> <div class="menu">${cont}<div class="btn primary wide" data-act="start">시작</div>
  <div class="btn wide gold" data-act="grace">주님의 은혜</div><div class="btn wide" data-act="coll">컬렉션</div>
- <div class="btn wide" data-act="opt">옵션</div></div></div></div>`,'titlebg')}
+ <div class="btn wide" data-act="opt">옵션</div></div></div><div class="tcredit">BY XAYXOO STUDIO</div></div>`,'titlebg')}
 function showOptions(fromPause){state=fromPause?'pause':'heroes';
  const sl=(k,lbl)=>`<div class="orow"><div class="ol">${lbl}<b id="ov_${k}">${OPT[k]}</b></div><input type="range" min="0" max="100" step="5" value="${OPT[k]}" data-k="${k}" class="osl"></div>`;
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">OPTIONS</div><div class="big">옵션</div><div class="opts">
