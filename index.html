@@ -456,7 +456,7 @@ const HEROES={
  jonah:{name:'요나',en:'JONAH',role:'관통 돌진 딜러',desc:'큰 물고기를 불러 전장을 가로지르게 한다. 물고기가 지나간 길의 적은 모두 삼켜진다.',w:'fish',hp:100,spd:62,price:1000,lock:12,pal:{h:'#2a2018',H:'#4a3a2a',n:'#3a8a4a',u:'#4a6a8a',U:'#2e4660',r:'#c8a040',f:'#8ab0c8',W:'#e8e8e0'}},
  john:{name:'요한',en:'JOHN',role:'선회 · 원거리 딜러',desc:'일곱 금 촛대가 몸 주위를 돌며 적을 태우고, 일곱 별을 쏘아 보낸다. 밧모 섬의 사도.',w:'lamp',hp:95,spd:64,price:1200,lock:15,pal:{h:'#d8d8d0',H:'#ffffff',W:'#ecece4',g:'#a8a8a0',u:'#e8e0d0',U:'#b0a890',r:'#a8281c',B:'#6b4a2a'}},
  jesus:{name:'예수',en:'JESUS',role:'말씀 · 무적',desc:'어떤 공격에도 피해를 입지 않는다. 보이지 않는 말씀이 가장 가까운 적들을 쉼 없이 친다.',w:'word',hp:100,spd:64,special:1,pal:{h:'#6a4426',H:'#8a5a34',W:'#fbfbf6',g:'#d4d8e2',y:'#e8c04a',B:'#4a3018',t:'#9a7a44'}},
- abraham:{name:'아브라함',en:'ABRAHAM',role:'관통 · 폭발 딜러',desc:'수레를 보내 가로줄을 3초간 왕복하며 관통한 뒤 폭발시킨다. 체력이 가장 높다.',w:'cart',hp:120,spd:56,pal:{h:'#e0d4b0',H:'#fff2d0',r:'#6a3a7a',W:'#c8c8c0',u:'#a8865a',U:'#7a5a3a'}},
+ abraham:{name:'아브라함',en:'ABRAHAM',role:'관통 · 폭발 딜러',desc:'수레를 양쪽으로 보내 가로줄을 3초간 왕복하며 관통한 뒤 폭발시킨다. 체력이 가장 높다.',w:'cart',hp:120,spd:56,pal:{h:'#e0d4b0',H:'#fff2d0',r:'#6a3a7a',W:'#c8c8c0',u:'#a8865a',U:'#7a5a3a'}},
 };
 const ESPEC={dog:{y:'#f2c84a',o:'#b07a20'},tank:{y:'#f2c84a',o:'#b07a20'},heli:{m:'#3a2a5a',M:'#6a4a9a'},frog:{q:'#3a6a5a',Q:'#6a9a7a'},boat:{q:'#2a5a4a',Q:'#4a8a6a'},gunboat:{q:'#3a4a5a',Q:'#5a7a8a'},rpg:{o:'#ff8a2a',y:'#ffd34a'}};
 /* ===== hi-res hero sprites (1.5x canvas, same pixel size) ===== */
@@ -883,7 +883,7 @@ const WDEF={
  wave:{name:'모세의 파도',desc:'적을 향해 파도를 보내 닿는 모든 적에게 피해',hero:'moses'},
  ark:{name:'방주의 동물들',desc:'동물들이 사방으로 흩어지며 지나가는 길의 적을 모두 공격',hero:'noah'},
  fist:{name:'삼손의 주먹',desc:'가까운 적에게 주먹을 내리쳐 주변 적까지 날려버린다',hero:'samson'},
- cart:{name:'아브라함의 수레',desc:'수레가 가로줄을 3초간 왕복하며 관통한 뒤 폭발',hero:'abraham'},
+ cart:{name:'아브라함의 수레',desc:'수레가 양쪽으로 달려 가로줄을 3초간 왕복하며 관통한 뒤 폭발',hero:'abraham'},
  grenade:{name:'제단의 숯불',desc:'적 무리에 숯불을 던져 광역 피해'},
  drone:{name:'그룹의 보호',desc:'그룹이 잠시 나타나 주위를 돌며 닿는 적을 공격 · 레벨이 오를수록 오래 머문다'},
  flame:{name:'엘리야의 불',desc:'진행 방향으로 하늘의 불을 내린다'},
@@ -905,7 +905,7 @@ const WS={
  wave:l=>({dmg:12+4*(l-1),cd:1.5*Math.pow(0.93,l-1),n:[1,1,1,2,2,2,3,3][l-1],w:18+3*l}),
  ark:l=>({dmg:10+4*(l-1),cd:1.2*Math.pow(0.93,l-1),n:[3,3,4,4,5,5,6,7][l-1]}),
  fist:l=>({dmg:16+6*(l-1),cd:0.75*Math.pow(0.93,l-1),n:[1,1,1,2,2,2,3,3][l-1],r:18+2*l}),
- cart:l=>({dmg:9+3*(l-1),cd:3.4*Math.pow(0.94,l-1),n:[1,1,1,2,2,2,3,3][l-1],boom:30+10*l,r:24+l}),
+ cart:l=>({dmg:14+4*(l-1),cd:2.6*Math.pow(0.94,l-1),n:[1,1,2,2,2,3,3,4][l-1],boom:30+10*l,r:24+l}),
  rifle:l=>({dmg:7+2.5*(l-1),cd:0.6*Math.pow(0.93,l-1),n:[1,1,2,2,3,3,4,4][l-1],pierce:[0,0,0,1,1,1,2,3][l-1]}),
  grenade:l=>({dmg:20+7*l,cd:2.4*Math.pow(0.93,l-1),n:1+Math.floor(l/3),r:20+2*l}),
  drone:l=>({dmg:6+2.5*l,n:Math.min(5,1+Math.floor(l/2)),R:28+l*2,dur:2+l*0.75,off:3.2}),
@@ -929,7 +929,7 @@ const EVO={
  wave:{p:'he',name:'홍해 가르기',desc:'화면 양 끝에서 거대한 물벽이 밀려와 휩쓴다'},
  ark:{p:'he',name:'방주의 대행진',desc:'짝을 지은 동물 떼가 사방으로 쏟아져 나와 전장을 휩쓴다'},
  fist:{p:'he',name:'삼손의 진노',desc:'몸 주위로 강한 충격파가 연속으로 퍼져 나간다'},
- cart:{p:'he',name:'불수레',desc:'불타는 수레 4대가 왕복하며 불길을 남기고 대폭발'},
+ cart:{p:'he',name:'불수레',desc:'불타는 수레가 양옆으로 4대, 위아래로 4대 달려 나가 불길을 남기고 대폭발'},
  grenade:{p:'ammo',name:'번제의 불',desc:'폭발 후 불씨 6개가 연쇄 폭발'},
  drone:{p:'magnet',name:'그룹의 분노',desc:'붉은 기운을 두른 그룹 여섯이 사라지지 않고 계속 선회하며 닿는 적을 공격'},
  flame:{p:'vest',name:'갈멜 산의 불',desc:'불이 지나간 자리에 불길이 남는다'},
@@ -1026,7 +1026,7 @@ const SONGS=[
  {name:'기쁘다 구주 오셨네 (Joy to the World)',bpm:148,bar:4,key:0,tr:2,mel:'C5:2 B4:1.5 A4:0.5 G4:3 F4:1 E4:2 D4:2 C4:3 G4:1 A4:3 A4:1 B4:3 B4:1 C5:6 C5:1 C5:1 B4:1 A4:1 G4:1 G4:1.5 F4:0.5 E4:1 C5:1 C5:1 B4:1 A4:1 G4:1 G4:1.5 F4:0.5 E4:1 E4:1 E4:1 E4:1 E4:1 E4:0.5 F4:0.5 G4:3 F4:0.5 E4:0.5 D4:1 D4:1 D4:1 D4:0.5 E4:0.5 F4:3 E4:0.5 D4:0.5 C4:1 C5:2 A4:1 G4:1.5 F4:0.5 E4:1 F4:1 E4:2 D4:2 C4:4'},
  {name:'내 주는 강한 성이요 (A Mighty Fortress)',bpm:132,bar:4,key:0,tr:0,mel:'C4:1 C4:1 C4:1 G3:1 A3:1 B3:1 C4:1.5 B3:0.5 A3:1 G3:2 R:1 C4:1 B3:1 A3:1 G3:1 F3:1 E3:1 F3:1 E3:1 D3:1 C3:3 R:1 C4:1 C4:1 C4:1 G3:1 A3:1 B3:1 C4:1.5 B3:0.5 A3:1 G3:2 R:1 C4:1 B3:1 A3:1 G3:1 F3:1 E3:1 F3:1 E3:1 D3:1 C3:3 R:1 E4:1 E4:1 D4:1 C4:1 D4:1 E4:1 D4:2 R:1 E4:1 E4:1 D4:1 C4:1 B3:1 A3:1 G3:2 R:1 C4:1 B3:1 A3:1 G3:1 F3:1 E3:1 F3:1 E3:1 D3:1 C3:4'},
  {name:'영광 영광 할렐루야 (Battle Hymn of the Republic)',bpm:150,bar:4,key:0,tr:0,mel:'G3:1 G3:0.75 G3:0.25 G3:0.75 F3:0.25 E3:0.75 G3:0.25 C4:0.75 D4:0.25 E4:1 E4:0.75 E4:0.25 D4:0.75 C4:0.25 C4:2 A3:1 A3:0.75 A3:0.25 B3:0.75 C4:0.25 B3:0.75 A3:0.25 G3:0.75 A3:0.25 G3:0.75 E3:0.25 G3:0.75 C4:0.25 E3:2 G3:1 G3:0.75 G3:0.25 G3:0.75 F3:0.25 E3:0.75 G3:0.25 C4:0.75 D4:0.25 E4:1 E4:0.75 E4:0.25 D4:0.75 C4:0.25 C4:2 D4:1 D4:1 C4:1 B3:1 C4:4 C4:1.5 B3:0.5 A3:1 B3:1 C4:1 A3:1 G3:1 E3:1 G3:1.5 C4:0.5 E4:2 C4:2 R:2 A3:1.5 B3:0.5 C4:1 B3:1 A3:1 G3:1 E3:1 G3:1 C4:2 R:2 C4:1.5 B3:0.5 A3:1 B3:1 C4:1 A3:1 G3:1 E3:1 G3:1.5 C4:0.5 E4:2 C4:2 D4:1 D4:1 C4:1 B3:1 C4:4'},
- {name:'메인 · 나 같은 죄인 살리신 (Amazing Grace)',bpm:78,bar:3,key:7,tr:0,mel:'R:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:2 E4:1 D4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 D5:2 B4:1 D5:2 B4:0.5 D5:0.5 B4:2 G4:1 D4:2 E4:0.5 G4:0.5 E4:2 D4:1 G4:2 B4:0.5 G4:0.5 B4:2 A4:1 G4:3'},
+ {name:'메인 · 그 크신 하나님의 사랑 (The Love of God)',bpm:84,bar:4,key:0,tr:0,mel:'R:3 G3:1 C4:1.5 D4:0.5 E4:1 E4:1 E4:1.5 D4:0.5 C4:1 G3:1 E4:1.5 F4:0.5 G4:1 G4:1 A4:1 G4:1 E4:1 G4:1 C5:1.5 B4:0.5 A4:1 G4:1 A4:1 G4:1 E4:1 D4:1 E4:1.5 F4:0.5 G4:1 E4:1 D4:1 D4:1 C4:3 G4:1 E4:1.5 D4:0.5 C4:1 E4:1 G4:2 C5:1 B4:1 A4:1.5 G4:0.5 F4:1 A4:1 G4:3 G4:1 E4:1.5 D4:0.5 C4:1 E4:1 G4:1.5 A4:0.5 C5:1 C5:1 B4:1 A4:1 G4:1 E4:1 D4:3 G4:1 C5:1.5 B4:0.5 A4:1 G4:1 E4:1.5 F4:0.5 G4:1 E4:1 D4:1 D4:1 C4:4'},
  {name:'곧 오소서 임마누엘 (O Come, O Come, Emmanuel)',bpm:146,bar:4,key:4,tr:0,drive:1,mel:'E4:1 G4:1 B4:1 B4:1 B4:1 A4:1 C5:1 B4:1 A4:1 G4:2 R:1 A4:1 B4:1 G4:1 E4:1 G4:1 A4:1 F#4:1 E4:1 D4:3 R:1 E4:1 G4:1 B4:1 B4:1 B4:1 A4:1 C5:1 B4:1 A4:1 G4:2 R:1 A4:1 B4:1 G4:1 E4:1 G4:1 A4:1 F#4:1 E4:1 D4:3 R:1 D5:1 D5:2 B4:1 B4:2 R:2 B4:1 A4:1 C5:1 B4:1 A4:1 G4:2 R:1 A4:1 B4:1 G4:1 E4:1 G4:1 A4:1 F#4:1 E4:4'},
 ];
 (function(){const NB={C:0,D:2,E:4,F:5,G:7,A:9,B:11};for(const S of SONGS){const ev=[];let t=0;for(const tok of S.mel.trim().split(/\s+/)){const[n,d]=tok.split(':');const dur=parseFloat(d);if(n!=='R'){const m=n.match(/^([A-G])(#|b)?(\d)$/);ev.push({t,dur,midi:12*(+m[3]+1)+NB[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)})}t+=dur}
@@ -1337,7 +1337,7 @@ function updEvo(w,dt){w.t-=dt;
  case'ark':if(w.t<=0){w.t=0.85*P.cdMul;const o=rnd(TAU),n=14;for(let i=0;i<n;i++){const a=o+Math.floor(i/2)/(n/2)*TAU+rnd(-0.12,0.12);after((i%2)*0.08,()=>releaseAnimal(a+(i%2?0.12:-0.12),36,true))}sfx('herd');shake=Math.max(shake,0.6*(1.5))}break;
  case'fist':{w.t2=(w.t2||0.5)-dt;if(w.t2<=0){w.t2=1.1*P.cdMul;G.rings.push({r:6,max:100,spd:230,dmg:75,hit:new Set()});sfx('quake');shake=Math.max(shake,0.6*(3));addLight(P.x,P.y,90,'rgba(255,210,120,1)',0.25)}
    if(w.t<=0){const tg=nearestN(P.x,P.y,62,3);if(!tg.length){w.t=0.05;break}w.t=0.5*P.cdMul;tg.forEach((t,i)=>after(i*0.08,()=>{if(!t.dead)punch(t,45,28,true)}))}break}
- case'cart':if(w.t<=0){w.t=3.0*P.cdMul;for(const off of [-36,-12,12,36])spawnCart(P.y+off,30,140,40,4,true);sfx('cart')}break;
+ case'cart':if(w.t<=0){w.t=3.4*P.cdMul;[-1,1].forEach((d,i)=>{for(const off of [-14,14])spawnCart(P.y+off+(i?6:-6),24,140,40,4,true,d)});[-1,1].forEach((d,i)=>{for(const off of [-16,16])spawnCart(0,24,140,40,4,true,d,true,P.x+off+(i?6:-6))});sfx('cart')}break;
  case'rifle':if(w.t<=0){w.t=0.07*P.cdMul;const tg=nearest(P.x,P.y,220);if(!tg){w.t=0.1;break}const a=Math.atan2(tg.y-P.y,tg.x-P.x)+rnd(-0.12,0.12),ox=P.x+Math.cos(a)*8,oy=P.y-2+Math.sin(a)*8;
    G.bul.push({x:ox,y:oy,vx:Math.cos(a)*330,vy:Math.sin(a)*330,dmg:16,pierce:2,life:0.7,hit:new Set()});P.face=Math.cos(a)<0?-1:1;
    addLight(ox,oy,26,'rgba(255,210,120,1)',0.05);part(ox,oy,Math.cos(a)*40,Math.sin(a)*40,0.06,'#fff3b0',2);part(P.x,P.y-2,-Math.cos(a)*30+rnd(-20,20),rnd(-70,-30),0.5,'#d8b040',1,260);sfx('shot')}break;
@@ -1370,7 +1370,7 @@ function nearestN(x,y,maxD,n){const a=[];for(const e of G.en){if(e.dead)continue
 function throwStone(t,dmg,big){const a=Math.atan2(t.y-P.y,t.x-P.x);G.bul.push({x:P.x,y:P.y-6,vx:Math.cos(a)*(big?260:310),vy:Math.sin(a)*(big?260:310),dmg,pierce:0,life:big?1.6:0.9,hit:new Set(),kind:big?'bigstone':'stone',home:big?t:null,blast:big?30:0});
   P.face=Math.cos(a)<0?-1:1;sfx('sling');for(let i=0;i<3;i++)part(P.x+P.face*6,P.y-8,rnd(-25,25),rnd(-30,-5),0.2,'#e8dcc0',1)}
 function spawnWave(x,y,a,hw,dmg,spd,life,big){G.waves.push({x,y,dx:Math.cos(a),dy:Math.sin(a),hw,dmg,spd,life,max:life,hit:new Set(),big})}
-function spawnCart(y,dmg,boom,r,dur,fire){const tg=nearest(P.x,P.y,200);const dir=tg?(tg.x<P.x?-1:1):P.face;G.carts.push({x:P.x,y,ox:P.x,vx:dir*(fire?175:150),life:dur,dmg,boom,r,hits:new Map(),fire,ft:0})}
+function spawnCart(y,dmg,boom,r,dur,fire,dir,vert,x){const sp=fire?175:150;if(vert)G.carts.push({x,y:P.y,oy:P.y,vx:0,vy:dir*sp,face:dir,vert:1,life:dur,dmg,boom,r,hits:new Map(),fire,ft:0});else G.carts.push({x:P.x,y,ox:P.x,vx:dir*sp,vy:0,face:dir,life:dur,dmg,boom,r,hits:new Map(),fire,ft:0})}
 function punch(t,dmg,r,big){const a=Math.atan2(t.y-P.y,t.x-P.x),d=Math.min(Math.hypot(t.x-P.x,t.y-P.y),big?30:24),x=P.x+Math.cos(a)*d,y=P.y-2+Math.sin(a)*d;P.face=Math.cos(a)<0?-1:1;
   query(x,y,r+12,e=>{const dx=e.x-x,dy=e.y-y,dd=Math.hypot(dx,dy)||1;if(dd<r+e.r)hurt(e,dmg,(dx/dd*0.5+Math.cos(a))*120,(dy/dd*0.5+Math.sin(a))*120)});
   G.punches.push({x,y,t:0.25,r,a,big});for(let i=0;i<6;i++){const b=rnd(TAU);part(x,y,Math.cos(b)*rnd(30,80),Math.sin(b)*rnd(30,80),0.3,pick(['#fff3b0','#e8d0a0','#b8a080']),1)}
@@ -1387,7 +1387,7 @@ function updWeapons(dt){
     if(w.t<=0){w.t=s.cd*P.cdMul;query(P.x,P.y,s.R+14,e=>{const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy)||1;if(d<s.R+e.r*0.5)hurt(e,s.dmg,dx/d*30,dy/d*30,Math.random()<0.6)})}break;
   case'ark':if(w.t<=0){w.t=s.cd*P.cdMul;const o=rnd(TAU);for(let i=0;i<s.n;i++)releaseAnimal(o+i/s.n*TAU+rnd(-0.35,0.35),s.dmg,false);sfx('herd')}break;
   case'fist':if(w.t<=0){const tg=nearestN(P.x,P.y,62,s.n);if(!tg.length){w.t=0.05;break}w.t=s.cd*P.cdMul;tg.forEach((t,i)=>after(i*0.1,()=>{if(!t.dead)punch(t,s.dmg,s.r,false)}))}break;
-  case'cart':if(w.t<=0){w.t=s.cd*P.cdMul;for(let i=0;i<s.n;i++)spawnCart(P.y+[0,-24,24][i],s.dmg,s.boom,s.r,3,false);sfx('cart')}break;
+  case'cart':if(w.t<=0){w.t=s.cd*P.cdMul;for(let i=0;i<s.n;i++){const y=P.y+[0,-24,24,-48][i];spawnCart(y,s.dmg,s.boom,s.r,3,false,-1);spawnCart(y,s.dmg,s.boom,s.r,3,false,1)}sfx('cart')}break;
   case'rifle':if(w.t<=0){w.t=s.cd*P.cdMul;const tg=nearest(P.x,P.y,RNG(w));if(!tg){w.t=0.1;break}
     for(let i=0;i<s.n;i++)after(i*0.07,()=>{const a=Math.atan2(tg.y-P.y,tg.x-P.x)+rnd(-0.08,0.08)+(i%2?1:-1)*Math.floor((i+1)/2)*0.07;const ox=P.x+Math.cos(a)*8,oy=P.y-2+Math.sin(a)*8;
       G.bul.push({x:ox,y:oy,vx:Math.cos(a)*280,vy:Math.sin(a)*280,dmg:s.dmg,pierce:s.pierce,life:0.75,hit:new Set()});P.face=Math.cos(a)<0?-1:1;
@@ -1492,9 +1492,9 @@ function update(dt){
   if(v.hw>60){for(const e of G.en)if(!e.dead)chk(e)}else query(v.x,v.y,v.hw+14,chk);
   if(Math.random()<(v.big?1:0.5)){const t=rnd(-v.hw,v.hw);part(v.x-v.dy*t,v.y+v.dx*t,v.dx*40+rnd(-10,10),v.dy*40-rnd(10,30),0.4,pick(['#e8f6ff','#9fd0ff']),1)}}
  G.waves=G.waves.filter(v=>v.life>0);
- for(const c of G.carts){c.x+=c.vx*dt*P.pspd;c.life-=dt*P.pspd;const RR=W*0.42;if(c.x>c.ox+RR)c.vx=-Math.abs(c.vx);if(c.x<c.ox-RR)c.vx=Math.abs(c.vx);
-  query(c.x,c.y,18,e=>{if(Math.hypot(e.x-c.x,e.y-c.y)<e.r+8){const l=c.hits.get(e)||0;if(tGlobal-l>0.3){c.hits.set(e,tGlobal);hurt(e,c.dmg,Math.sign(c.vx)*70,rnd(-30,30),Math.random()<0.5)}}});
-  if(Math.random()<0.35)part(c.x-Math.sign(c.vx)*6,c.y+4,-c.vx*0.1,rnd(-10,0),0.4,c.fire?pick(['#ff8a2a','#ffd34a']):'rgba(180,160,120,0.5)',2,0,c.fire?'fire':'smoke');
+ for(const c of G.carts){c.x+=c.vx*dt*P.pspd;c.y+=(c.vy||0)*dt*P.pspd;c.life-=dt*P.pspd;if(c.vert){const RV=H*0.42;if(c.y>c.oy+RV)c.vy=-Math.abs(c.vy);if(c.y<c.oy-RV)c.vy=Math.abs(c.vy)}else{const RR=W*0.42;if(c.x>c.ox+RR)c.vx=-Math.abs(c.vx);if(c.x<c.ox-RR)c.vx=Math.abs(c.vx)}
+  query(c.x,c.y,18,e=>{if(Math.hypot(e.x-c.x,e.y-c.y)<e.r+8){const l=c.hits.get(e)||0;if(tGlobal-l>0.3){c.hits.set(e,tGlobal);hurt(e,c.dmg,c.vert?rnd(-30,30):Math.sign(c.vx)*70,c.vert?Math.sign(c.vy)*70:rnd(-30,30),Math.random()<0.5)}}});
+  if(Math.random()<0.35)part(c.x-Math.sign(c.vx)*6,c.y+4-Math.sign(c.vy||0)*6,-c.vx*0.1,rnd(-10,0),0.4,c.fire?pick(['#ff8a2a','#ffd34a']):'rgba(180,160,120,0.5)',2,0,c.fire?'fire':'smoke');
   if(c.fire){c.ft-=dt;if(c.ft<=0&&G.fires.length<45){c.ft=0.22;G.fires.push({x:c.x,y:c.y+2,t:2.5,tick:0,dmg:16,r:11})}}
   if(c.life<=0)explode(c.x,c.y,c.r,c.boom)}
  G.carts=G.carts.filter(c=>c.life>0);
@@ -1737,7 +1737,7 @@ function render(){
   else if(o.k===2)drawPlayer(cx,cy);
   else if(o.k===3){const n=o.n,t=n.t/n.T,x=n.x0+(n.x1-n.x0)*t-cx,y=n.y0+(n.y1-n.y0)*t-cy-Math.sin(Math.PI*t)*34;ctx.drawImage(shadowSpr(5),Math.round(n.x0+(n.x1-n.x0)*t-cx-2),Math.round(n.y0+(n.y1-n.y0)*t-cy));if(n.cluster){const f=SPR.torchFire[Math.floor(tGlobal*14+n.T*10)%3];ctx.drawImage(f.i,Math.round(x-f.W/2),Math.round(y-f.H+4));if(Math.random()<0.6)part(x+cx+rnd(-2,2),y+cy-2,rnd(-15,15),rnd(-40,-15),rnd(0.2,0.4),pick(['#ffd34a','#ff8a2a','#ff4a1a']),1,0,'fire');addLight(x+cx,y+cy-3,22,'rgba(255,150,60,1)',0.06)}else{const f=SPR.coalFire[Math.floor(tGlobal*12+n.T*10)%3];ctx.drawImage(f.i,Math.round(x-f.W/2),Math.round(y-f.H+4));if(Math.random()<0.5)part(x+cx+rnd(-3,3),y+cy-4,rnd(-15,15),rnd(-40,-15),rnd(0.2,0.4),pick(['#ffd34a','#ff8a2a','#ff4a1a']),1,0,'fire');addLight(x+cx,y+cy-3,20,'rgba(255,140,50,1)',0.05)}}
   else if(o.k===5){const a=o.a,fr=SPR.animals[a.t][Math.floor(a.anim)%2],sc=a.big?2:1,x=Math.round(a.x-cx),y=Math.round(a.y-cy)-(a.t===3?8:0);const al=Math.min(1,a.life*4);ctx.globalAlpha=al;if(a.t!==3||true)ctx.drawImage(shadowSpr(fr.W*sc*0.8),Math.round(a.x-cx-fr.W*sc*0.4),Math.round(a.y-cy+2));ctx.drawImage(a.vx<0?fr.f:fr.i,x-Math.floor(fr.W*sc/2),y-fr.H*sc+3,fr.W*sc,fr.H*sc);ctx.globalAlpha=1}
-  else if(o.k===4){const c=o.c,sp=c.fire?SPR.cartF:SPR.cart,x=Math.round(c.x-cx),y=Math.round(c.y-cy)+(Math.floor(tGlobal*20)%2);ctx.drawImage(shadowSpr(12),x-6,y+3);const fl=c.life<0.6&&Math.floor(c.life*16)%2;ctx.drawImage(fl?(c.vx<0?sp.wf:sp.w):(c.vx<0?sp.f:sp.i),x-Math.floor(sp.W/2),y-sp.H+4)}
+  else if(o.k===4){const c=o.c,sp=c.fire?SPR.cartF:SPR.cart,x=Math.round(c.x-cx),y=Math.round(c.y-cy)+(Math.floor(tGlobal*20)%2);ctx.drawImage(shadowSpr(12),x-6,y+3);const fl=c.life<0.6&&Math.floor(c.life*16)%2;ctx.drawImage(fl?(c.face<0?sp.wf:sp.w):(c.face<0?sp.f:sp.i),x-Math.floor(sp.W/2),y-sp.H+4)}
  }
  // marks
  for(const m of G.marks.concat(G.emarks)){const x=Math.round(m.x-cx),y=Math.round(m.y-cy),blink=Math.floor(m.t*12)%2;const en=G.emarks.includes(m);ctx.fillStyle=en?(blink?'#ff3b30':'#ff9a4a'):(blink?'#bfe6ff':'#7ac0ff');
