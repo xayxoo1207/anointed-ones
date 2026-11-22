@@ -2446,7 +2446,7 @@ function drawMinimap(){const c=$('mmap');if(!c||!G)return;const g=c.getContext('
  g.restore();g.fillStyle='#7fd0ff';g.fillRect(R-2,R-2,4,4);g.fillStyle='#fff';g.fillRect(R-1,R-1,2,2);
  g.strokeStyle='rgba(255,255,255,0.5)';g.font='bold 8px monospace';g.fillStyle='#c8b898';g.fillText('N',R,7)}
 let shopList=[];
-function shopPrice(){return Math.round(40+G.d*8)}
+function shopPrice(){return Math.min(1000,500+Math.round(Math.min(G.d,12)/12*10)*50)}
 function openShop(){const m=G.merch;m.away=false;const npass=Object.keys(P.pass).filter(k=>P.pass[k]>0).length;
  const avail=Object.keys(PDEF).filter(k=>!(PDEF[k].lock&&unlocked<PDEF[k].lock)&&hardOk(PDEF[k])&&hidOk(PDEF[k]));
  let L=avail.filter(k=>!P.pass[k]);if(L.length<3)L=L.concat(avail.filter(k=>P.pass[k]&&P.pass[k]<PMAX));
