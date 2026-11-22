@@ -1446,7 +1446,9 @@ function initStatic(){
   ICON.e_ark=icon(outl(["..W.....B.",".WWW...BB.","WWeWW.BeBB","WWWWW.BBBB",".WWW...BBB",".W.W...B.B","..........","yyyyyyyyyy","ByByByByBy"]),Object.assign({},ICONPAL,{"W":"#f2f2ea","e":"#1a1410","B":"#8a5a2a","y":"#c8a040"}));
   ICON.e_fist=icon(outl(["..y.yy.y..",".y......y.","y..kkkk..y","..kssssk..","y.kSsSsk.y","..kssssk..","y..kkkk..y",".y......y.","..y.yy.y.."]),Object.assign({},ICONPAL,{"s":"#d89a74","S":"#a8684e","y":"#ffd34a"}));
   ICON.e_cart=icon(outl(["..o..y.o..",".oyo.oyo..","oyWyoyWyo.","kkkkkkkkkk","kBrBrBrBk.","kBBBBBBBk.","kkkkkkkkk.",".kGk..kGk.","..k....k.."]),Object.assign({},ICONPAL,{"o":"#ff8a2a","y":"#ffd34a","W":"#fffbe8","B":"#8a5a2a","r":"#d8401a","G":"#ffd34a"}));
-  ICON.e_flame=icon(outl(["...yWWy...","...oyyo...","...oyyo...","..oyWWyo..","..oyWWyo..","..royyor..","kkkkkkkkkk","kQqQqQqQqk","kqqqqqqqqk"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#fffbe8","o":"#ff8a2a","r":"#d8401a","q":"#8a8a90","Q":"#b8b8c0"}));
+  {const fp=Object.assign({},ICONPAL,{s:'#e8b080',S:'#b07448',b:'#6a4426',y:'#ffd34a',W:'#fffbe8',o:'#ff8a2a',r:'#d8401a'});
+   ICON.flame=icon(outl(["..........",".s.s......",".s.s.s..y.",".sSsSs.yWy","ssSsSsoyWW","sSSSSroyWW","sSSSSrooyy",".sSSs.rro.",".bbb......",".bbb......"]),fp);
+   ICON.e_flame=icon(outl(["..yyWWyy..",".oyWWWWyo.","royWWWWyor","royyWWyyor",".rooyyoor.","s.s.rr.s.s","s.s.ro.s.s","sSs.rr.sSs","sSSs..sSSs",".bb....bb."]),fp)}
   ICON.e_mortar=icon(outl([".gGGGGGg..","gGGgGGGGg.","GGGGGGGGGg",".gggggggg.","..W...W...",".WcW.WcW..","..W...W.W.","....W..WcW","...WcW..W."]),Object.assign({},ICONPAL,{"g":"#4a4a58","G":"#6a6a7a","W":"#e8f4ff","c":"#8acaff"}));
   ICON.e_air=icon(outl(["o.....yy..","yo...yyyy.","oyo..yWey.","yoyyyyyyy.","kkkkkkyyo.","kyByByk.yo","kkkkkkk..y",".kyk.kyk..","..k...k..."]),Object.assign({},ICONPAL,{"o":"#ff8a2a","y":"#ffd34a","W":"#fffbe8","e":"#1a1410","B":"#d8401a"}));
   ICON.e_aura=icon(outl(["y.yy..yy.y","yy.yyyy.yy",".yy.yy.yy.","..yyWWyy..","...yWWy...","..yyWWyy..",".yy.yy.yy.","yy.yyyy.yy","y.yy..yy.y"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#ffffff"}));
