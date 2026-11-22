@@ -1451,7 +1451,7 @@ function initStatic(){
    ICON.e_flame=icon(outl(["..yyWWyy..",".oyWWWWyo.","royWWWWyor","royyWWyyor",".rooyyoor.","s.s.rr.s.s","s.s.ro.s.s","sSs.rr.sSs","sSSs..sSSs",".bb....bb."]),fp)}
   ICON.e_mortar=icon(outl([".gGGGGGg..","gGGgGGGGg.","GGGGGGGGGg",".gggggggg.","..W...W...",".WcW.WcW..","..W...W.W.","....W..WcW","...WcW..W."]),Object.assign({},ICONPAL,{"g":"#4a4a58","G":"#6a6a7a","W":"#e8f4ff","c":"#8acaff"}));
   ICON.e_air=icon(outl(["o.....yy..","yo...yyyy.","oyo..yWey.","yoyyyyyyy.","kkkkkkyyo.","kyByByk.yo","kkkkkkk..y",".kyk.kyk..","..k...k..."]),Object.assign({},ICONPAL,{"o":"#ff8a2a","y":"#ffd34a","W":"#fffbe8","e":"#1a1410","B":"#d8401a"}));
-  ICON.e_aura=icon(outl(["y.yy..yy.y","yy.yyyy.yy",".yy.yy.yy.","..yyWWyy..","...yWWy...","..yyWWyy..",".yy.yy.yy.","yy.yyyy.yy","y.yy..yy.y"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#ffffff"}));
+  ICON.e_aura=icon(outl(['...goog...','.ggoWWogg.','.g..yy..g.','g...aa...g','g..yWWy..g','g..yWWy..g','g.aayyaa.g','.aa....aa.','oyo....oyo','oWoggggoWo']),Object.assign({},ICONPAL,{a:'#e0a848',o:'#ff8a2a',y:'#ffd34a',W:'#fffbe8',g:'#e8b830'}));
   ICON.e_sniper=icon(outl(["........yy",".......yWy","......yWy.",".....yWy..","....yWy...","...yWy....",".kyWy.....","kkWy......","kkk.......","ok........"]),Object.assign({},ICONPAL,{"y":"#ffd34a","W":"#fffbe8","o":"#c8a040"}));
   ICON.e_whirl=icon(outl(["WWWWWWWWWW","wWWWWWWWWw",".wWWWWWWw.",".wWwWWwWw.","..wWWWWw..","..wWwWw...","...wWWw...","...wWw....","....ww....","....w....."]),Object.assign({},ICONPAL,{"W":"#eef4f6","w":"#98b0bc"}));
   ICON.e_armor=icon(outl(["W........W","WW......WW","wWW....WWw","wWWW..WWWw",".wWWyyWWw.",".wWWyyWWw.","..wWWWWw..","..wWWWWw..","...wWWw...","....ww...."]),Object.assign({},ICONPAL,{"W":"#fff8e8","w":"#e8c870","y":"#ffd34a"}));
@@ -1488,7 +1488,7 @@ function initStatic(){
   ICON.loaves=icon(['.kkkk.....','kAAAAk.kk.','kAaaAk.kck','kAAAAk.kck','.kkkk..kck','..kkkkkkck','.kcccccccck','kcckcccccck','.kcccccccck','..kkkkkkkk'],Object.assign({},ICONPAL,{c:'#7aa0b8'}));
   SPR.wing=spr(['....kkk.....','..kkWWWkk...','.kWWWWWWWk..','kWWwWWWWWWk.','kWwWWwWWWWWk','.kwWwWWwWWWk','..kwWwWWwWWk','..kwWwWwWWWk','...kwWwWwWWk','...kwWwWwWWk','...kwwWwWwWk','....kwWwWwWk','....kwwWwWWk','....kwWwWwWk','.....kwwWwk.','.....kwWwWk.','.....kwwWk..','......kwwk..','......kwk...','.......k....'],Object.assign({},BASEPAL,{W:'#fff8e8',w:'#e8c870'}));
   ICON.armor=icon(['..kkkkkk..','.kWWWWWWk.','kWWcWWcWWk','kWWWccWWWk','kWcWWWWcWk','.kWWccWWk.','.kWWWWWWk.','..kWWWWk..','...kWWk...','....kk....'],ICONPAL);
-  ICON.wisdom=icon(['.k..kk..k.','kykkyykkyk','kyykyykyyk','kyyyyyyyyk','kyryycyyrk','koyyyyyyok','kkkkkkkkkk'],ICONPAL);ICON.cart=icon(SD.cart,ICONPAL);ICON.fist=icon(SD.i_fist,ICONPAL);ICON.ark=icon(SD.i_ark,ICONPAL);ICON.aura=icon(['kk..kk..kk','kWk.kk.kWk','.kWkkkkWk.','..kWWWWk..','.kWkyykWk.','.kWkyykWk.','..kWWWWk..','.kWkkkkWk.','kWk....kWk','kk......kk'],ICONPAL);ICON.drone=icon(SD.angel,ICONPAL);ICON.air=icon(SD.chariot,ICONPAL);
+  ICON.wisdom=icon(['.k..kk..k.','kykkyykkyk','kyykyykyyk','kyyyyyyyyk','kyryycyyrk','koyyyyyyok','kkkkkkkkkk'],ICONPAL);ICON.cart=icon(SD.cart,ICONPAL);ICON.fist=icon(SD.i_fist,ICONPAL);ICON.ark=icon(SD.i_ark,ICONPAL);ICON.aura=icon(outl(['...WWWW...','.WWwwwwWW.','.Ww....wW.','WW......WW','Ww......wW','Ww......wW','WW......WW','.Ww....wW.','.WWwwwwWW.','...WWWW...']),Object.assign({},ICONPAL,{W:'#f2f2f8',w:'#b8c8e0'}));ICON.drone=icon(SD.angel,ICONPAL);ICON.air=icon(SD.chariot,ICONPAL);
   DIG.w=[...Array(10)].map((_,i)=>mkDigit(i,'#ffffff'));DIG.y=[...Array(10)].map((_,i)=>mkDigit(i,'#ffd34a'));DIG.r=[...Array(10)].map((_,i)=>mkDigit(i,'#ff4a3a'));DIG.g=[...Array(10)].map((_,i)=>mkDigit(i,'#7aff7a'));
 }
 const DIGB=['111101101101111','010110010010111','111001111100111','111001111001111','101101111001001','111100111001111','111100111101111','111001001001001','111101111101111','111101111001111'];
@@ -1680,7 +1680,7 @@ const EVO={
  flame:{p:'light',name:'갈멜 산의 불',desc:'불이 지나간 자리에 불길이 남는다'},
  mortar:{p:'tent',name:'큰 우박 폭풍',desc:'우박 16개가 전장을 뒤덮는다'},
  air:{p:'wisdom',name:'불말과 불병거',desc:'불병거 3대 편대가 전장을 휩쓴다'},
- aura:{p:'lions',name:'여호와의 은혜',desc:'황금빛 파장이 주위를 회전하며 적을 휩쓸고 체력을 서서히 회복'},
+ aura:{p:'lions',name:'스랍의 불막대기',desc:'세 갈래 불막대기가 주위를 회전하며 적을 휩쓸고 체력을 서서히 회복'},
  sniper:{p:'scope',name:'빛의 검',desc:'두꺼운 빛의 검이 쉬지 않고 연달아 날아가 가장 가까운 적을 쓰러질 때까지 꿰뚫는다'},
  whirl:{p:'boots',name:'주의 바람 기둥',desc:'토네이도 기둥 다섯이 적을 쫓아가며 주변 적을 빨아들여 갈아낸다'},
  pyre:{p:'ammo',name:'갈멜의 응답',desc:'여호와의 불이 쉬지 않고 쏟아져 화면의 적들을 태운다'},
@@ -2873,7 +2873,7 @@ function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden
  $('stl').innerHTML=`<b>${G.st.hidden?'HIDDEN':(G.hard?'시험 ':'')+'ST.'+String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}if(!G.extras){G.extras=1;setupExtras()}showTutorial()}
 function showTutorial(){let seen=false;try{seen=localStorage.getItem('fs_tut')==='1';localStorage.setItem('fs_tut','1')}catch(e){}if(seen)return;state='intro';introT=performance.now();
  screen(`<div class="panel bi"><div class="op" style="color:#ffd34a">HOW TO PLAY</div><div class="big" style="font-size:calc(var(--p)*16)">이렇게 싸워요</div><div class="tut"><p>화면 아무 곳이나 드래그해서 이동 · 공격은 자동</p><p style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 패시브를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</p></div><div class="nkey">터치하여 계속하세요</div></div>`,'intro')}
-function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="mmw"><canvas id="mmap" width="128" height="128"></canvas><div class="mml"><span style="color:#7fd0ff">●</span> 나 &nbsp;<img src="${chaliceURL()}" style="width:calc(var(--p)*6);height:calc(var(--p)*6);image-rendering:pixelated;vertical-align:middle"> 멜기세덱${G.mis&&!G.mis.done?' &nbsp;<span style="color:#ff6a8a">???</span> 미지의 장소':''}</div></div><div class="btn primary" data-act="resume">계속</div><div class="btn gold" data-act="recipes">무기 조합표</div><div class="btn" data-act="popt">옵션</div><div class="btn" data-act="pquit">메인 화면</div></div>`);drawMinimap()}
+function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="mmw"><canvas id="mmap" width="128" height="128"></canvas><div class="mml"><span style="color:#7fd0ff">●</span> 나 &nbsp;<img src="${chaliceURL()}" style="width:calc(var(--p)*6);height:calc(var(--p)*6);image-rendering:pixelated;vertical-align:middle"> 멜기세덱${G.gems.some(a=>a.k==='anvil')?` &nbsp;<img src="${anvilURL()}" style="width:calc(var(--p)*6);height:calc(var(--p)*5);image-rendering:pixelated;vertical-align:middle"> 모루`:''}${G.mis&&!G.mis.done?' &nbsp;<span style="color:#ff6a8a">???</span> 미지의 장소':''}</div></div><div class="btn primary" data-act="resume">계속</div><div class="btn gold" data-act="recipes">무기 조합표</div><div class="btn" data-act="popt">옵션</div><div class="btn" data-act="pquit">메인 화면</div></div>`);drawMinimap()}
 function closePause(){hideScreen();state='play'}
 function fmtT(t){return Math.floor(t/60)+'분 '+String(Math.floor(t%60)).padStart(2,'0')+'초'}
 function gameOver(){state='over';sfx('bigboom');setTimeout(()=>{
@@ -3070,7 +3070,9 @@ function extrasTick(dt){const m=G.merch;if(m&&!m.gone){m.anim+=dt;if(m.leave>0){
  if(M.prog>=M.goal){M.on=0;M.fin=1;for(const e of G.en)if(!e.dead&&!e.boss&&Math.hypot(e.x-q.x,e.y-q.y)<220){e.dead=true;dropGem(e.x,e.y,e.xp)}
   if(hz)banner('일어나서 먹으라','"천사가 그를 어루만지며 그에게 이르되 일어나서 먹으라" — 왕상 19:5',2.6);else banner('여호와께서 큰 물고기를 예비하사','"요나를 삼키게 하셨으므로" — 욘 1:17',2.6);after(2.8,()=>completeHidden(M.k))}}
 function chalice(g,x,y){g.fillStyle='#000';g.fillRect(x-4,y-4,9,10);g.fillStyle='#ffd34a';g.fillRect(x-3,y-3,7,3);g.fillRect(x-2,y,5,1);g.fillRect(x,y+1,1,2);g.fillRect(x-2,y+3,5,1);g.fillStyle='#8a1a2a';g.fillRect(x-2,y-3,5,1);g.fillStyle='#fff3b0';g.fillRect(x-3,y-3,1,2)}
-let _chU=null;function chaliceURL(){if(!_chU){const c=document.createElement('canvas');c.width=c.height=11;chalice(c.getContext('2d'),5,4);_chU=c.toDataURL()}return _chU}
+let _chU=null;function anvilMini(g,x,y){const A=['kkkkkkk.','kQQQQQQk','.kqqqqk.','..kqqk..','.kqqqqk.','.kkkkkk.'],C={k:'#141018',Q:'#d8dee8',q:'#7a808c'};A.forEach((r,j)=>[...r].forEach((ch,i)=>{if(ch!=='.'){g.fillStyle=C[ch];g.fillRect(x-4+i,y-3+j,1,1)}}))}
+let _anU=null;function anvilURL(){if(!_anU){const c=document.createElement('canvas');c.width=10;c.height=8;anvilMini(c.getContext('2d'),5,4);_anU=c.toDataURL()}return _anU}
+function chaliceURL(){if(!_chU){const c=document.createElement('canvas');c.width=c.height=11;chalice(c.getContext('2d'),5,4);_chU=c.toDataURL()}return _chU}
 function drawExtras(cx,cy){const m=G.merch,t=performance.now()/1000;
  if(m&&!m.gone){const fr=SPR.merchant[Math.floor(m.anim*2)%2],up=m.leave>0?m.leave*m.leave*30:0;ctx.globalAlpha=m.leave>0?Math.max(0,1-m.leave/1.2):1;
   ctx.drawImage(shadowSpr(10),Math.round(m.x-cx-5),Math.round(m.y-cy-2));ctx.drawImage(fr.i,Math.round(m.x-cx-fr.W/2),Math.round(m.y-cy-fr.H-up));
@@ -3110,6 +3112,7 @@ function drawMinimap(){const c=$('mmap');if(!c||!G)return;const g=c.getContext('
  g.font='bold 9px monospace';g.textAlign='center';g.textBaseline='middle';
  const M=G.mis;if(M&&!M.done)for(const q of M.pts){if(q.got)continue;const[x,y,out]=pos(q.x,q.y,true);g.fillStyle='#000';g.fillText('???',x+1,y+1);g.fillStyle=out?'#ff9ab0':'#ff6a8a';g.fillText('???',x,y)}
  const m=G.merch;if(m&&!m.gone){const[x,y]=pos(m.x,m.y,true);chalice(g,x,y)}
+ for(const a of G.gems)if(a.k==='anvil'&&!a.got){const[x,y]=pos(a.x,a.y,true);anvilMini(g,x,y)}
  g.restore();g.fillStyle='#7fd0ff';g.fillRect(R-2,R-2,4,4);g.fillStyle='#fff';g.fillRect(R-1,R-1,2,2);
  g.strokeStyle='rgba(255,255,255,0.5)';g.font='bold 8px monospace';g.fillStyle='#c8b898';g.fillText('N',R,7)}
 let shopList=[];
