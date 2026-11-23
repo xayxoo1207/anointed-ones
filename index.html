@@ -1507,7 +1507,7 @@ function initStatic(){
   ICON.pyre=icon(outl(['...yWy...','...oyo...','..oyWyo..','..oyWyo..','...oyo...','...oyo...','..royor..','.rooyoor.','kkkkkkkkk']),Object.assign({},ICONPAL,{y:'#ffd34a',W:'#fffbe8',o:'#ff8a2a',r:'#d8401a'}));
   ICON.e_pyre=icon(outl(['....oo....','...oWWo...','...oyWo...','o..oyWo..o','oo.oWyo.oo','yo.oyWo.oy','Wo.oWWo.oW','yo.oyWo.oy','oyoyWWyoyo','royWWWWyor','rrooyyoorr','.rrrrrrrr.']),Object.assign({},ICONPAL,{y:'#ffd34a',W:'#fff3b0',o:'#ff8a2a',r:'#c8401a'}));
   {const fp={k:OUT,'1':'#a8300e','2':'#e86a1a','3':'#ffc040','4':'#ffd34a','5':'#fff3b0','6':'#ffffff','7':'#e86a1a','8':'#ffc040','9':'#fff3b0','@':'#4a0e0e','^':'#8a1a14','!':'#fff3b0','~':'#5a1a08'};SPR.firehorse=BXR.horse.map(r=>spr(outl(r),fp))}
-  ICON.mantle=icon(outl([".BBBBBBB..","BbbBbbBbB.",".BbbBbbBbB","..BbbbBbB.","...BbBbB..","....BBB...","w...BB...w","ww.....www","Www...wWWw","wwWw.wWwww"]),Object.assign({},ICONPAL,{B:'#8a6a48',b:'#5a4430',w:'#4a8ac8',W:'#cfe6f5'}));
+  ICON.mantle=icon(outl(['.....BBb..','...BBbbBb.','..Bbb..bBW','.Bb......W','.Bb......w','Bb......Ww','sb.....Ww.','sS...wWw..','ss.ww.....','m.........']),Object.assign({},ICONPAL,{B:'#e8dcc0',b:'#b8a684',s:'#e8b080',S:'#b07448',m:'#5a3a1e',W:'#96724c',w:'#d2b482'}));
   ICON.e_mantle=icon(outl(["..y.y.....",".yoyoy....","yoyHHHH...","oyHHhHHH..",".oHHHkHHH.",".oHhHHHHHH","..HHHH.HHh","..HhH.....",".HHhH.....",".HHHH....."]),Object.assign({},ICONPAL,{H:'#ff8a2a',h:'#e85a1a',o:'#ff8a2a',y:'#ffd34a',k:'#4a0e0e'}));
   ICON.rainbow=icon(outl(['..rrrrr..','.rooooor.','roy...yor','oyg...gyo','yg.....gy','gb.....bg','b.......b']),Object.assign({},ICONPAL,{r:'#e8402a',o:'#ff9a2a',y:'#ffe04a',g:'#5ac84a',b:'#4a8ae8'}));
   ICON.tree=icon(outl(['..NNNN...','.NNrNNN..','NNNNNrNN.','NrNNNNNN.','.NNNNrN..','...tt....','...tt....','..tttt...']),Object.assign({},ICONPAL,{N:'#3a8a3a',r:'#e83a2a',t:'#6a4a2a'}));
@@ -2749,8 +2749,7 @@ function drawArmor(w,cx,cy){const x=Math.round(P.x-cx),y=Math.round(P.y-cy-3);co
  if(w.pulse>0)w.pulse-=1/60;if(w.flash>0)w.flash-=1/60}
 function jesusFx(x,y,hh){const t=tGlobal,pu=0.5+0.5*Math.sin(t*2.4);ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.12+0.06*pu;ctx.drawImage(glowTex('rgba(255,250,230,1)'),x-22,y-hh/2-18,44,44);ctx.globalAlpha=0.08;ctx.drawImage(glowTex('rgba(255,220,140,1)'),x-36,y-hh/2-32,72,72);ctx.restore();
  for(let i=0;i<8;i++){const a=t*0.9+i/8*TAU,r=13+2*Math.sin(t*3+i);ctx.fillStyle=i%2?'rgba(255,240,180,0.8)':'rgba(255,255,255,0.9)';ctx.fillRect(Math.round(x+Math.cos(a)*r),Math.round(y+1-hh/2+Math.sin(a)*r*0.9),1,1)}
- const hx=x,hy=y+8-hh-3;ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.5;ctx.drawImage(glowTex('rgba(255,215,110,1)'),hx-10,hy-6,20,12);ctx.restore();
- for(let i=0;i<28;i++){const a=i/28*TAU,px=Math.round(hx+Math.cos(a)*6),py=Math.round(hy+Math.sin(a)*2.2);ctx.fillStyle=(Math.floor(t*8)+i)%7===0?'#ffffff':'#ffd34a';ctx.fillRect(px,py,1,1)}
+ const hx=x,hy=y+8-hh+1;ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.35;ctx.drawImage(glowTex('rgba(255,215,110,1)'),hx-10,hy-6,20,12);ctx.restore();
  addLight(P.x,P.y-8,40,'rgba(255,248,220,1)',0.04+0.02*pu)}
 function heroGlow(fr,x,y,w,h){const aw=P.weapons.find(q=>q.k==='armor');if(!aw||aw.evo||aw.up===false)return;const wi=(P.face<0&&!SPR['hero4_'+P.hero])?fr.wf:fr.w;const a=0.75+0.25*Math.sin(tGlobal*4)+(aw.flash>0?0.3:0);
  ctx.save();ctx.globalAlpha=Math.min(1,a*0.55);ctx.shadowColor='rgba(220,236,255,0.95)';ctx.shadowBlur=8;ctx.drawImage(wi,x,y,w,h);ctx.restore();
@@ -3017,18 +3016,19 @@ w.evo=true;w.t=0.3;w.hits=null;state='evo';sfx('heal');shake=5;addLight(P.x,P.y,
   const cols=['#ffffff','#fff3b0','#ffd34a','#ff9a2a'];for(let i=0;i<28;i++){const d=document.createElement('i');d.className='spk';const a=i/28*TAU+rnd(-0.12,0.12),r=rnd(60,130);d.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px');d.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px');d.style.setProperty('--rt',Math.round(a*180/Math.PI)+'deg');d.style.background=cols[i%4];d.style.animationDelay=rnd(0,0.08).toFixed(2)+'s';st.appendChild(d)}
   setTimeout(()=>{const f=$('evoinf');if(f)f.classList.add('on')},450)},1700)}
 function checkReady(){for(const w of P.weapons)if(evoReady(w)&&!w.noted){w.noted=true;0}}
-function wAvail(k){const d=WDEF[k];if(k==='pyre'&&!HIDC.horeb)return false;if(d.lock&&unlocked<d.lock)return false;if(d.hero){if(d.hero===P.hero)return true;if(k==='word'||!ML('body'))return false;const h=HEROES[d.hero];return heroOwned(d.hero)&&(!h.lock||unlocked>=h.lock)}return true}
+function wAvail(k){const d=WDEF[k];if(k==='pyre')return false;/* 보류: 하늘의 불(진화 불기둥) — 다시 넣으려면 이 줄을 HIDC.horeb 조건으로 되돌리기 */if(d.lock&&unlocked<d.lock)return false;if(d.hero){if(d.hero===P.hero)return true;if(k==='word'||!ML('body'))return false;const h=HEROES[d.hero];return heroOwned(d.hero)&&(!h.lock||unlocked>=h.lock)}return true}
 function openRecipes(){state='pause';const known=k=>!!(COLL.evo&&COLL.evo[k]);
  const wOk=k=>{const d=WDEF[k];if(d.hero){const h=HEROES[d.hero];return !h.lock||unlocked>=h.lock}return !d.lock||unlocked>=d.lock};
  const pOk=p=>{const d=PDEF[p];return !d.lock||unlocked>=d.lock};
  const Q=(img)=>`<span class="rq"><img src="${img}" class="lk">???</span>`;
- const rows=Object.keys(EVO).map(k=>{const e=EVO[k],kn=known(k),w=P.weapons.find(x=>x.k===k);
+ const EK=Object.keys(EVO).filter(k=>k!=='pyre'||P.weapons.some(w=>w.k==='pyre'));
+ const rows=EK.map(k=>{const e=EVO[k],kn=known(k),w=P.weapons.find(x=>x.k===k);
   const wc=wOk(k)?`<span class="rq"><img src="${ICON[k]}">${WDEF[k].name}${w&&!w.evo?` <em>LV${w.lv}</em>`:''}</span>`:Q(ICON[k]);
   const pc=evoPs(k).map(p=>kn&&pOk(p)?`<span class="rq"><img src="${ICON[p]}">${PDEF[p].name}${P.pass[p]?' <em>✓</em>':''}</span>`:Q(ICON[p])).join('<i>+</i>');
   const rc=kn?`<span class="rq gold"><img src="${EICON(k)}">${w&&w.evo?'★ ':''}${e.name}</span>`:Q(EICON(k));
   return `<div class="rrow ${kn?'kn':''} ${w?'own':''}">${wc}<i>+</i>${pc}<i>▶</i>${rc}</div>`}).join('');
- const n=Object.keys(EVO).filter(known).length;
- screen(`<div class="panel"><div class="op" style="color:#ffd34a">EVOLUTION</div><div class="big" style="font-size:calc(var(--p)*16)">무기 조합표</div><div class="hint">무기 LV8 + 짝이 되는 패시브 보유 → 미니보스의 모루 · 발견 ${n}/${Object.keys(EVO).length}</div><div class="rlist">${rows}</div><div class="btn primary" data-act="pauseback">◀ 돌아가기</div></div>`)}
+ const n=EK.filter(known).length;
+ screen(`<div class="panel"><div class="op" style="color:#ffd34a">EVOLUTION</div><div class="big" style="font-size:calc(var(--p)*16)">무기 조합표</div><div class="hint">무기 LV8 + 짝이 되는 패시브 보유 → 미니보스의 모루 · 발견 ${n}/${EK.length}</div><div class="rlist">${rows}</div><div class="btn primary" data-act="pauseback">◀ 돌아가기</div></div>`)}
 function recipes(){return '<table class="rec">'+Object.keys(EVO).filter(k=>wAvail(k)||P.weapons.some(w=>w.k===k)).map(k=>{const e=EVO[k],w=P.weapons.find(x=>x.k===k);const cls=w&&w.evo?'ok':w?'have':'';
  return `<tr class="${cls}"><td><img src="${ICON[k]}"> ${WDEF[k].name}${w&&!w.evo?' '+w.lv:''}</td><td>+</td><td>${[].concat(e.p).map(p=>`<img src="${ICON[p]}"> ${PDEF[p].name}${P.pass[p]?' ✓':''}`).join('<br>')}</td><td>▶</td><td>${w&&w.evo?'★ ':''}${e.name}</td></tr>`}).join('')+'</table>'}
 // level up
@@ -3071,7 +3071,7 @@ function openLevelUp(){state='levelup';sfx('lvl');const ops=options();
 // ================= UNLOCK REVEAL =================
 function unlockList(){const L=[];const add=(id,ok,o)=>{if(ok)L.push(Object.assign({id},o))};
  for(const k in HEROES){const h=HEROES[k];if(!h.lock&&!h.hid&&k!=='jesus')continue;const ok=k==='jesus'?collComplete():h.hid?!!HIDC[h.hid]:unlocked>=h.lock;add('h_'+k,ok,{img:HEROIMG[k],kind:'새 영웅',name:h.name,sub:k==='jesus'?'모든 것을 이루신 분이 함께하십니다':h.role,hero:1})}
- for(const k in WDEF){const d=WDEF[k];if(d.hero)continue;if(k==='pyre'){add('w_pyre',!!HIDC.horeb,{img:ICON.pyre,kind:'새 무기',name:d.name,sub:'이제 레벨업 화면에 등장해요'});continue}if(d.lock)add('w_'+k,unlocked>=d.lock,{img:ICON[k],kind:'새 무기',name:d.name,sub:'이제 레벨업 화면에 등장해요'})}
+ for(const k in WDEF){const d=WDEF[k];if(d.hero)continue;if(k==='pyre')continue;if(d.lock)add('w_'+k,unlocked>=d.lock,{img:ICON[k],kind:'새 무기',name:d.name,sub:'이제 레벨업 화면에 등장해요'})}
  for(const k in PDEF){const d=PDEF[k];if(!d.lock&&!d.hlock&&!d.hid)continue;add('p_'+k,(!d.lock||unlocked>=d.lock)&&hardOk(d)&&hidOk(d),{img:ICON[k],kind:'새 패시브',name:d.name,sub:'이제 레벨업 화면에 등장해요'})}
  for(const d of METADEF){if(!d.lock&&!d.hlock)continue;add('m_'+d.k,(!d.lock||unlocked>=d.lock)&&hardOk(d),{img:ICON[d.icon],kind:'새 은혜',name:d.name,sub:'주님의 은혜에서 기도로 강화할 수 있어요'})}
  for(const k of HIDK){const st=STAGES[HIDSI[k]];add('s_'+k,!!HID[k],{img:null,kind:'숨겨진 스테이지',name:st.name,sub:'스테이지 선택에서 도전할 수 있어요'})}
