@@ -1811,6 +1811,7 @@ function sfx(n){if(!AC||muted)return;const now=AC.currentTime;if(lastS[n]&&now-l
   case'pray':tone('sine',1320,1320,0.25,0.05);tone('sine',1980,1980,0.3,0.035,0.06);break;
   case'punch':tone('square',140,50,0.09,0.09);nz(0.12,0.25,600);break;
   case'tuk':tone('square',200,80,0.035,0.05);nz(0.03,0.09,1400,0,'bandpass');break;
+  case'bell':{const N=262;[[0.25,0.07,3.2],[0.252,0.04,3.0],[0.5,0.065,2.6],[0.6,0.05,2.2],[0.75,0.022,1.6],[1,0.05,1.5],[1.004,0.025,1.4],[1.5,0.02,0.9],[2,0.012,0.6]].forEach(([m,v,d])=>tone('sine',N*m,N*m*0.997,d,v));tone('triangle',N*0.5,N*0.49,0.5,0.05);nz(0.18,0.22,700,0,'lowpass');break}
   case'howl':{const t=AC.currentTime;for(const [d,f0] of [[0,320],[0.15,260]]){const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.setValueAtTime(f0,t+d);o.frequency.exponentialRampToValueAtTime(f0*1.9,t+d+0.35);o.frequency.exponentialRampToValueAtTime(f0*1.2,t+d+1.1);g.gain.setValueAtTime(0.0001,t+d);g.gain.exponentialRampToValueAtTime(0.05,t+d+0.2);g.gain.exponentialRampToValueAtTime(0.0008,t+d+1.15);const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;o.connect(lp);lp.connect(g);g.connect(sfxG);o.start(t+d);o.stop(t+d+1.2)}break}
   case'horn':tone('sawtooth',233,240,0.32,0.06);tone('sawtooth',349,352,0.32,0.04,0.02);tone('square',466,470,0.25,0.02,0.04);break;
   case'quake':nz(0.6,0.5,220,0,'lowpass');tone('sine',70,28,0.5,0.35);break;
@@ -2172,7 +2173,7 @@ function updEvo(w,dt){w.t-=dt;
     }
    if(w.hits.size>300)w.hits.clear();break}
  case'word':{if(w.t<=0){w.t=0.22*P.cdMul;const tg=G.en.filter(e=>!e.dead&&inWordView(e)).sort((a,b)=>((a.x-P.x)**2+(a.y-P.y)**2)-((b.x-P.x)**2+(b.y-P.y)**2)).slice(0,12);tg.forEach((t,i)=>after(i*0.02,()=>{if(!t.dead)wordHit(t,110)}))}
-   w.t2=(w.t2||3)-dt;if(w.t2<=0){w.t2=3*P.cdMul;for(const e of G.en)if(!e.dead&&onScreen(e))wordHit(e,60,true);addLight(P.x,P.y,240,'rgba(255,250,225,1)',0.35);sfx('evo')}break}
+   w.t2=(w.t2||3)-dt;if(w.t2<=0){w.t2=3*P.cdMul;for(const e of G.en)if(!e.dead&&onScreen(e))wordHit(e,60,true);addLight(P.x,P.y,240,'rgba(255,250,225,1)',0.35);sfx('bell')}break}
  case'mantle':{horseTick(w,dt);if(w.t<=0){w.t=0.75*P.cdMul;mantleSweep(0,TAU,86,72,true);w.c=(w.c||0)+1}break}
   case'pyre':if(w.t<=0){w.t=1.0*P.cdMul;pillarTargets(4).forEach((e,i)=>after(i*0.12,()=>spawnFirePillar(e)))}break;
  case'torch':{w.t2=(w.t2||0)-dt;if(w.t<=0){w.t=1.5*P.cdMul;torchBurst(8,50,26,60);w.c=(w.c||0)+1;if(w.c%2===0){G.rings.push({r:6,max:120,spd:240,dmg:45,hit:new Set()});sfx('horn')}}break}
