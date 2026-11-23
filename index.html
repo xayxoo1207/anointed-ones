@@ -2997,11 +2997,12 @@ function choir(midis,t,dur,vol){const f1=AC.createBiquadFilter(),f2=AC.createBiq
  f1.connect(out);f2.connect(out);const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;lp.connect(f1);lp.connect(f2);const dry=AC.createGain();dry.gain.value=0.25;lp.connect(dry);dry.connect(out);out.connect(master);
  for(const m of midis)for(const dt of [-7,0,6]){const o=AC.createOscillator();o.type='sawtooth';o.frequency.value=mf(m);o.detune.value=dt;const v=AC.createOscillator(),vg=AC.createGain();v.frequency.value=5.2;vg.gain.value=4;v.connect(vg);vg.connect(o.detune);o.connect(lp);o.start(t);o.stop(t+dur+0.05);v.start(t);v.stop(t+dur+0.05)}}
 function hallelujah(){if(!AC||muted)return;const t0=AC.currentTime+0.05;
- if(musicG){musicG.gain.cancelScheduledValues(t0);musicG.gain.setValueAtTime(0.5,t0);musicG.gain.linearRampToValueAtTime(0.08,t0+0.15);musicG.gain.setValueAtTime(0.08,t0+2.9);musicG.gain.linearRampToValueAtTime(0.5,t0+3.6)}
- // "Hal - le - lu - jah!"  C - F - G - C(high)
- const seq=[[[48,60,64,67],0,0.42],[[53,60,65,69],0.42,0.2],[[55,62,67,71],0.62,0.38],[[48,60,64,67,72],1.0,2.1]];
+ if(musicG){musicG.gain.cancelScheduledValues(t0);musicG.gain.setValueAtTime(0.5,t0);musicG.gain.linearRampToValueAtTime(0.08,t0+0.15);musicG.gain.setValueAtTime(0.08,t0+3.0);musicG.gain.linearRampToValueAtTime(0.5,t0+3.7)}
+ // Handel, Messiah "Hallelujah": 할(.) 렐 루 야~ (원래 음역대인 C장조로 한 번)
+ const q=0.46,I=[48,60,64,72],Ia=[48,60,64,67],IVb=[53,60,65,69];
+ const seq=[[I,0,q*1.5],[Ia,q*1.5,q*0.5],[IVb,q*2,q*0.5],[Ia,q*2.5,q*4]];
  for(const[ch,st,du]of seq){choir(ch,t0+st,du+0.05,0.11);for(const m of ch.slice(-1))tone('triangle',mf(m+12),mf(m+12),du,0.05,t0+st-AC.currentTime,master)}
- [84,88,91,96,100].forEach((m,i)=>tone('sine',mf(m),mf(m),0.6,0.04,1.0+i*0.07+t0-AC.currentTime,master));nz(1.6,0.12,7000,1.0+t0-AC.currentTime,'highpass')}
+ [84,88,91,96].forEach((m,i)=>tone('sine',mf(m),mf(m),0.6,0.035,q*2.5+i*0.07+t0-AC.currentTime,master));nz(1.6,0.1,7000,q*2.5+t0-AC.currentTime,'highpass')}
 function evolve(w){try{COLL.evo=COLL.evo||{};COLL.evo[w.k]=1;localStorage.setItem('fs_coll',JSON.stringify(COLL))}catch(e){}
 w.evo=true;w.t=0.3;w.hits=null;state='evo';sfx('heal');shake=5;addLight(P.x,P.y,160,'rgba(255,210,90,1)',0.8);
  for(let i=0;i<40;i++){const a=rnd(TAU),sp=rnd(40,140);part(P.x,P.y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(0.5,1),pick(['#ffd34a','#fff3b0','#ff9a2a']),2,0,'fire')}
