@@ -394,7 +394,7 @@ SD.frogB=["..........","...kkkk...","..kmmmmk..",".kmceemmk.","kmMmmmmMmk",".kkk
 SD.boatA=["......kkk.........",".....kcck.........","....kkkkkkk.......","kkkkkTTTTTTkkkkkkk","kTTTTTTTTTTTTTTTTk",".ktTTTTTTTTTTTTTk.","..kRRRRRRRRRRRRk..","...kkkkkkkkkkkk..."];
 SD.gunboatA=["........kkk...........",".......kgggkkkkk......","......kTTTTTkggk......","....kkkTcTcTkkk.......","kkkkkTTTTTTTTTTkkkkkkk","kTTTTTTTTTTTTTTTTTTTTk",".ktTTTTTTTTTTTTTTTTTk.","..kRRRRRRRRRRRRRRRRk..","...kkkkkkkkkkkkkkkk..."];
 SD.shipA=["......................k.........................",".....................kgk........................","..................kkkkgkkkk.....................","..................kTTTTTTTk.....kk..............",".............kkkkkkTcTcTcTkkkkkkggggk...........","......kkk....kTTTTTTTTTTTTTTTTTkkkk.............","....kkgggk...kTTTTTTTTTTTTTTTTTk......kkk.......","kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkgggkkkkkk","kTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTk.",".kTtTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTk..","..kTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTk...","...kRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRk....","....kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk....."];
-SD.pboat=["kkkkkkkkkkkkkkkkkkkkkk","kPPPPPPPPPPPPPPPPPPPPPk",".kPpPPPPPPPPPPPPPPPPPk.","..kRRRRRRRRRRRRRRRRRk..","...kkkkkkkkkkkkkkkkk..."];
+SD.pboat=['.kkkkkkkkkkkkkkkkkkkkkkkkkkk.','kLLLkLLLkLLLkLLLkLLLkLLLkLLLk','klLlklLlklLlklLlklLlklLlklLlk','klllklllklllklllklllklllklllk','krrrkrrrkrrrkrrrkrrrkrrrkrrrk','klllklllklllklllklllklllklllk','klllklllklllklllklllklllklllk','krrrkrrrkrrrkrrrkrrrkrrrkrrrk','kdddkdddkdddkdddkdddkdddkdddk','keEekeEekeEekeEekeEekeEekeEek','.kkkkkkkkkkkkkkkkkkkkkkkkkkk.'];
 SD.jet=["....kk..........","....kTk.........","kk..kTTk........","kTkkkTTTTTTTkk..","kTTTTTTTTTTTTcck","kkkkkTTTTTTTkk..","....kTTk........","....kTk.........","....kk.........."];
 SD.medkit=["..kkkkk..","kkkWWWkkk","kWWWRWWWk","kWWRRRWWk","kWWWRWWWk","kkkkkkkkk"];
 SD.flare=["..k..",".kyk.",".kok.",".kRk.",".kRk.",".kkk."];
@@ -1414,7 +1414,7 @@ function icon(rows,pal){const c=raw(rows,pal||PLAYERPAL);const s=mk(12,12),x=s.g
 function initStatic(){
   for(const k in HEROES){const pal=CHB[k]?ch3pal(CHB[k].pal):Object.assign({},BASEPAL,{E:'#1a1010'},HEROES[k].pal);const hr=CHB[k]?chibi(k):hero2(k);SPR['hero_'+k]=[spr(hr[0],pal),spr(hr[1],pal)];HEROIMG[k]=raw(hr[0],pal).toDataURL();
    if(HERO4[k]){const H4=HERO4[k],p4=Object.assign({},BASEPAL,H4.pal),o={};for(const d in H4.fr)o[d]=H4.fr[d].map(r=>spr(outl(r),p4));SPR['hero4_'+k]=o;SPR['hero_'+k]=o.down;HEROIMG[k]=raw(outl(H4.fr.down[0]),p4).toDataURL()}}
-  SPR.pboat=spr(SD.pboat,Object.assign({},BASEPAL,{P:'#7a5a3a',p:'#9a7a4a',R:'#4a2e1a'}));
+  SPR.pboat=spr(SD.pboat,Object.assign({},BASEPAL,{L:'#c89a5a',l:'#9a7040',d:'#6a4a28',r:'#d8c890',e:'#b88a50',E:'#7a5430'}));
   SPR.jet=spr(SD.chariot,Object.assign({},BASEPAL,{o:'#ff8a2a',y:'#ffd34a'}));
   SPR.drone=spr(SD.angel,Object.assign({},BASEPAL,{W:'#f8f4e0',y:'#ffd34a'}));
   SPR.cart=spr(SD.cart,Object.assign({},BASEPAL,{a:'#8a6a3a',A:'#b08a4a',B:'#5a3a1e',G:'#2a2a2a'}));
@@ -2744,7 +2744,8 @@ function drawSword(s,cx,cy){const x=s.x-cx,y=s.y-cy,c=Math.cos(s.a),sn=Math.sin(
  addLight(s.x,s.y,s.big?30:16,s.big?'rgba(255,220,120,1)':'rgba(220,235,255,1)',0.06)}
 function drawPlayer(cx,cy){if(P.inv>0&&Math.floor(P.inv*20)%2===0&&state==='play')return;
  const H4=SPR['hero4_'+P.hero],fr=(H4?H4[P.dir||'down']:SPR['hero_'+P.hero])[P.moving?Math.floor(P.anim)%2:0];const x=Math.round(P.x-cx),y=Math.round(P.y-cy);const hw=fr.W,hh=fr.H;if(P.hero==='jesus')jesusFx(x,y+(G.b.land?0:Math.round(Math.sin(tGlobal*3))),hh);
- if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.drawImage(P.face<0?b.f:b.i,x-Math.floor(b.W/2),y+5+bob);heroGlow(fr,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.drawImage(P.face<0&&!H4?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-12,y+10+bob,24,1);return}
+ if(!G.b.land&&P.hero==='jesus'){const bob=Math.round(Math.sin(tGlobal*3)*0.6),rr=8+Math.sin(tGlobal*2)*1.5;ctx.save();ctx.globalAlpha=0.55;ctx.strokeStyle='#e8f6ff';ctx.beginPath();ctx.ellipse(x,y+7,rr,rr*0.32,0,0,TAU);ctx.stroke();ctx.globalAlpha=0.3;ctx.beginPath();ctx.ellipse(x,y+7,rr+5,(rr+5)*0.32,0,0,TAU);ctx.stroke();ctx.restore();if(P.moving&&Math.random()<0.4)part(x+cx+rnd(-5,5),y+cy+7,rnd(-15,15),rnd(-10,0),0.35,pick(['#e8f6ff','#9fd0ff']),1);heroGlow(fr,x-Math.round(hw/2),y+8+bob-hh,hw,hh);ctx.drawImage(P.face<0&&!H4?fr.f:fr.i,x-Math.round(hw/2),y+8+bob-hh,hw,hh);return}
+ if(!G.b.land){const b=SPR.pboat;const bob=Math.round(Math.sin(tGlobal*3));ctx.fillStyle='rgba(220,240,255,0.35)';ctx.fillRect(x-Math.floor(b.W/2)-2,y+12+bob,b.W+4,1);ctx.drawImage(b.i,x-Math.floor(b.W/2),y+2+bob);heroGlow(fr,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.drawImage(P.face<0&&!H4?fr.f:fr.i,x-Math.round(hw/2),y+7+bob-hh,hw,hh);ctx.fillStyle='rgba(220,240,255,0.5)';ctx.fillRect(x-17,y+13+bob,34,1);return}
  ctx.drawImage(shadowSpr(15),x-7,y+6);heroGlow(fr,x-Math.round(hw/2),y+8-hh,hw,hh);ctx.drawImage(P.face<0&&!H4?fr.f:fr.i,x-Math.round(hw/2),y+8-hh,hw,hh)}
 function drawWeather(){const t=G.b.weather;
  for(const o of G.wx){const x=Math.round(o.x),y=Math.round(o.y);
