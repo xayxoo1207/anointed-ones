@@ -71,18 +71,36 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 #scr{position:absolute;inset:0;display:flex;align-items:safe center;justify-content:center;pointer-events:auto;background:rgba(5,4,10,.66);overflow-y:auto;padding:calc(var(--p)*8 + env(safe-area-inset-top,0px)) env(safe-area-inset-right,0px) calc(var(--p)*8 + env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,0px)}
 .unlockbg{background:#000!important}
 .unlwrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
-.unlrays{position:absolute;left:50%;top:50%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;background:repeating-conic-gradient(rgba(255,214,120,.42) 0deg 7deg,rgba(255,214,120,0) 7deg 22deg);-webkit-mask:radial-gradient(circle,#000 0,#000 18%,transparent 60%);mask:radial-gradient(circle,#000 0,#000 18%,transparent 60%);animation:unlRays 1s cubic-bezier(.2,1.4,.4,1) forwards,unlSpin 18s linear infinite;transform:scale(0)}
-.unlglow{position:absolute;left:50%;top:50%;width:90vmin;height:90vmin;margin:-45vmin 0 0 -45vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,250,220,.95),rgba(255,211,74,.45) 30%,rgba(255,180,60,0) 65%);animation:unlGlow .9s ease-out forwards;opacity:0}
+.unlrays{position:absolute;left:50%;top:50%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;background:repeating-conic-gradient(rgba(255,214,120,.42) 0deg 7deg,rgba(255,214,120,0) 7deg 22deg);-webkit-mask:radial-gradient(circle,#000 0,#000 18%,transparent 60%);mask:radial-gradient(circle,#000 0,#000 18%,transparent 60%);transform:scale(0);animation:unlSpin 18s linear infinite}
+.unlwrap.charge .unlrays{animation:unlRaysC 1.5s ease-in forwards,unlSpin 18s linear infinite}
+.unlwrap.pop .unlrays{animation:unlRays .9s cubic-bezier(.2,1.4,.4,1) forwards,unlSpin 18s linear infinite;transform:scale(.15)}
+.unlglow{position:absolute;left:50%;top:50%;width:90vmin;height:90vmin;margin:-45vmin 0 0 -45vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,250,220,.95),rgba(255,211,74,.45) 30%,rgba(255,180,60,0) 65%);opacity:0}
+.unlwrap.charge .unlglow{animation:unlGlowC 1.5s ease-in forwards}.unlwrap.pop .unlglow{animation:unlGlow .9s ease-out forwards}
+.unlflash{position:absolute;inset:0;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.9) 30%,rgba(255,240,200,0) 75%);opacity:0;pointer-events:none;z-index:3}
+.unlwrap.pop .unlflash{animation:unlFlash .7s ease-out forwards}
 .unlbox{position:relative;text-align:center;z-index:2}
-.unlkind{font-family:'Black Han Sans';color:#ffe9a0;font-size:calc(var(--p)*8);letter-spacing:.1em;opacity:0;animation:unlUp .4s .35s forwards}
-.unlimg{display:block;width:calc(var(--p)*44);height:calc(var(--p)*44);margin:calc(var(--p)*4) auto;image-rendering:pixelated;object-fit:contain;filter:drop-shadow(0 0 calc(var(--p)*4) rgba(255,230,150,.9));transform:scale(0);animation:unlPop .6s .15s cubic-bezier(.2,1.6,.4,1) forwards}
+.unlpic{position:relative;width:calc(var(--p)*44);height:calc(var(--p)*44);margin:calc(var(--p)*4) auto}
+.unlimg{position:absolute;left:0;top:0;width:100%;height:100%;image-rendering:pixelated;object-fit:contain}
+.unlimg.ub{filter:brightness(0) drop-shadow(0 0 calc(var(--p)*1) rgba(255,230,160,.9));animation:evoJ1 .06s linear 0s 8,evoJ2 .05s linear .5s 10,evoJ3 .04s linear 1s 13,unlGrow 1.5s ease-in forwards}
+.unlimg.uw{filter:brightness(0) invert(1);opacity:0}.unlimg.uc{opacity:0;filter:drop-shadow(0 0 calc(var(--p)*4) rgba(255,230,150,.9))}
+.unlwrap.pop .ub{opacity:0;animation:none}
+.unlwrap.pop .uw{animation:unlWhite 1.3s ease-out forwards}.unlwrap.pop .uc{animation:unlColor 1.3s ease-out forwards}
 .unlstar{font-size:calc(var(--p)*34);line-height:calc(var(--p)*44);color:#fff3b0}
-.unlname{font-family:'Black Han Sans';font-size:calc(var(--p)*17);color:#ffd34a;text-shadow:0 0 calc(var(--p)*5) #ff9a2a,calc(var(--p)*1) calc(var(--p)*1) 0 #5a2a00;opacity:0;animation:unlUp .45s .5s forwards}
-.unlsub{color:#f2ead8;font-size:calc(var(--p)*6.5);margin-top:calc(var(--p)*3);opacity:0;animation:unlUp .45s .65s forwards}
-.unltap{color:#a89c88;font-size:calc(var(--p)*5.5);margin-top:calc(var(--p)*10);opacity:0;animation:unlUp .4s 1.1s forwards,unlBlink 1.4s 1.5s infinite}
-@keyframes unlRays{to{transform:scale(1)}}@keyframes unlSpin{from{rotate:0deg}to{rotate:360deg}}
-@keyframes unlGlow{0%{opacity:0;transform:scale(.2)}40%{opacity:1}100%{opacity:.85;transform:scale(1)}}
-@keyframes unlPop{to{transform:scale(1)}}@keyframes unlUp{from{opacity:0;transform:translateY(calc(var(--p)*4))}to{opacity:1;transform:none}}@keyframes unlBlink{50%{opacity:.35}}
+.unlkind,.unlname,.unlsub,.unltap{opacity:0}
+.unlkind{font-family:'Black Han Sans';color:#ffe9a0;font-size:calc(var(--p)*8);letter-spacing:.1em}
+.unlname{font-family:'Black Han Sans';font-size:calc(var(--p)*17);color:#ffd34a;text-shadow:0 0 calc(var(--p)*5) #ff9a2a,calc(var(--p)*1) calc(var(--p)*1) 0 #5a2a00}
+.unlsub{color:#f2ead8;font-size:calc(var(--p)*6.5);margin-top:calc(var(--p)*3)}
+.unltap{color:#a89c88;font-size:calc(var(--p)*5.5);margin-top:calc(var(--p)*10)}
+.unlwrap.pop .unlkind{animation:unlUp .4s .5s forwards}.unlwrap.pop .unlname{animation:unlUp .45s .7s forwards}.unlwrap.pop .unlsub{animation:unlUp .45s .85s forwards}.unlwrap.pop .unltap{animation:unlUp .4s 1.2s forwards,unlBlink 1.4s 1.6s infinite}
+.unlpic .spk{position:absolute;left:50%;top:50%;width:calc(var(--p)*3);height:calc(var(--p)*1);transform-origin:0 50%;opacity:0;animation:spk .8s ease-out forwards;pointer-events:none}
+@keyframes unlRaysC{0%{transform:scale(0)}100%{transform:scale(.15)}}@keyframes unlRays{to{transform:scale(1)}}@keyframes unlSpin{from{rotate:0deg}to{rotate:360deg}}
+@keyframes unlGlowC{0%{opacity:0;transform:scale(.1)}100%{opacity:.5;transform:scale(.35)}}
+@keyframes unlGlow{0%{opacity:1;transform:scale(.35)}100%{opacity:.85;transform:scale(1)}}
+@keyframes unlFlash{0%{opacity:1}100%{opacity:0}}
+@keyframes unlGrow{0%{scale:.85}100%{scale:1.12}}
+@keyframes unlWhite{0%{opacity:1;transform:scale(1.4)}25%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+@keyframes unlColor{0%{opacity:0}25%{opacity:0}100%{opacity:1}}
+@keyframes unlUp{from{opacity:0;transform:translateY(calc(var(--p)*4))}to{opacity:1;transform:none}}@keyframes unlBlink{50%{opacity:.35}}
 #scr.clear{background:transparent}
 #scr .cfm{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(5,4,10,.72)}
 #scr .cfmb{background:#1a1622;border:calc(var(--p)*1) solid #ffd34a;box-shadow:0 0 0 calc(var(--p)*1) #0b0a12;padding:calc(var(--p)*6) calc(var(--p)*7);text-align:center;max-width:86%}
@@ -2369,7 +2387,7 @@ function collect(g){
  else if(g.k==='med'){P.hp=Math.min(P.maxHp,P.hp+60);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:60,t:0.8,c:'g'})}
  else if(g.k==='manna'){P.hp=Math.min(P.maxHp,P.hp+20);sfx('heal');G.nums.push({x:P.x,y:P.y-14,v:20,t:0.8,c:'g'})}
  else if(g.k==='lots'){P.rerolls=(P.rerolls||0)+1;sfx('pray');0}
- else if(g.k==='flare'){for(const o of G.gems)if(o.k==='xp')o.vac=true;sfx('heal');banner('','',0)}
+ else if(g.k==='flare'){for(const o of G.gems)if(o!==g&&o.k!=='anvil'&&o.k!=='flare')o.vac=true;sfx('heal');banner('','',0)}
  else if(g.k==='prayer'){PRAY++;G.prayers=(G.prayers||0)+1;saveMeta();sfx('pray');G.nums.push({x:P.x+6,y:P.y-16,v:1,t:0.6,c:'y'})}
  else if(g.k==='anvil'){const ew=P.weapons.find(evoReady);if(ew){evolve(ew);return}G.pending++;sfx('lvl');banner('모루','진화할 무기가 없어 레벨업으로 바뀌었다',1.8)}
  else if(g.k==='crate'){G.pending++;sfx('lvl');for(let i=0;i<20;i++)part(P.x,P.y,rnd(-80,80),rnd(-120,-20),0.8,pick(['#ffd34a','#fff3b0','#ff8a2a']),2,200)}
@@ -2808,7 +2826,7 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='glogin'){if(CL.api)CL.api.login().catch(e=>{CL.msg='로그인 실패 · '+(e&&e.code||'');refreshCloud()})}
  else if(a==='glogout'){if(CL.api)CL.api.logout()}
  else if(a==='gsync'){cloudPush(null,true).catch(()=>{CL.msg='저장 실패 · 인터넷 연결을 확인하세요';refreshCloud()})}
- else if(a==='unlnext'){if(performance.now()-unlT>700)nextUnlock()}
+ else if(a==='unlnext'){if(performance.now()-unlT>2700)nextUnlock()}
  else if(a==='quizok')closeQuiz(b.dataset.ok==='1');
  else if(a==='shk'){OPT.shake=+b.dataset.v;saveOpt();document.querySelectorAll('.seg .btn').forEach(x=>x.classList.toggle('on',x===b));shake=[0,2,3][OPT.shake]}
  else if(a==='buy')buyMeta(b.dataset.k,b);
@@ -3063,9 +3081,12 @@ let unlQ=[],unlDone=null,unlT=0;
 function showUnlocks(list,done){const rk=i=>i.id==='h_jesus'?-1:(i.hero?2:1);unlQ=list.slice().sort((a,b)=>rk(b)-rk(a));unlDone=done;nextUnlock()}
 function nextUnlock(){const it=unlQ.shift();if(!it){const seen=unlSeen()||[];unlSave([...new Set([...seen,...unlockList().map(i=>i.id)])]);const d=unlDone;unlDone=null;if(d)d();return}
  const seen=unlSeen()||[];if(!seen.includes(it.id)){seen.push(it.id);unlSave(seen)}
- state='unlock';unlT=performance.now();sfx('evo');if(it.hero)hallelujah();
- const pic=it.img?`<img class="unlimg" src="${it.img}">`:`<div class="unlimg unlstar">✦</div>`;
- screen(`<div class="unlwrap" data-act="unlnext"><div class="unlrays"></div><div class="unlglow"></div><div class="unlbox"><div class="unlkind">${it.kind}</div>${pic}<div class="unlname">${it.name} 해금!</div><div class="unlsub">${it.sub}</div><div class="unltap">터치하여 계속하세요</div></div></div>`,'unlockbg')}
+ state='unlock';unlT=performance.now();
+ const one=c=>it.img?`<img class="unlimg ${c}" src="${it.img}">`:`<div class="unlimg unlstar ${c}">✦</div>`;
+ sfx('heal');
+ screen(`<div class="unlwrap charge" id="unlw" data-act="unlnext"><div class="unlrays"></div><div class="unlglow"></div><div class="unlflash"></div><div class="unlbox"><div class="unlkind">${it.kind}</div><div class="unlpic">${one('ub')}${one('uw')}${one('uc')}</div><div class="unlname">${it.name} 해금!</div><div class="unlsub">${it.sub}</div><div class="unltap">터치하여 계속하세요</div></div></div>`,'unlockbg');
+ setTimeout(()=>{const w=$('unlw');if(!w)return;w.classList.remove('charge');w.classList.add('pop');sfx('evo');sfx('punch');if(it.hero)hallelujah();
+  const box=w.querySelector('.unlpic'),cols=['#ffffff','#fff3b0','#ffd34a','#ff9a2a'];for(let i=0;i<30;i++){const d=document.createElement('i');d.className='spk';const a=i/30*TAU+rnd(-0.1,0.1),r=rnd(90,170);d.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px');d.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px');d.style.setProperty('--rt',Math.round(a*180/Math.PI)+'deg');d.style.background=cols[i%4];box.appendChild(d)}},1500)}
 // ================= ELIJAH QUIZ =================
 const OTB=['창세기','출애굽기','레위기','민수기','신명기','여호수아','룻기','사무엘상','열왕기상','느헤미야','에스더','욥기','시편','잠언','전도서','이사야','에스겔','다니엘','아모스','요나','하박국','스가랴','말라기'];
 const NTB=['마태복음','마가복음','누가복음','요한복음','사도행전','로마서','고린도전서','고린도후서','갈라디아서','에베소서','빌립보서','데살로니가전서','디모데후서','히브리서','야고보서','베드로전서','요한일서','요한계시록'];
