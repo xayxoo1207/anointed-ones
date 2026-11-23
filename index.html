@@ -1702,6 +1702,8 @@ const EICON=k=>ICON['e_'+k]||ICON[k];
 const wname=w=>w.evo?EVO[w.k].name:WDEF[w.k].name;
 const evoPs=k=>[].concat(EVO[k].p);const evoReady=w=>!w.evo&&w.lv>=WMAX&&evoPs(w.k).every(p=>(P.pass[p]||0)>=(EVO[w.k].full?PMAX:1));
 const WMAX=8,PMAX=5,MAXW=6,MAXP=6;
+// 보류: 탄환 무기가 늘어나면 PDEF에 다시 넣기 (효과 코드 oilBounce, 아이콘 ICON.oil은 남겨 둠)
+const PDEF_HOLD={oil:{name:'그치지 않는 기름',desc:'날아가는 탄환이 적을 맞힌 뒤 가까운 다른 적에게 튕겨 간다 · 레벨마다 튕김 +1 (튕길 때마다 피해 -15%)'}};
 const PDEF={
  vest:{name:'의의 호심경',desc:'받는 피해 -1.5'},
  boots:{name:'복음을 전하는 발',desc:'이동 속도 +8%'},
@@ -1725,7 +1727,6 @@ const PDEF={
  tree:{hid:'eden',name:'생명나무 열매',desc:'스테이지마다 한 번, 쓰러지면 체력이 모두 찬 채로 다시 일어난다 · 최대 체력 +5%'},
  rainbow:{hid:'ararat',name:'무지개 언약',desc:'레벨업 선택지가 4개로 늘어난다 · 레벨마다 받는 피해 -3%'},
  jprayer:{hid:'belly',name:'요나의 기도',desc:'체력이 30% 이하일 때 받는 피해 -12%'},
- oil:{name:'그치지 않는 기름',desc:'날아가는 탄환이 적을 맞힌 뒤 가까운 다른 적에게 튕겨 간다 · 레벨마다 튕김 +1 (튕길 때마다 피해 -15%)'},
  loaves:{lock:5,name:'오병이어',desc:'체력이 서서히 찬다 · 초당 회복 +0.4'},
 };
 
