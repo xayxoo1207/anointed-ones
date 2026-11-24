@@ -20,7 +20,7 @@
 </style>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:#050508;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 #stage{box-shadow:0 0 0 1px #1a1622,0 0 40px #000}
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 #stage{position:relative}
@@ -367,10 +367,20 @@ html,body{margin:0;height:100%;background:#050508;overflow:hidden;touch-action:n
 @keyframes nhin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .nhend.skip *{animation-delay:0s!important}.nhend.skip .nhcity{animation-duration:.3s!important}.nhend.skip .nhwhite{display:none}
 .stg.nhs{border-color:#fff3b0}.stg.nhs .no{color:#fff3b0}
+#rotmsg{display:none;position:fixed;inset:0;z-index:999;background:#050508;color:#f2ead8;font-family:'Do Hyeon',sans-serif;font-size:22px;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+#rotmsg small{font-size:14px;color:#a89a80}
+.rottip{margin-top:18px;padding:10px 16px;border:2px solid #3a3446;border-radius:8px;font-size:15px;line-height:1.5;color:#d8cfb8}.rottip b{color:#ffd34a;font-weight:normal}
+.rotph{width:34px;height:58px;border:4px solid #ffd34a;border-radius:7px;margin-bottom:14px;animation:rotph 1.8s ease-in-out infinite}
+@keyframes rotph{0%,20%{transform:rotate(-90deg)}60%,100%{transform:rotate(0)}}
+body.rotlock #rotmsg{display:flex}body.rotlock #wrap{visibility:hidden}
+.fewsel{margin-top:calc(var(--p)*6);padding:calc(var(--p)*4);border:calc(var(--p)*1) solid #3a3446;background:rgba(0,0,0,.25)}
+.fewt{color:#f2ead8;margin-bottom:calc(var(--p)*3)}.fewt b{color:#ffd34a}.fewt span{color:#8fd16a;font-size:.9em}
+.fewsel .seg{display:flex;gap:calc(var(--p)*2);justify-content:center}.fewsel .seg .btn{flex:1;margin:0;padding:calc(var(--p)*3) 0;min-width:0}
+.fewv{margin-top:calc(var(--p)*3);color:#a89a80;font-size:.85em}
 </style>
 </head>
 <body>
-<div id="wrap"><div id="stage">
+<div id="rotmsg"><div class="rotph"></div><div>세로 화면으로 돌려주세요</div><small>이 게임은 세로 화면에서만 플레이할 수 있어요</small><div class="rottip">누워서 플레이할 때는<br>제어 센터에서 <b>화면 방향 고정</b>을 켜 주세요</div></div><div id="wrap"><div id="stage">
 <canvas id="c"></canvas>
 <div id="ui">
   <div id="hud" class="hidden">
@@ -395,7 +405,10 @@ const light=document.createElement('canvas'),lctx=light.getContext('2d');
 const $=id=>document.getElementById(id);
 let redV=null,W=216,H=384,S=3,vign=null;
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
-function resize(){
+function fixVP(){try{const de=document.documentElement,b=document.body;if(window.scrollX||window.scrollY)window.scrollTo(0,0);de.scrollTop=0;de.scrollLeft=0;if(b){b.scrollTop=0;b.scrollLeft=0}const h=window.innerHeight;if(h&&de.style.height!==h+'px'){de.style.height=h+'px';if(b)b.style.height=h+'px'}}catch(e){}}
+function phoneLand(){const w=innerWidth,h=innerHeight;return w>h&&Math.min(w,h)<600&&(matchMedia('(pointer:coarse)').matches||'ontouchstart'in window)}
+function rotCheck(){const on=phoneLand();document.body.classList.toggle('rotlock',on);if(on){try{if(typeof state!=='undefined'&&state==='play'&&G)openPause()}catch(e){}}}
+function resize(){fixVP();rotCheck();
   const wr=$('wrap').getBoundingClientRect(),vv=window.visualViewport;const iw=Math.round(wr.width||(vv&&vv.width)||innerWidth),ih=Math.round(wr.height||(vv&&vv.height)||innerHeight),land=iw>ih*1.05;if(iw===resize.w&&ih===resize.h&&cv.width)return;resize.w=iw;resize.h=ih;
   let s=Math.min(iw,ih)/(land?270:216);if(s>=3)s=Math.floor(s);s=Math.max(s,0.75);
   W=Math.max(200,Math.min(Math.round(iw/s),640));H=Math.max(240,Math.min(Math.round(ih/s),640));
@@ -409,7 +422,7 @@ function resize(){
   gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,0.7)');g.fillStyle=gr;g.fillRect(0,0,W,H);
   redV=mk(W,H);{const g2=redV.getContext('2d'),r2=g2.createRadialGradient(W/2,H/2,Math.min(W,H)*0.32,W/2,H/2,Math.max(W,H)*0.6);r2.addColorStop(0,'rgba(200,0,0,0)');r2.addColorStop(0.55,'rgba(200,0,0,0.35)');r2.addColorStop(1,'rgba(150,0,0,0.95)');g2.fillStyle=r2;g2.fillRect(0,0,W,H)}
 }
-addEventListener('resize',resize);addEventListener('orientationchange',()=>{setTimeout(resize,120);setTimeout(resize,500)});addEventListener('pageshow',()=>{resize();setTimeout(resize,300)});document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(resize,150)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);[100,400,1000,2500].forEach(t=>setTimeout(resize,t));addEventListener('orientationchange',()=>setTimeout(resize,200));
+addEventListener('resize',resize);try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{})}catch(e){}addEventListener('orientationchange',()=>{fixVP();[60,120,300,500,900].forEach(t=>setTimeout(()=>{fixVP();resize.w=0;resize()},t))});addEventListener('scroll',()=>{if(window.scrollX||window.scrollY)window.scrollTo(0,0)},{passive:true});if(window.visualViewport)visualViewport.addEventListener('scroll',fixVP);addEventListener('pageshow',()=>{resize();setTimeout(resize,300)});document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(resize,150)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);[100,400,1000,2500].forEach(t=>setTimeout(resize,t));addEventListener('orientationchange',()=>setTimeout(resize,200));
 function hash(x,y,s=0){let h=(Math.imul(x|0,374761393)+Math.imul(y|0,668265263)+Math.imul(s|0,982451653))|0;h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)/4294967296}
 const rnd=(a=1,b)=>b===undefined?Math.random()*a:a+Math.random()*(b-a);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -1780,6 +1793,8 @@ const EICON=k=>ICON['e_'+k]||ICON[k];
 const wname=w=>w.evo?EVO[w.k].name:WDEF[w.k].name;
 const evoPs=k=>[].concat(EVO[k].p);const evoReady=w=>!w.evo&&w.lv>=WMAX&&evoPs(w.k).every(p=>(P.pass[p]||0)>=(EVO[w.k].full?PMAX:1));
 const WMAX=8,PMAX=5,MAXW=6,MAXP=6;
+let WCAP=6;try{WCAP=Math.max(1,Math.min(6,+(localStorage.getItem('fs_wcap')||6)))}catch(e){}
+const FEWB={1:1,2:0.8,3:0.5,4:0.3,5:0.15,6:0};const fewOk=()=>unlocked>NMAIN;const wcapNow=()=>fewOk()?WCAP:MAXW;const fewBonus=()=>FEWB[(G&&G.wcap)||6]||0;
 // 보류: 탄환 무기가 늘어나면 PDEF에 다시 넣기 (효과 코드 oilBounce, 아이콘 ICON.oil은 남겨 둠)
 const PDEF_HOLD={oil:{name:'그치지 않는 기름',desc:'날아가는 탄환이 적을 맞힌 뒤 가까운 다른 적에게 튕겨 간다 · 레벨마다 튕김 +1 (튕길 때마다 피해 -15%)'}};
 const PDEF={
@@ -1947,7 +1962,7 @@ function recompute(){const pv=k=>P.pass[k]||0;P.pspd=1+0.12*pv('eagle');P.area=1
 function newRun(si,hero){clearBattle();P=newPlayer(hero);P.rerolls=ML('urim')*3;recompute();P.hp=P.maxHp;P.revives=ML('revive');G=null;beginStage(si,{pending:0,kills:0,time:0});}
 function beginStage(i,carry){
   const st=STAGES[i];const b=BIOME[st.biome];if(st.secret){const L=ROSTER.slice(0,NMAIN).filter(r=>r.grunt&&r.dog&&r.rpg&&r.heavy&&r.tank);const RR={grp:'곡과 마곡의 군대'};for(const k of ['grunt','dog','rpg','heavy','tank'])RR[k]=pick(L)[k];ROSTER[i]=RR}
-  G={cust:[],si:i,hard:HARD&&!st.hidden&&!st.secret,d:st.dlv!=null?st.dlv:(i<=6?i:6+(i-6)*0.65),st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],dying:[],whirls:[],swords:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
+  G={wcap:wcapNow(),cust:[],si:i,hard:HARD&&!st.hidden&&!st.secret,d:st.dlv!=null?st.dlv:(i<=6?i:6+(i-6)*0.65),st,b,t:0,en:[],bul:[],ebul:[],gems:[],parts:[],fx:[],nades:[],marks:[],emarks:[],jets:[],tracers:[],nums:[],decals:[],dying:[],whirls:[],swords:[],timers:[],fires:[],waves:[],carts:[],rings:[],punches:[],animals:[],elite:80,
      boss:null,bossSpawned:false,spawnAcc:0,pending:(carry.pending||0)+ML('first'),kills:carry.kills||0,totalTime:carry.time||0,stageKills:0,evt:50,minis:[],nextMini:180,miniIdx:0,clearT:-1,wx:[]};
   buildStage();P.x=0;P.y=0;P.inv=1;cam.x=-W/2;cam.y=-H/2;initWeather();
 }
@@ -2895,9 +2910,10 @@ $('scr').addEventListener('click',e=>{if(state==='notice'){initAudio();leaveNoti
  else if(a==='glogout'){if(CL.api)CL.api.logout()}
  else if(a==='gsync'){cloudPush(null,true).catch(()=>{CL.msg='저장 실패 · 인터넷 연결을 확인하세요';refreshCloud()})}
  else if(a==='nhskip')b.classList.add('skip');
+ else if(a==='wcap'){WCAP=+b.dataset.v;try{localStorage.setItem('fs_wcap',WCAP)}catch(e){}if(G)G.wcap=WCAP;sfx('click');const y=$('scr').scrollTop;showBrief();$('scr').scrollTop=y}
  else if(a==='unlnext'){if(performance.now()-unlT>2700)nextUnlock()}
  else if(a==='quizok')closeQuiz(b.dataset.ok==='1');
- else if(a==='shk'){OPT.shake=+b.dataset.v;saveOpt();document.querySelectorAll('.seg .btn').forEach(x=>x.classList.toggle('on',x===b));shake=[0,2,3][OPT.shake]}
+ else if(a==='shk'){OPT.shake=+b.dataset.v;saveOpt();b.parentNode.querySelectorAll('.btn').forEach(x=>x.classList.toggle('on',x===b));shake=[0,2,3][OPT.shake]}
  else if(a==='buy')buyMeta(b.dataset.k,b);
  else if(a==='refund')refundMeta(b);
  else if(a==='cont')contRun();
@@ -2942,14 +2958,14 @@ let lastVerse=-1;function pickVerse(){let i;do{i=Math.floor(Math.random()*VERSES
 let menuShown=false;function revealMenu(){if(menuShown||state!=='title')return false;menuShown=true;const t=document.querySelector('.tbot');if(t)t.classList.remove('tlock');sfx('click');return true}
 const BATTLE_ST=['play','pause','levelup','evo','shop','quiz','brief','intro'];
 function saveBattle(){try{if(!G||!P||!BATTLE_ST.includes(state)||G.clearT>=0||state==='over')return;
- localStorage.setItem('fs_battle',JSON.stringify({v:1,si:G.si,hard:!!G.hard,hero:P.hero,t:G.t,kills:G.kills,tt:G.totalTime,sk:G.stageKills,pend:G.pending,elite:G.elite,nm:G.nextMini,mi:G.miniIdx,boss:!!G.bossSpawned&&!G.quiet,npcDone:G.npcStage===G.si&&(!G.npc||G.npc.leave>0),merchGone:!!(G.merch&&G.merch.gone),
+ localStorage.setItem('fs_battle',JSON.stringify({v:1,si:G.si,hard:!!G.hard,hero:P.hero,t:G.t,kills:G.kills,tt:G.totalTime,sk:G.stageKills,pend:G.pending,elite:G.elite,nm:G.nextMini,mi:G.miniIdx,boss:!!G.bossSpawned&&!G.quiet,npcDone:G.npcStage===G.si&&(!G.npc||G.npc.leave>0),merchGone:!!(G.merch&&G.merch.gone),wc:G.wcap,
   lv:P.lv,xp:P.xp,next:P.next,hp:P.hp,rr:P.rerolls||0,rv:P.revives||0,w:P.weapons.map(w=>({k:w.k,lv:w.lv,evo:!!w.evo})),pass:P.pass}))}catch(e){}}
 function clearBattle(){try{localStorage.removeItem('fs_battle')}catch(e){}}
 function loadBattle(){try{const b=JSON.parse(localStorage.getItem('fs_battle')||'null');return b&&b.v===1&&STAGES[b.si]&&HEROES[b.hero]?b:null}catch(e){return null}}
 function resumeBattle(b){HARD=!!b.hard;lastHero=b.hero;freshHero(b.hero);
  P.weapons=b.w.map(o=>({k:o.k,lv:o.lv,t:0.5,evo:o.evo,shown:o.evo}));P.pass=b.pass||{};recompute();
  beginStage(b.si,{pending:b.pend||0,kills:b.kills||0,time:b.tt||0});G.pending=b.pend||0;
- G.t=b.t||0;G.stageKills=b.sk||0;G.elite=b.elite||G.elite;G.nextMini=b.nm||G.nextMini;G.miniIdx=b.mi||0;G.evt=G.t+20;
+ G.t=b.t||0;if(b.wc)G.wcap=b.wc;G.stageKills=b.sk||0;G.elite=b.elite||G.elite;G.nextMini=b.nm||G.nextMini;G.miniIdx=b.mi||0;G.evt=G.t+20;
  P.lv=b.lv;P.xp=b.xp;P.next=b.next;P.hp=Math.max(1,Math.min(P.maxHp,b.hp));P.rerolls=b.rr;P.revives=b.rv;
  if(b.npcDone)G.npcStage=G.si;startPlay();if(b.merchGone&&G.merch)G.merch.gone=true;if(b.boss&&!G.bossSpawned)spawnBoss();slots();openPause()}
 let battleAsked=false;
@@ -3044,10 +3060,10 @@ function roster(){const R=ROSTER[G.si];if(!R)return'';const ks=G.b.land?['grunt'
 function showBrief(){state='brief';$('hud').classList.add('hidden');const st=G.st;
  screen(`<div class="panel"><div class="op">${st.secret?'<span style="color:#fff3b0">FINAL STAGE · 마지막 길</span>':st.hidden?'<span style="color:#ffd34a">HIDDEN STAGE · 숨겨진 길</span>':`STAGE ${String(G.si+1).padStart(2,'0')} / ${String(NMAIN).padStart(2,'0')}`}${G.hard?'<span class="htag">주님의 시험</span>':''}</div>
  <div class="big">${st.name}</div><div class="rg">${st.region} &nbsp; <span class="tag">${st.type}</span></div>
- ${route(G.si)}<div class="brief">${st.brief}<br><div class="verse">${st.verse}</div><span style="color:#ff8a6a">${st.noBoss?'9분 동안 크고 강한 바람 · 지진 · 불을 차례로 견디면 승리<br>3분마다 미니보스 출현</span><span style="display:none">':''}15분 생존 · 3분마다 미니보스 출현${G.hard?'<br>적 속도 +20% · 적 피해 +35%':''}<br>15:00 최종 보스 「${st.bossName}」 처치 시 승리</span>${roster()}<div style="margin-top:calc(var(--p)*4);color:#c8b898">영웅: ${HEROES[P.hero].name} · ${WDEF[HEROES[P.hero].w].name}</div></div>
+ ${route(G.si)}<div class="brief">${st.brief}<br><div class="verse">${st.verse}</div><span style="color:#ff8a6a">${st.noBoss?'9분 동안 크고 강한 바람 · 지진 · 불을 차례로 견디면 승리<br>3분마다 미니보스 출현</span><span style="display:none">':''}15분 생존 · 3분마다 미니보스 출현${G.hard?'<br>적 속도 +20% · 적 피해 +35%':''}<br>15:00 최종 보스 「${st.bossName}」 처치 시 승리</span>${roster()}<div style="margin-top:calc(var(--p)*4);color:#c8b898">영웅: ${HEROES[P.hero].name} · ${WDEF[HEROES[P.hero].w].name}</div>${fewOk()?`<div class="fewsel"><div class="fewt">적은 무기 · 무기 칸 <b>${G.wcap}</b>${FEWB[G.wcap]?` <span>클리어 기도 +${Math.round(FEWB[G.wcap]*100)}%</span>`:''}</div><div class="seg">${[1,2,3,4,5,6].map(n=>`<div class="btn ${G.wcap===n?'on':''}" data-act="wcap" data-v="${n}">${n}</div>`).join('')}</div><div class="fewv">"여호와의 구원은 사람이 많고 적음에 달리지 아니하였느니라" — 삼상 14:6</div></div>`:''}</div>
  <div class="btn primary" data-act="go">출전 ▶</div><div class="btn" data-act="select">◀ 뒤로</div><div class="btn" data-act="quit">메인</div></div>`)}
 function startPlay(){hideScreen();state='play';$('hud').classList.remove('hidden');$('boss').classList.add('hidden');
- $('stl').innerHTML=`<b>${G.st.secret?'FINAL':G.st.hidden?'HIDDEN':(G.hard?'시험 ':'')+'ST.'+String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}if(!G.extras){G.extras=1;setupExtras()}showTutorial()}
+ $('stl').innerHTML=`<b>${G.st.secret?'FINAL':G.st.hidden?'HIDDEN':(G.hard?'시험 ':'')+'ST.'+String(G.si+1).padStart(2,'0')}</b> ${G.st.name} · ${HEROES[P.hero].name}${G.wcap<6?' · 무기 '+G.wcap+'칸':''}`;slots();hudT=0;hud();banner(G.st.name,G.st.region+' · '+G.st.type,2);if(G.npcStage!==G.si){G.npcStage=G.si;spawnElijah()}if(!G.extras){G.extras=1;setupExtras()}showTutorial()}
 function showTutorial(){let seen=false;try{seen=localStorage.getItem('fs_tut')==='1';localStorage.setItem('fs_tut','1')}catch(e){}if(seen)return;state='intro';introT=performance.now();
  screen(`<div class="panel bi"><div class="op" style="color:#ffd34a">HOW TO PLAY</div><div class="big" style="font-size:calc(var(--p)*16)">이렇게 싸워요</div><div class="tut"><p>화면 아무 곳이나 드래그해서 이동 · 공격은 자동</p><p style="color:#ffd34a">★ 무기 LV8 + 짝이 되는 패시브를 갖추고<br>미니보스가 떨어뜨리는 모루를 얻으면 무기가 진화합니다</p></div><div class="nkey">터치하여 계속하세요</div></div>`,'intro')}
 function openPause(){state='pause';screen(`<div class="panel"><div class="big">일시정지</div><div class="stats">스테이지 ${G.si+1} · ${G.st.name}<br>레벨 <b>${P.lv}</b> &nbsp; 처치 <b>${G.kills}</b></div><div class="mmw"><canvas id="mmap" width="128" height="128"></canvas><div class="mml"><span style="color:#7fd0ff">●</span> 나 &nbsp;<img src="${chaliceURL()}" style="width:calc(var(--p)*6);height:calc(var(--p)*6);image-rendering:pixelated;vertical-align:middle"> 멜기세덱${G.gems.some(a=>a.k==='anvil')?` &nbsp;<img src="${anvilURL()}" style="width:calc(var(--p)*6);height:calc(var(--p)*5);image-rendering:pixelated;vertical-align:middle"> 모루`:''}${G.mis&&!G.mis.done?' &nbsp;<span style="color:#ff6a8a">???</span> 미지의 장소':''}</div></div><div class="btn primary" data-act="resume">계속</div><div class="btn gold" data-act="recipes">무기 조합표</div><div class="btn" data-act="popt">옵션</div><div class="btn" data-act="pquit">메인 화면</div></div>`);drawMinimap()}
@@ -3057,8 +3073,8 @@ function gameOver(){state='over';clearBattle();sfx('bigboom');setTimeout(()=>{
  screen(`<div class="panel"><div class="op" style="color:#ff3b30">FALLEN</div><div class="big" style="color:#ff3b30">쓰러짐</div><div class="rg">스테이지 ${G.si+1} · ${G.st.name}</div>
  <div class="stats">도달 레벨 <b>${P.lv}</b><br>얻은 기도 <b>${G.prayers||0}</b> (보관됨)<br>총 처치 <b>${G.kills}</b><br>총 전투 시간 <b>${fmtT(G.totalTime)}</b></div>
  <div class="btn primary" data-act="retry">이 스테이지 재도전</div><div class="btn" data-act="select">스테이지 선택</div><div class="btn" data-act="quit">메인 화면</div></div>`)},900)}
-function stageClear(){clearBattle();clearTrials();if(G.st.secret)return secretClear();if(G.st.hidden)return hiddenClear();G.wasOpen=HARDOPEN();if(G.hard){const L=HCROWN[P.hero]||[];if(!L.includes(G.si))L.push(G.si);HCROWN[P.hero]=L;try{localStorage.setItem('fs_hcrown',JSON.stringify(HCROWN))}catch(e){}}const newHero=Object.keys(HEROES).find(k=>HEROES[k].lock===G.si+2&&unlocked<HEROES[k].lock);const newWs=[...Object.keys(WDEF).filter(k=>WDEF[k].lock===G.si+2&&unlocked<WDEF[k].lock),...Object.keys(PDEF).filter(k=>PDEF[k].lock===G.si+2&&unlocked<PDEF[k].lock)];const newM=METADEF.find(d=>d.lock===G.si+2&&unlocked<d.lock);const newHU=G.hard&&!REC['h'+G.si]?[...Object.keys(PDEF).filter(k=>PDEF[k].hlock===G.si+1).map(k=>({img:ICON[k],t:'새 패시브',n:PDEF[k].name,s:'이제 레벨업 화면에 등장해요'})),...METADEF.filter(d=>d.hlock===G.si+1).map(d=>({img:ICON[d.icon],t:'새 은혜',n:d.name,s:'주님의 은혜에서 기도로 강화할 수 있어요'}))]:[];saveUnlock(G.si+2);saveRec(G.si,P.lv,G.stageKills);const clearPray=(10+G.si*10)*(G.hard?2:1);PRAY+=clearPray;G.prayers=(G.prayers||0)+clearPray;saveMeta();savedRun=null;storeRun();
- if(G.st.final){state='win';screen(`<div class="panel"><div class="op" style="color:#8fd16a">VICTORY</div><div class="big">선한 싸움을 마치다</div><div class="brief">${G.hard?'주님의 시험을 통과했다. ':''}엘라 골짜기에서 아마겟돈까지, 모든 우상과 괴수를 물리쳤다.${!G.hard&&!G.wasOpen?'<div style="color:#ff8a6a;margin-top:calc(var(--p)*3)">주님의 시험 모드가 열렸습니다!<br>모든 스테이지를 더 어려운 시험으로 다시 도전하고, 주님의 은혜를 더 높이 강화할 수 있어요.<br>주님의 은혜에 「한 몸의 지체」가 열렸습니다. 다른 영웅들의 무기도 함께 쓸 수 있어요.</div>':''}<div class="verse">"나는 선한 싸움을 싸우고 나의 달려갈 길을 마치고 믿음을 지켰으니" — 딤후 4:7</div></div>${trialRows()}${route(NMAIN)}
+function stageClear(){clearBattle();clearTrials();if(G.st.secret)return secretClear();if(G.st.hidden)return hiddenClear();G.wasOpen=HARDOPEN();if(G.hard){const L=HCROWN[P.hero]||[];if(!L.includes(G.si))L.push(G.si);HCROWN[P.hero]=L;try{localStorage.setItem('fs_hcrown',JSON.stringify(HCROWN))}catch(e){}}const newHero=Object.keys(HEROES).find(k=>HEROES[k].lock===G.si+2&&unlocked<HEROES[k].lock);const newWs=[...Object.keys(WDEF).filter(k=>WDEF[k].lock===G.si+2&&unlocked<WDEF[k].lock),...Object.keys(PDEF).filter(k=>PDEF[k].lock===G.si+2&&unlocked<PDEF[k].lock)];const newM=METADEF.find(d=>d.lock===G.si+2&&unlocked<d.lock);const newHU=G.hard&&!REC['h'+G.si]?[...Object.keys(PDEF).filter(k=>PDEF[k].hlock===G.si+1).map(k=>({img:ICON[k],t:'새 패시브',n:PDEF[k].name,s:'이제 레벨업 화면에 등장해요'})),...METADEF.filter(d=>d.hlock===G.si+1).map(d=>({img:ICON[d.icon],t:'새 은혜',n:d.name,s:'주님의 은혜에서 기도로 강화할 수 있어요'}))]:[];saveUnlock(G.si+2);saveRec(G.si,P.lv,G.stageKills);const clearPray=Math.round((10+G.si*10)*(G.hard?2:1)*(1+fewBonus()));PRAY+=clearPray;G.prayers=(G.prayers||0)+clearPray;saveMeta();savedRun=null;storeRun();
+ if(G.st.final){state='win';screen(`<div class="panel"><div class="op" style="color:#8fd16a">VICTORY</div><div class="big">선한 싸움을 마치다</div><div class="brief">${G.hard?'주님의 시험을 통과했다. ':''}엘라 골짜기에서 아마겟돈까지, 모든 우상과 괴수를 물리쳤다.${!G.hard&&!G.wasOpen?'<div style="color:#ff8a6a;margin-top:calc(var(--p)*3)">주님의 시험 모드가 열렸습니다!<br>모든 스테이지를 더 어려운 시험으로 다시 도전하고, 주님의 은혜를 더 높이 강화할 수 있어요.<br>주님의 은혜에 「한 몸의 지체」가 열렸습니다. 다른 영웅들의 무기도 함께 쓸 수 있어요.<br>출전 전 브리핑에서 「적은 무기」로 무기 칸 수를 고를 수 있어요.</div>':''}<div class="verse">"나는 선한 싸움을 싸우고 나의 달려갈 길을 마치고 믿음을 지켰으니" — 딤후 4:7</div></div>${trialRows()}${route(NMAIN)}
   <div class="stats">최종 레벨 <b>${P.lv}</b><br>총 처치 <b>${G.kills}</b><br>총 전투 시간 <b>${fmtT(G.totalTime)}</b></div><div class="btn primary" data-act="quit">메인 화면으로</div><div class="btn" data-act="select">스테이지 선택</div></div>`);return}
  state='clear';screen(`<div class="panel"><div class="op" style="color:#8fd16a">STAGE ${String(G.si+1).padStart(2,'0')} CLEAR</div><div class="big">승리</div><div class="rg">${G.st.bossName} 처치 · ${G.st.name} 정복</div>
  <div class="stats">처치 <b>${G.stageKills}</b> &nbsp; 현재 레벨 <b>${P.lv}</b> &nbsp; 기도 <b>${G.prayers||0}</b> <span style="color:#ffd34a">(클리어 보너스 +${clearPray})</span><br>다음 스테이지는 레벨 1부터 새로 시작해요<br><span style="color:#ffe9a0">주님의 은혜에서 영웅을 강화하고 출전하세요</span></div>${newHero?`<div class="unl"><img src="${HEROIMG[newHero]}"><div><b>새 영웅 해금!</b><br>${HEROES[newHero].name} · ${HEROES[newHero].role}<br><small>영웅 선택에서 기도 ${HEROES[newHero].price}으로 합류시킬 수 있어요</small></div></div>`:''}${newWs.map(newW=>`<div class="unl"><img src="${ICON[newW]}" style="image-rendering:pixelated"><div><b>${WDEF[newW]?'새 무기':'새 패시브'} 해금!</b><br>${(WDEF[newW]||PDEF[newW]).name}<br><small>이제 레벨업 화면에 등장해요</small></div></div>`).join('')}${newM?`<div class="unl"><img src="${ICON[newM.icon]}" style="image-rendering:pixelated"><div><b>새 은혜 해금!</b><br>${newM.name}<br><small>주님의 은혜에서 기도로 강화할 수 있어요</small></div></div>`:''}${newHU.map(u=>`<div class="unl"><img src="${u.img}" style="image-rendering:pixelated"><div><b style="color:#ff8a6a">시험 보상 · ${u.t} 해금!</b><br>${u.n}<br><small>${u.s}</small></div></div>`).join('')}
@@ -3114,7 +3130,7 @@ const PRAY_LV=3;
 function jo(w,a,b){w=String(w);const c=w.charCodeAt(w.length-1);if(c<0xAC00||c>0xD7A3)return w+b;const f=(c-0xAC00)%28;if(a==='으로')return w+(f&&f!==8?'으로':'로');return w+(f?a:b)}
 function options(){const o=[];
  for(const w of P.weapons)if(w.lv<WMAX)o.push({t:'w',k:w.k,lv:w.lv+1});
- if(P.weapons.length<MAXW)for(const k in WDEF)if(wAvail(k)&&!P.weapons.find(w=>w.k===k))o.push({t:'w',k,lv:1});
+ if(P.weapons.length<((G&&G.wcap)||MAXW))for(const k in WDEF)if(wAvail(k)&&!P.weapons.find(w=>w.k===k))o.push({t:'w',k,lv:1});
  const npass=Object.keys(P.pass).filter(k=>P.pass[k]>0).length;for(const k in PDEF)if(!(PDEF[k].lock&&unlocked<PDEF[k].lock)&&hardOk(PDEF[k])&&hidOk(PDEF[k])&&(P.pass[k]||0)<PMAX&&((P.pass[k]||0)>0||npass<MAXP))o.push({t:'p',k,lv:(P.pass[k]||0)+1});
  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]]}
  const r=o.slice(0,P.pass.rainbow?4:3);if(!r.length){r.push({t:'f'});r.push({t:'pr'});r.push({t:'auto'});r.push({t:'autoPr'})}return r}
@@ -3155,6 +3171,7 @@ function unlockList(){const L=[];const add=(id,ok,o)=>{if(ok)L.push(Object.assig
  for(const d of METADEF){if(!d.lock&&!d.hlock)continue;add('m_'+d.k,(!d.lock||unlocked>=d.lock)&&hardOk(d),{img:ICON[d.icon],kind:'새 은혜',name:d.name,sub:'주님의 은혜에서 기도로 강화할 수 있어요'})}
  for(const k of HIDK){const st=STAGES[HIDSI[k]];add('s_'+k,!!HID[k],{img:null,kind:'숨겨진 스테이지',name:st.name,sub:'스테이지 선택에서 도전할 수 있어요'})}
  add('s_newheaven',coll2Complete(),{img:null,kind:'마지막 스테이지',name:'새 하늘과 새 땅',sub:'스테이지 선택에서 도전할 수 있어요'});
+ add('fewweap',fewOk(),{img:null,kind:'새 기능',name:'적은 무기',sub:'출전 전 브리핑에서 무기 칸 수를 1~6개로 고를 수 있어요'});
  add('hardmode',HARDOPEN(),{img:null,kind:'새 도전',name:'주님의 시험',sub:'모든 스테이지를 더 어려운 시험으로 다시 도전할 수 있어요'});
  return L}
 function unlSeen(){try{return JSON.parse(localStorage.getItem('fs_unlseen')||'null')}catch(e){return null}}
@@ -3352,7 +3369,7 @@ function nhCity(){if(nhCity.u)return nhCity.u;const W2=100,H2=66,c=document.crea
  for(const tx of[5,87]){Rr(tx,28,8,28,'#e8b030');Rr(tx,28,2,28,'#ffe08a');Rr(tx+6,28,2,28,'#b07818');Rr(tx-1,26,10,2,'#ffd34a');Rr(tx+3,22,2,4,'#fff3b0')}
  for(const gx of[21,46,71]){circ(gx+4,42,4,'#f4f0ff');Rr(gx,42,9,11,'#f4f0ff');Rr(gx+2,44,5,9,'#d8d0f0');Rr(gx+3,45,3,8,'#fffbe8')}
  return nhCity.u=c.toDataURL()}
-function secretClear(){const bonus=500;saveRec(G.si,P.lv,G.stageKills);PRAY+=bonus;saveMeta();state='clear';const fl=document.querySelector('.nhflash');
+function secretClear(){const bonus=Math.round(500*(1+fewBonus()));saveRec(G.si,P.lv,G.stageKills);PRAY+=bonus;saveMeta();state='clear';const fl=document.querySelector('.nhflash');
  screen(`<div class="nhend" data-act="nhskip"><div class="nhwhite"></div><div class="nhsky"><div class="unlrays nhrays"></div><img class="nhcity" src="${nhCity()}"></div>
  <div class="nhtxt"><div class="op nht0" style="color:#ffd34a">THE END</div><div class="big nht1">새 하늘과 새 땅</div>
  <div class="nhv nhv1">"또 내가 새 하늘과 새 땅을 보니 처음 하늘과 처음 땅이 없어졌고 바다도 다시 있지 않더라"<small>— 계 21:1</small></div>
@@ -3361,7 +3378,7 @@ function secretClear(){const bonus=500;saveRec(G.si,P.lv,G.stageKills);PRAY+=bon
  <div class="nhrest"><div class="stats">마지막 원수 사망을 멸하다<br>처치 <b>${G.stageKills}</b> &nbsp; 레벨 <b>${P.lv}</b> &nbsp; <span style="color:#ffd34a">기도 +${bonus}</span></div>${trialRows()}
  <div class="menu"><div class="btn primary wide" data-act="quit">메인 화면으로</div><div class="btn wide" data-act="select">스테이지 선택</div></div></div></div></div>`,'nhbg');
  if(fl)setTimeout(()=>fl.remove(),200);setTimeout(()=>{if(state==='clear'&&document.querySelector('.nhend'))hallelujah()},2600)}
-function hiddenClear(){clearBattle();const k=G.st.hidden,first=!HIDC[k];HIDC[k]=1;saveHid();saveRec(G.si,P.lv,G.stageKills);const bonus=200;PRAY+=bonus;saveMeta();state='clear';
+function hiddenClear(){clearBattle();const k=G.st.hidden,first=!HIDC[k];HIDC[k]=1;saveHid();saveRec(G.si,P.lv,G.stageKills);const bonus=Math.round(200*(1+fewBonus()));PRAY+=bonus;saveMeta();state='clear';
  const rw=k==='horeb'?`<div class="unl"><img src="${HEROIMG.elijah}"><div><b>${first?'새 영웅 합류!':'영웅'}</b><br>${HEROES.elijah.name} · ${HEROES.elijah.role}<br><small>무기 「하늘의 불」 · 진화 「갈멜의 응답」</small></div></div>`:`<div class="unl"><img src="${ICON[HIDREW[k]]}" style="image-rendering:pixelated"><div><b>${first?'새 패시브 해금!':'패시브'}</b><br>${PDEF[HIDREW[k]].name}<br><small>${PDEF[HIDREW[k]].desc}</small></div></div>`;
  screen(`<div class="panel"><div class="op" style="color:#ffd34a">HIDDEN STAGE CLEAR</div><div class="big" style="color:#ffd34a">숨겨진 길 정복</div><div class="rg">${G.st.name} · ${G.st.region}</div><div class="brief"><div class="verse">${G.st.verse}</div></div>
  <div class="stats">처치 <b>${G.stageKills}</b> &nbsp; 레벨 <b>${P.lv}</b> &nbsp; <span style="color:#ffd34a">기도 +${bonus}</span></div>${rw}${trialRows()}
